@@ -20,8 +20,8 @@ public class GameNetLogic implements Runnable, IListener
     private long nextTime;
     private static long NOOP_DURATION;
     private MediaTracker m_mtIcons;
-    private Hashtable m_htLoadedIcons;
-    private Hashtable m_htUnloadedIcons;
+    private Hashtable<String, Image> m_htLoadedIcons;
+    private Hashtable<String, Image> m_htUnloadedIcons;
     private static final String[] g_commands;
     private String m_lastWhisperer;
     
@@ -73,6 +73,8 @@ public class GameNetLogic implements Runnable, IListener
         if (o == loginPanel) {
             if (loginPanel.isEnabled() && loginPanel.isVisible()) {
                 this.processLogin();
+                // TODO: we get here, now what...
+                System.out.println("here");
             }
         }
         else if (o == lobbyPanel.getChatPanel()) {
@@ -328,7 +330,7 @@ public class GameNetLogic implements Runnable, IListener
         }
     }
     
-    private void handleSubscriptionButtons(final Vector vector) {
+    private void handleSubscriptionButtons(final Vector<CFButton> vector) {
         for (int i = 0; i < vector.size(); ++i) {
             final CFButton cfButton = vector.elementAt(i);
             if (cfButton != null) {
@@ -836,33 +838,30 @@ public class GameNetLogic implements Runnable, IListener
             this.addLine("[Unignored] " + s);
         }
     }
-    
-    public void run() {
-        while (true) {
-            try {
-                while (true) {
-                    if (this.m_network != null && this.m_network.m_bConnected) {
-                        try {
-                            final DataInputStream packet = this.m_network.readPacket();
-                            this.processPackets(packet, packet.readShort());
-                            continue;
+    public void run()
+    {
+        do
+            try
+            {
+                while (true)
+                    if ((this.m_network != null) && (this.m_network.m_bConnected))
+                        try
+                        {
+                            DataInputStream localDataInputStream = this.m_network.readPacket();
+                            processPackets(localDataInputStream, localDataInputStream.readShort());
                         }
-                        catch (IOException ex) {
-                            return;
+                        catch (IOException localIOException)
+                        {
+                          return;
                         }
-                    }
-                    Thread.sleep(500L);
-                }
+                    else
+                        Thread.sleep(500L);
             }
-            catch (Exception ex2) {
-                if (this.m_network != null) {
-                    this.disconnect("Connection Lost");
-                    return;
-                }
-                continue;
+            catch (Exception localException)
+            {
             }
-            break;
-        }
+        while (this.m_network == null);
+            disconnect("Connection Lost");
     }
     
     public int getPlayerRank(final String s) {

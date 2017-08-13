@@ -57,13 +57,15 @@ public class Network extends ByteArrayInputStream
     
     public String login(final int n, final short n2, final short n3, final String s, final String s2, final boolean b, final String s3, final int n4) {
         try {
-            (this.m_socket = new Socket(InetAddress.getByName(s3), n4)).setSoTimeout(10000);
+            //(this.m_socket = new Socket(InetAddress.getByName(s3), n4)).setSoTimeout(10000);
+            (this.m_socket = new Socket(InetAddress.getByName(s3), 6049)).setSoTimeout(10000);
         }
         catch (Exception ex) {
             System.out.println(ex);
             return "Could not connect to server";
         }
         try {
+            // TODO: we get here, now what... (port = 6049)
             this.m_socket.setSoTimeout(0);
             this.m_reader = new PacketStreamReader(this.m_socket.getInputStream());
             this.m_writer = new PacketStreamWriter(this.m_socket.getOutputStream());
@@ -74,6 +76,7 @@ public class Network extends ByteArrayInputStream
             stream.writeInt(n);
             stream.writeShort(n2);
             stream.writeShort(n3);
+            
             this.m_writer.sendPacket();
             this.m_bConnected = true;
         }

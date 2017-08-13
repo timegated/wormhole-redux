@@ -8,7 +8,7 @@ public class CFPlayerPanel extends CFScroller implements IListener
     
     private CFPlayerElement findPlayer(final String s) {
         for (int i = 0; i < super.m_vComponents.size(); ++i) {
-            final CFPlayerElement cfPlayerElement = super.m_vComponents.elementAt(i);
+            final CFPlayerElement cfPlayerElement = (CFPlayerElement)super.m_vComponents.elementAt(i);
             if (cfPlayerElement != null && cfPlayerElement.getName().equals(s)) {
                 return cfPlayerElement;
             }

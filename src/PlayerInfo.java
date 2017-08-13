@@ -114,7 +114,7 @@ public class PlayerInfo
         this.m_username = "Empty";
         this.m_bEmpty = true;
         this.reset();
-        this.m_imgPowerups = WormholeModel.g_mediaTable.get("img_smallpowerups");
+        this.m_imgPowerups = (Image[])WormholeModel.g_mediaTable.get("img_smallpowerups");
         this.m_myHeight = 158;
     }
     

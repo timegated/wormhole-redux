@@ -570,11 +570,11 @@ public class CFSkin extends MouseAdapter
         if (width - this.r2Counter > 0) {
             this.r2Counter += 38;
         }
-        this.m_loginOffScreenG.drawImage(GameLoader.g_mediaElements.get("img_r2background"), width - this.r2Counter, 0, null);
+        this.m_loginOffScreenG.drawImage((Image)GameLoader.g_mediaElements.get("img_r2background"), width - this.r2Counter, 0, null);
         if (this.titleCounter < loginPanel.m_tfUsername.getLocation().x - 70) {
             this.titleCounter += 12;
         }
-        this.m_loginOffScreenG.drawImage(GameLoader.g_mediaElements.get("img_r2title"), this.titleCounter, loginPanel.m_tfUsername.getLocation().y - 50, null);
+        this.m_loginOffScreenG.drawImage((Image)GameLoader.g_mediaElements.get("img_r2title"), this.titleCounter, loginPanel.m_tfUsername.getLocation().y - 50, null);
         this.m_loginOffScreenG.setFont(CFSkin.FONTNORMAL);
         this.m_loginOffScreenG.drawString("Username:", loginPanel.m_tfUsername.getLocation().x - 70, loginPanel.m_tfUsername.getLocation().y + 15);
         this.m_loginOffScreenG.drawString("Password:", loginPanel.m_tfPassword.getLocation().x - 70, loginPanel.m_tfPassword.getLocation().y + 15);
@@ -603,7 +603,7 @@ public class CFSkin extends MouseAdapter
         graphics.fillRect(0, 0, cfChatElement.getWidth(), cfChatElement.getHeight());
         graphics.setFont(cfChatElement.getFont());
         graphics.setColor(cfChatElement.getForeground());
-        final Vector lines = cfChatElement.getLines();
+        final Vector<String> lines = cfChatElement.getLines();
         for (int i = 0; i < lines.size(); ++i) {
             final String s = lines.elementAt(i);
             final int n = (i + 1) * cfChatElement.getSpacing() - 2;

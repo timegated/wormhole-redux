@@ -13,7 +13,7 @@ public class PortalSprite extends Sprite
     static final int MAX_W = 60;
     int m_damageTaken;
     final int MAX_TAKEN = 150;
-    Vector m_vOutgoingPowerups;
+    Vector<BulletSprite> m_vOutgoingPowerups;
     static final int NMISSILES = 12;
     static final int NMINES = 15;
     static final double MINE_VEL = 6.0;

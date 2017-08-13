@@ -6,7 +6,7 @@ public class CFTablePanel extends CFScroller
     private Hashtable m_tableMap;
     
     public synchronized CFTableElement findTable(final int n) {
-        return this.m_tableMap.get(new Integer(n));
+        return (CFTableElement)this.m_tableMap.get(new Integer(n));
     }
     
     public synchronized void setTableStatus(final int n, final byte b, final int n2) {
@@ -22,7 +22,7 @@ public class CFTablePanel extends CFScroller
     }
     
     public synchronized void removeTable(final int n) {
-        final CFTableElement cfTableElement = this.m_tableMap.remove(new Integer(n));
+        final CFTableElement cfTableElement = (CFTableElement)this.m_tableMap.remove(new Integer(n));
         if (cfTableElement != null) {
             this.removeElement(cfTableElement);
         }

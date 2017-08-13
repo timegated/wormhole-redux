@@ -100,7 +100,7 @@ public class CFScroller extends Panel implements AdjustmentListener, MouseListen
         final int offsetY = this.m_offsetY;
         this.m_offscreenG.setClip(this.m_leftGutter, this.m_topGutter, this.m_scrollingAreaWidth, this.m_scrollingAreaHeight);
         for (int i = 0; i < this.m_vComponents.size(); ++i) {
-            final CFElement cfElement = this.m_vComponents.elementAt(i);
+            final CFElement cfElement = (CFElement)this.m_vComponents.elementAt(i);
             if (cfElement != null) {
                 final int n = cfElement.getY() - offsetY;
                 if ((n <= this.m_topGutter + this.m_scrollingAreaHeight && n >= this.m_topGutter) || (n + cfElement.getHeight() <= this.m_topGutter + this.m_scrollingAreaHeight && n + cfElement.getHeight() >= this.m_topGutter)) {
@@ -176,7 +176,7 @@ public class CFScroller extends Panel implements AdjustmentListener, MouseListen
         mouseEvent.translatePoint(0, this.m_offsetY);
         synchronized (this.m_vComponents) {
             for (int i = 0; i < this.m_vComponents.size(); ++i) {
-                final CFElement cfElement = this.m_vComponents.elementAt(i);
+                final CFElement cfElement = (CFElement)this.m_vComponents.elementAt(i);
                 if (cfElement != null && cfElement.contains(mouseEvent.getX(), mouseEvent.getY())) {
                     // monitorexit(this.m_vComponents)
                     return cfElement;
@@ -198,7 +198,7 @@ public class CFScroller extends Panel implements AdjustmentListener, MouseListen
     protected void layoutComponents(final int offsetY) {
         int topGutter = this.m_topGutter;
         for (int i = 0; i < this.m_vComponents.size(); ++i) {
-            final CFElement cfElement = this.m_vComponents.elementAt(i);
+            final CFElement cfElement = (CFElement)this.m_vComponents.elementAt(i);
             cfElement.setLocation(((this.m_alignment == 0) ? 0 : ((this.m_scrollingAreaWidth - cfElement.getWidth()) / 2)) + this.m_leftGutter, topGutter);
             topGutter += cfElement.getHeight() + this.m_yBuffer;
         }

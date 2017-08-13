@@ -520,7 +520,7 @@ public class WormholeModel extends Model
     }
     
     public void doOneCycle() {
-        GameBoard.playSound(WormholeModel.g_mediaTable.get("snd_silence"));
+        GameBoard.playSound((AudioClip)WormholeModel.g_mediaTable.get("snd_silence"));
         switch (this.m_mode) {
             case 0: {
                 this.handleDefaultModelBehavior();
@@ -1179,7 +1179,7 @@ public class WormholeModel extends Model
     }
     
     public static Image[] getImages(final String s) {
-        return WormholeModel.g_mediaTable.get(s);
+        return (Image[])WormholeModel.g_mediaTable.get(s);
     }
     
     void addIncomingPowerup(final PortalSprite portalSprite, final byte b, final byte incomingSlot, final byte b2) {
@@ -1299,7 +1299,7 @@ public class WormholeModel extends Model
         }
         this.m_winningPlayerString = null;
         this.m_player = new PlayerSprite(this.m_boardCenterX, this.m_boardCenterY, this.m_playerFighterType);
-        this.m_imgLogo = super.m_mediaTable.get("img_bg_logo");
+        this.m_imgLogo = (Image)super.m_mediaTable.get("img_bg_logo");
         if (this.m_imgLogo != null) {
             this.m_rectLogo.setBounds(this.m_boardCenterX - this.m_imgLogo.getWidth(null) / 2, this.m_boardCenterY - this.m_imgLogo.getHeight(null) / 2, this.m_imgLogo.getWidth(null), this.m_imgLogo.getHeight(null));
         }
