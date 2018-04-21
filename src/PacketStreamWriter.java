@@ -12,6 +12,7 @@ public class PacketStreamWriter
         this.m_bOStream.reset();
         this.m_lastSize = this.m_oStream.size();
     }
+
     
     public void sendPacket() throws IOException {
         final int n = this.m_oStream.size() - this.m_lastSize;

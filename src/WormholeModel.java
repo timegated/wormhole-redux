@@ -520,7 +520,7 @@ public class WormholeModel extends Model
     }
     
     public void doOneCycle() {
-        GameBoard.playSound((AudioClip)WormholeModel.g_mediaTable.get("snd_silence"));
+        //GameBoard.playSound((AudioClip)WormholeModel.g_mediaTable.get("snd_silence"));
         switch (this.m_mode) {
             case 0: {
                 this.handleDefaultModelBehavior();
@@ -903,7 +903,7 @@ public class WormholeModel extends Model
         this.m_starSize = new int[70];
         this.m_narrowStarX = new int[70];
         this.m_narrowStarY = new int[70];
-        this.m_playerFighterType = 1;
+        this.m_playerFighterType = 1;	// XXX THIS IS THE SHIP OF THE PLAYER
         this.m_describedShip = 1;
         this.m_changeTeamsRect = new Rectangle(30, 33, 144, 18);
         this.m_borderShades = new Color[6];

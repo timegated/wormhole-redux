@@ -1,59 +1,138 @@
 import java.net.*;
 import java.io.*;
-import java.nio.ByteBuffer;
+import java.util.*;
 
-public class Server extends Thread
-{
-   private ServerSocket serverSocket;
-   
-   public Server(int port) throws IOException
-   {
-      serverSocket = new ServerSocket(port);
-      serverSocket.setSoTimeout(0);
-   }
+public class Server{
+	
+	static final int PORT = 4444;
+	List<ServerThread> clients = new Vector<ServerThread>();
+	List<User> users = new Vector<User>();
+	
+	public static void main(String args[]) throws Exception{
+		new Server().process();
+	}
+	
+	public void process() throws IOException{
+		ServerSocket serverSocket = null;
+		try {
+			serverSocket = new ServerSocket(PORT);
+			while(true){
+				System.out.println("Waiting for client on port " + serverSocket.getLocalPort() + "...");
+				Socket socket = serverSocket.accept();
+				System.out.println("Just connected to " + socket.getRemoteSocketAddress());
+				ServerThread client =  new ServerThread(socket);
+				clients.add(client);
+			}
+		} catch(IOException e){
+			
+		} finally {
+	        if (serverSocket != null) {
+	        	serverSocket.close();
+	        }
+		}
+	}
+	
+	void broadcastUser(User user) throws IOException{
+		for (ServerThread client : this.clients){
+			client.sendUser(user);
+		}
+	}
 
-   public void run()
-   {
-      while(true)
-      {
-         try
-         {
-            System.out.println("Waiting for client on port " +
-            serverSocket.getLocalPort() + "...");
-            Socket server = serverSocket.accept();
-            System.out.println("Just connected to " + server.getRemoteSocketAddress());
-            PacketStreamReader pr = new PacketStreamReader(server.getInputStream());
-            pr.readPacket();
-
-            byte[] byteArray = pr.getBuffer();
-
-
-
-         
-         }catch(SocketTimeoutException s)
-         {
-            System.out.println("Socket timed out!");
-            break;
-         }catch(IOException e)
-         {
-            e.printStackTrace();
-            break;
-         }
-      }
-   }
-
-
-
-   public static void main(String [] args)
-   {
-      int port = Integer.parseInt(args[0]);
-      try
-      {
-         Thread t = new Server(port);
-         t.start();
-      }catch(IOException e)
-      {
-         e.printStackTrace();
-      }
-   }
+	void addUser(User user){
+		this.users.add(user);
+	}
+	
+	private class ServerThread extends Thread {
+		private User user;
+		private PacketStreamWriter pw;
+		private PacketStreamReader pr;
+		
+	    public void marshall(byte b) throws IOException{
+	    	this.pw.getStream().writeByte(b);
+	    }
+	    public void marshall(short s) throws IOException{
+	    	this.pw.getStream().writeShort(s);
+	    }
+	    public void marshall(int i) throws IOException{
+	    	this.pw.getStream().writeInt(i);
+	    }
+	    public void marshall(String s) throws IOException{
+	    	this.pw.getStream().writeUTF(s);
+	    }
+	    public void sendPacket() throws IOException{
+	    	this.pw.sendPacket();
+	    }
+				
+		public User user(){
+			return user;
+		}
+		
+		public ServerThread(Socket socket) throws IOException{
+			this.pw = new PacketStreamWriter(socket.getOutputStream());
+			this.pr = new PacketStreamReader(socket.getInputStream());
+			start();
+		}
+			
+		public void receiveLogin() throws IOException{			
+			PacketStreamReader pr = this.pr;
+			final DataInputStream stream = pr.getStream();
+			short bytes;
+			boolean b;
+			String s, s2;
+			int n;
+			short n2, n3;
+			bytes = stream.readShort();
+			b = (stream.readByte()==1);
+			String username = stream.readUTF();
+			s2 = stream.readUTF();
+			n = stream.readInt();
+			n2 = stream.readShort();
+			n3 = stream.readShort();
+			this.user = new User(username);
+			addUser(user);
+			broadcastUser(user);
+		}
+		
+		public void sendLoginResponse() throws IOException{		
+			marshall( (byte)1 );
+			marshall( user().userID() );
+			marshall( user().totalCredits() );
+			marshall( user().subscriptionLevel() );
+			marshall( user().username() );
+			sendPacket();
+		}		
+		
+		public void sendUser(User user) throws IOException{		
+			marshall( (byte)13 );
+			marshall( user().username() );
+			marshall( 1 );
+			marshall( 2 );
+			marshall( "small-platinumWeapons" );
+			marshall( "small-bronzeSurvivor" );
+			marshall( "clan" );
+			sendPacket();
+		}
+		
+		public void processPackets(final DataInputStream stream) {
+			try {
+				final byte flag = stream.readByte();
+			} catch (Exception e) {
+				return;
+			}
+		}
+		
+		public void run() {
+			try {
+				receiveLogin();
+				sendLoginResponse();
+				final DataInputStream stream = pr.getStream();
+				while (true) {
+					processPackets(stream);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return;
+			}
+		}
+	}
 }

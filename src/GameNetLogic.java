@@ -73,8 +73,6 @@ public class GameNetLogic implements Runnable, IListener
         if (o == loginPanel) {
             if (loginPanel.isEnabled() && loginPanel.isVisible()) {
                 this.processLogin();
-                // TODO: we get here, now what...
-                System.out.println("here");
             }
         }
         else if (o == lobbyPanel.getChatPanel()) {
@@ -570,10 +568,13 @@ public class GameNetLogic implements Runnable, IListener
             final byte byte1 = dataInputStream.readByte();
             switch (byte1) {
                 case 0: {
-                    this.disconnect(dataInputStream.readUTF());
+                	String connectionStatusMsg = dataInputStream.readUTF();
+                    this.disconnect(connectionStatusMsg);
+                    break;
                 }
                 case 1: {
                     this.finishLogin(dataInputStream.readInt(), dataInputStream.readShort(), dataInputStream.readByte(), dataInputStream.readUTF());
+                    break;
                 }
                 case 4: {
                     String utf = null;
@@ -582,6 +583,7 @@ public class GameNetLogic implements Runnable, IListener
                     }
                     catch (Exception ex2) {}
                     this.disconnect((utf == null) ? "Logged out" : utf);
+                    break;
                 }
                 case 6: {
                     final String utf2 = dataInputStream.readUTF();
@@ -608,6 +610,7 @@ public class GameNetLogic implements Runnable, IListener
                     final String string = s + "]";
                     this.m_pnlGame.getPlayingPanel().getChatPanel().addLine(s2, string, utf4, null);
                     this.m_pnlGame.getLobbyPanel().getChatPanel().addLine(s2, string, utf4, null);
+                    break;
                 }
                 case 5:
                 case 18: {
@@ -618,9 +621,11 @@ public class GameNetLogic implements Runnable, IListener
                         return;
                     }
                     ((byte1 == 5) ? this.m_pnlGame.getLobbyPanel().getChatPanel() : this.m_pnlGame.getPlayingPanel().getChatPanel()).addLine(utf5, utf6);
+                    break;
                 }
                 case 13: {
                     this.myAddPlayer(dataInputStream);
+                    break;
                 }
                 case 14: {
                     final String utf7 = dataInputStream.readUTF();
@@ -636,6 +641,7 @@ public class GameNetLogic implements Runnable, IListener
                     for (short short1 = dataInputStream.readShort(), n2 = 0; n2 < short1; ++n2) {
                         this.myAddPlayer(dataInputStream);
                     }
+                    break;
                 }
                 case 41: {
                     final short short2 = dataInputStream.readShort();
@@ -675,6 +681,7 @@ public class GameNetLogic implements Runnable, IListener
                             this.setTableForPlayer(utf9, short4);
                         }
                     }
+                    break;
                 }
                 case 20: {
                     if (dataInputStream.readByte() == 1) {
@@ -781,6 +788,7 @@ public class GameNetLogic implements Runnable, IListener
                     final short short11 = dataInputStream.readShort();
                     final byte byte12 = dataInputStream.readByte();
                     this.handleTableStatusChange(short11, byte12, (short)((byte12 == 3) ? dataInputStream.readShort() : -1));
+                    break;
                 }
                 case 27: {
                     final CreditsPanel creditsPanel = this.m_pnlGame.getPlayingPanel().getCreditsPanel();
@@ -790,6 +798,7 @@ public class GameNetLogic implements Runnable, IListener
                         credits = 0;
                     }
                     creditsPanel.setCredits(credits);
+                    break;
                 }
                 case 75: {
                     final short short12 = dataInputStream.readShort();
@@ -816,9 +825,11 @@ public class GameNetLogic implements Runnable, IListener
                             }
                         }
                     }
+                    break;
                 }
                 case 80: {
                     this.m_pnlGame.getPlayingPanel().getGameBoard().getModel().handleGamePacket(dataInputStream);
+                    break;
                 }
             }
         }

@@ -34,4 +34,8 @@ public class PacketStreamReader
         }
         return this.readPacket(this.m_byteBuffer);
     }
+    
+    public DataInputStream getStream() {
+        return this.m_iStream;
+    }
 }
