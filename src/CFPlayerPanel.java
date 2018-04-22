@@ -37,11 +37,11 @@ public class CFPlayerPanel extends CFScroller implements IListener
         CFSkin.getSkin().paintCFPlayerPanel(graphics, this);
     }
     
-    public synchronized void addPlayer(final String s, final String s2, final int n, final String[] array) {
-        if (this.findPlayer(s) != null) {
+    public synchronized void addPlayer(final String username, final String s2, final int rank, final String[] array) {
+        if (this.findPlayer(username) !=null) {
             return;
         }
-        final CFPlayerElement generateCFPlayerElement = CFSkin.getSkin().generateCFPlayerElement(this, s, s2, n, array, super.m_scrollingAreaWidth);
+        final CFPlayerElement generateCFPlayerElement = CFSkin.getSkin().generateCFPlayerElement(this, username, s2, rank, array, super.m_scrollingAreaWidth);
         generateCFPlayerElement.setParent(this);
         this.addSortedElement(generateCFPlayerElement);
     }

@@ -232,22 +232,23 @@ public class GameNetLogic implements Runnable, IListener
     }
     
     private synchronized void myAddPlayer(final DataInputStream dataInputStream) throws IOException {
-        final String utf = dataInputStream.readUTF();
-        if (utf.length() == 0) {
+        final String username = dataInputStream.readUTF();
+        if (username.length() == 0) {
             return;
         }
-        final short short1 = dataInputStream.readShort();
-        final String[] array = new String[dataInputStream.readShort()];
-        for (int i = 0; i < array.length; ++i) {
-            final String utf2 = dataInputStream.readUTF();
-            array[i] = utf2;
-            if (this.m_htLoadedIcons.get(utf2) == null && this.m_htUnloadedIcons.get(utf2) == null) {
-                final Image image = GamePanel.m_applet.getImage(GamePanel.m_applet.getCodeBase(), "images/icons/" + utf2);
-                this.m_htUnloadedIcons.put(utf2, image);
+        final short rank = dataInputStream.readShort();
+        short numIcons = dataInputStream.readShort();
+        final String[] iconNames = new String[numIcons];
+        for (int i = 0; i < iconNames.length; ++i) {
+            final String iconName = dataInputStream.readUTF();
+            iconNames[i] = iconName;
+            if (this.m_htLoadedIcons.get(iconName) == null && this.m_htUnloadedIcons.get(iconName) == null) {
+                final Image image = GamePanel.m_applet.getImage(GamePanel.m_applet.getCodeBase(), "images/icons/" + iconName);
+                this.m_htUnloadedIcons.put(iconName, image);
                 this.m_mtIcons.addImage(image, 0);
             }
         }
-        this.m_pnlGame.getLobbyPanel().getPlayerPanel().addPlayer(utf, dataInputStream.readUTF(), short1, array);
+        this.m_pnlGame.getLobbyPanel().getPlayerPanel().addPlayer(username, dataInputStream.readUTF(), rank, iconNames);
     }
     
     private String[][] readTableOptions(final DataInputStream dataInputStream) throws IOException {

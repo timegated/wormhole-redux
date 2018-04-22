@@ -89,12 +89,11 @@ public class Server{
 			n2 = stream.readShort();
 			n3 = stream.readShort();
 			this.user = new User(username);
-			addUser(user);
-			broadcastUser(user);
 		}
 		
-		public void sendLoginResponse() throws IOException{		
-			marshall( (byte)1 );
+		public void sendLoginResponse() throws IOException{
+			byte opcode = 1;
+			marshall( opcode );
 			marshall( user().userID() );
 			marshall( user().totalCredits() );
 			marshall( user().subscriptionLevel() );
@@ -102,20 +101,21 @@ public class Server{
 			sendPacket();
 		}		
 		
-		public void sendUser(User user) throws IOException{		
-			marshall( (byte)13 );
-			marshall( user().username() );
-			marshall( 1 );
-			marshall( 2 );
-			marshall( "small-platinumWeapons" );
-			marshall( "small-bronzeSurvivor" );
-			marshall( "clan" );
+		public void sendUser(User user) throws IOException{	
+			byte opcode = 13;
+			marshall( opcode );
+			marshall( user.username() );
+			marshall( user.rank() );
+			marshall( user.numIcons() );
+			for (String iconName : user.icons())
+				marshall( iconName );
+			marshall( user.clan() );
 			sendPacket();
 		}
 		
 		public void processPackets(final DataInputStream stream) {
 			try {
-				final byte flag = stream.readByte();
+				final byte opcode = stream.readByte();
 			} catch (Exception e) {
 				return;
 			}
@@ -125,6 +125,17 @@ public class Server{
 			try {
 				receiveLogin();
 				sendLoginResponse();
+				
+				// Send current user list to client
+				for (User u : users){
+					sendUser(u);
+				}
+				
+				// Add user and broadcast to all clients
+				addUser(this.user);
+				broadcastUser(this.user);
+				
+				// Start processing packets from client
 				final DataInputStream stream = pr.getStream();
 				while (true) {
 					processPackets(stream);
