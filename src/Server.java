@@ -72,21 +72,21 @@ public class Server{
 			this.pr = new PacketStreamReader(socket.getInputStream());
 			start();
 		}
-			
+		
 		public void receiveLogin() throws IOException{			
 			final DataInputStream stream = this.pr.getStream();
 
-			short bytes = stream.readShort();
-			boolean isGuestAccount = (stream.readByte()==1);
-			String username = stream.readUTF();
-			String password = stream.readUTF();
-			int gameId = stream.readInt();
-			short majorVersion = stream.readShort();
-			short minorVersion = stream.readShort();
+			short 	numBytes		= stream.readShort();
+			boolean isGuestAccount 	= (stream.readByte()==1);
+			String 	username 		= stream.readUTF();
+			String	password 		= stream.readUTF();
+			int 	gameId 			= stream.readInt();
+			short 	majorVersion 	= stream.readShort();
+			short 	minorVersion 	= stream.readShort();
 			
 			this.user = new User(username);
 		}
-		
+
 		public void sendLoginResponse() throws IOException{
 			byte opcode = 1;
 			marshall( opcode );
