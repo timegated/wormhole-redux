@@ -187,7 +187,7 @@ public class GameNetLogic implements Runnable, IListener
         }
     }
     
-    public String login(final String s, final int n, final String s2, final int n2, final String s3, final String s4, final boolean bGuestAccount) {
+    public String login(final String username, final String password, final boolean isGuestAccount) {
         if (this.m_network != null) {
             this.m_network.disconnect();
             this.m_network = null;
@@ -203,10 +203,13 @@ public class GameNetLogic implements Runnable, IListener
         this.m_pnlGame.getLobbyPanel().getPlayerPanel().clearPlayers();
         this.m_pnlGame.getLobbyPanel().getChatPanel().clearLines();
         CFSkin.getSkin().addWelcomeMessage(this.m_pnlGame.getLobbyPanel().getChatPanel());
-        this.m_bGuestAccount = bGuestAccount;
+        this.m_bGuestAccount = isGuestAccount;
         this.m_network = new Network();
-        if (this.m_network.login(CFSkin.getSkin().getGameID(), CFSkin.getSkin().getMajorVersion(), CFSkin.getSkin().getMinorVersion(), s3, s4, bGuestAccount, this.m_host, this.m_loginPort) != null) {
-            return this.m_network.login(CFSkin.getSkin().getGameID(), CFSkin.getSkin().getMajorVersion(), CFSkin.getSkin().getMinorVersion(), s3, s4, bGuestAccount, this.m_host2, this.m_loginPort2);
+        
+        // Try to connect twice.
+        // Login will return null if successful. If not null, then login will be retried.
+        if (this.m_network.login(CFSkin.getSkin().getGameID(), CFSkin.getSkin().getMajorVersion(), CFSkin.getSkin().getMinorVersion(), username, password, isGuestAccount, this.m_host, this.m_loginPort) != null) {
+            return this.m_network.login(CFSkin.getSkin().getGameID(), CFSkin.getSkin().getMajorVersion(), CFSkin.getSkin().getMinorVersion(), username, password, isGuestAccount, this.m_host2, this.m_loginPort2);
         }
         return null;
     }
@@ -535,25 +538,25 @@ public class GameNetLogic implements Runnable, IListener
         final LoginPanel loginPanel = this.m_pnlGame.getLoginPanel();
         loginPanel.setLoginEnabled(false);
         loginPanel.setConnectionStatus("Logging in");
-        final boolean b = loginPanel.getPassword().length() == 0;
-        String s = loginPanel.getUsername();
+        final boolean isGuestAccount = loginPanel.getPassword().length() == 0;
+        String username = loginPanel.getUsername();
         loginPanel.getPassword();
-        if (s.length() == 0) {
+        if (username.length() == 0) {
             this.disconnect("Please enter username");
             return;
         }
-        if (b) {
-            if (s.length() > 5) {
+        if (isGuestAccount) {
+            if (username.length() > 5) {
                 this.disconnect("Guest usernames cannot exceed 5 characters");
                 return;
             }
-            s = CFPlayerElement.GUEST_STRING + s;
+            username = CFPlayerElement.GUEST_STRING + username;
         }
-        else if (s.length() > 20) {
+        else if (username.length() > 20) {
             this.disconnect("Usernames cannot exceed 20 characters");
             return;
         }
-        final String login = this.login(this.m_host, this.m_loginPort, this.m_host2, this.m_loginPort2, s, loginPanel.getPassword(), b);
+        final String login = this.login(username, loginPanel.getPassword(), isGuestAccount);
         if (login != null) {
             this.disconnect(login);
         }

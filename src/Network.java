@@ -55,9 +55,9 @@ public class Network extends ByteArrayInputStream
         this.m_dataStream = new DataInputStream(this);
     }
     
-    public String login(final int n, final short n2, final short n3, final String s, final String s2, final boolean b, final String s3, final int n4) {
+    public String login(final int gameId, final short majorVersion, final short minorVersion, final String username, final String password, final boolean guestAccount, final String host, final int port) {
         try {
-            //(this.m_socket = new Socket(InetAddress.getByName(s3), n4)).setSoTimeout(10000);
+            //(this.m_socket = new Socket(InetAddress.getByName(host), port)).setSoTimeout(10000);
             (this.m_socket = new Socket("127.0.0.1", 4444)).setSoTimeout(10000);
         }
         catch (Exception ex) {
@@ -69,12 +69,12 @@ public class Network extends ByteArrayInputStream
             this.m_reader = new PacketStreamReader(this.m_socket.getInputStream());
             this.m_writer = new PacketStreamWriter(this.m_socket.getOutputStream());
             final DataOutputStream stream = this.m_writer.getStream();
-            stream.writeByte(b ? 1 : 0);
-            stream.writeUTF(s);
-            stream.writeUTF(s2);
-            stream.writeInt(n);
-            stream.writeShort(n2);
-            stream.writeShort(n3);
+            stream.writeByte(guestAccount ? 1 : 0);
+            stream.writeUTF(username);
+            stream.writeUTF(password);
+            stream.writeInt(gameId);
+            stream.writeShort(majorVersion);
+            stream.writeShort(minorVersion);
             this.m_writer.sendPacket();
             this.m_bConnected = true;
         }

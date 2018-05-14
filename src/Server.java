@@ -74,20 +74,16 @@ public class Server{
 		}
 			
 		public void receiveLogin() throws IOException{			
-			PacketStreamReader pr = this.pr;
-			final DataInputStream stream = pr.getStream();
-			short bytes;
-			boolean b;
-			String s, s2;
-			int n;
-			short n2, n3;
-			bytes = stream.readShort();
-			b = (stream.readByte()==1);
+			final DataInputStream stream = this.pr.getStream();
+
+			short bytes = stream.readShort();
+			boolean isGuestAccount = (stream.readByte()==1);
 			String username = stream.readUTF();
-			s2 = stream.readUTF();
-			n = stream.readInt();
-			n2 = stream.readShort();
-			n3 = stream.readShort();
+			String password = stream.readUTF();
+			int gameId = stream.readInt();
+			short majorVersion = stream.readShort();
+			short minorVersion = stream.readShort();
+			
 			this.user = new User(username);
 		}
 		
