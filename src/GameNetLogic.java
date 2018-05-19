@@ -712,28 +712,28 @@ public class GameNetLogic implements Runnable, IListener
                 }
                 case 60: {
                     final CFTablePanel tablePanel3 = this.m_pnlGame.getLobbyPanel().getTablePanel();
-                    final short short7 = dataInputStream.readShort();
-                    final byte byte7 = dataInputStream.readByte();
-                    final String utf11 = dataInputStream.readUTF();
-                    final boolean b9 = dataInputStream.readByte() == 1;
-                    final boolean b10 = dataInputStream.readByte() == 1;
-                    final int n5 = (dataInputStream.readByte() == 1) ? 8 : 4;
-                    final boolean b11 = dataInputStream.readByte() == 1;
-                    byte byte8 = -1;
-                    boolean b12 = false;
-                    if (b11) {
-                        byte8 = dataInputStream.readByte();
-                        b12 = (dataInputStream.readByte() == 1);
+                    final short tableId = dataInputStream.readShort();
+                    final byte status = dataInputStream.readByte();
+                    final String username = dataInputStream.readUTF();
+                    final boolean isRanked = dataInputStream.readByte() == 1;
+                    final boolean isPrivate = dataInputStream.readByte() == 1;
+                    final int numPlayerSlots = (dataInputStream.readByte() == 1) ? 8 : 4;
+                    final boolean isTeamTable = dataInputStream.readByte() == 1;
+                    byte teamSize = -1;
+                    boolean isBalancedTable = false;
+                    if (isTeamTable) {
+                        teamSize = dataInputStream.readByte();
+                        isBalancedTable = (dataInputStream.readByte() == 1);
                     }
-                    final String[][] tableOptions3 = this.readTableOptions(dataInputStream);
-                    if (tablePanel3.findTable(short7) == null) {
-                        tablePanel3.addTable(short7, n5);
+                    final String[][] tableOptions = this.readTableOptions(dataInputStream);
+                    if (tablePanel3.findTable(tableId) == null) {
+                        tablePanel3.addTable(tableId, numPlayerSlots);
                     }
-                    tablePanel3.setTableStatus(short7, byte7, 0);
-                    tablePanel3.addPlayerToTable(short7, utf11, (byte)0);
-                    this.setTableForPlayer(utf11, short7);
-                    tablePanel3.findTable(short7).setOptions(b9, b10, b11, byte8, b12, tableOptions3);
-                    if (short7 == this.m_tableID) {
+                    tablePanel3.setTableStatus(tableId, status, 0);
+                    tablePanel3.addPlayerToTable(tableId, username, (byte)0);
+                    this.setTableForPlayer(username, tableId);
+                    tablePanel3.findTable(tableId).setOptions(isRanked, isPrivate, isTeamTable, teamSize, isBalancedTable, tableOptions);
+                    if (tableId == this.m_tableID) {
                         this.m_pnlGame.getPlayingPanel().repaint();
                         return;
                     }

@@ -7,7 +7,7 @@ public class Server{
 	static final int PORT = 4444;
 	List<ServerThread> clients = new Vector<ServerThread>();
 	List<User> users = new Vector<User>();
-	ServerTables tables = new ServerTables();
+	ServerTableManager tables = new ServerTableManager();
 	
 	public static void main(String args[]) throws Exception{
 		new Server().process();
@@ -38,6 +38,12 @@ public class Server{
 			client.sendUser(user);
 		}
 	}
+	
+	void broadcastTable(ServerTable table) throws IOException{
+		for (ServerThread client : this.clients){
+			client.sendTable(table);
+		}
+	}
 
 	void addUser(User user){
 		this.users.add(user);
@@ -52,6 +58,9 @@ public class Server{
 		private PacketStreamWriter pw;
 		private PacketStreamReader pr;
 		
+	    public void marshall(boolean b) throws IOException{
+	    	this.pw.getStream().writeByte((byte)(b ? 1 : 0));
+	    }
 	    public void marshall(byte b) throws IOException{
 	    	this.pw.getStream().writeByte(b);
 	    }
@@ -124,7 +133,7 @@ public class Server{
 			ServerTable table = new ServerTable(isRanked, password, isBigTable, isTeamTable, teamSize, isBalancedTable);
 			user().setTable(table);
 			addTable(table);
-			//broadcastTable(table);
+			broadcastTable(table);
 		}
 
 		public void sendLoginResponse() throws IOException{
@@ -151,7 +160,19 @@ public class Server{
 		
 		public void sendTable(ServerTable table) throws IOException{	
 			byte opcode = 60;
-
+			marshall( opcode );
+			marshall( table.id() );
+			marshall( table.status() );
+			marshall( user().username() );
+			marshall( table.isRanked() );
+			marshall( table.isPrivate() );
+			marshall( table.isBigTable() );
+			marshall( table.isTeamTable() );
+			if (table.isTeamTable()){
+				marshall( table.teamSize() );
+				marshall( table.isBalancedTable() );				
+			}
+			marshall( (byte)0 );	// number of table options
 			sendPacket();
 		}
 		
