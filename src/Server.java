@@ -7,6 +7,7 @@ public class Server{
 	static final int PORT = 4444;
 	List<ServerThread> clients = new Vector<ServerThread>();
 	List<User> users = new Vector<User>();
+	ServerTables tables = new ServerTables();
 	
 	public static void main(String args[]) throws Exception{
 		new Server().process();
@@ -42,9 +43,12 @@ public class Server{
 		this.users.add(user);
 	}
 	
+	void addTable(ServerTable table){
+		this.tables.addTable(table);
+	}
+	
 	private class ServerThread extends Thread {
 		private User user;
-		private Table table;
 		private PacketStreamWriter pw;
 		private PacketStreamReader pr;
 		
@@ -117,7 +121,10 @@ public class Server{
 				}
 			}
 			
-			this.table = new Table(isRanked, password, isBigTable, isTeamTable, teamSize, isBalancedTable);
+			ServerTable table = new ServerTable(isRanked, password, isBigTable, isTeamTable, teamSize, isBalancedTable);
+			user().setTable(table);
+			addTable(table);
+			//broadcastTable(table);
 		}
 
 		public void sendLoginResponse() throws IOException{
@@ -142,6 +149,12 @@ public class Server{
 			sendPacket();
 		}
 		
+		public void sendTable(ServerTable table) throws IOException{	
+			byte opcode = 60;
+
+			sendPacket();
+		}
+		
 		public void processPackets(final DataInputStream stream) {
 			try {
 				final byte opcode = stream.readByte();
@@ -150,6 +163,7 @@ public class Server{
 					receiveCreateTable();
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				return;
 			}
 		}

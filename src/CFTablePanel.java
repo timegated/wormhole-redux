@@ -3,7 +3,7 @@ import java.awt.*;
 
 public class CFTablePanel extends CFScroller
 {
-    private Hashtable m_tableMap;
+    private Hashtable<Integer, CFTableElement> m_tableMap;
     
     public synchronized CFTableElement findTable(final int n) {
         return (CFTableElement)this.m_tableMap.get(new Integer(n));
@@ -18,7 +18,7 @@ public class CFTablePanel extends CFScroller
     
     public CFTablePanel(final IListener listener) {
         super(listener);
-        this.m_tableMap = new Hashtable();
+        this.m_tableMap = new Hashtable<Integer, CFTableElement>();
     }
     
     public synchronized void removeTable(final int n) {
