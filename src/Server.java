@@ -44,6 +44,7 @@ public class Server{
 	
 	private class ServerThread extends Thread {
 		private User user;
+		private Table table;
 		private PacketStreamWriter pw;
 		private PacketStreamReader pr;
 		
@@ -86,6 +87,38 @@ public class Server{
 			
 			this.user = new User(username);
 		}
+		
+		public void receiveCreateTable() throws IOException{			
+			final DataInputStream stream = this.pr.getStream();
+			
+			byte teamSize = 0, numStringPairs;
+			boolean isRanked, hasPassword, isBigTable, isTeamTable, isBalancedTable = false;
+			String password = "";
+
+			isRanked 	= (stream.readByte()==1);
+			hasPassword = (stream.readByte()==1);
+			
+			if (hasPassword){
+				password = stream.readUTF();
+			}
+			
+			isBigTable	= (stream.readByte()==1);
+			isTeamTable = (stream.readByte()==1);
+			if (isTeamTable){
+				teamSize = stream.readByte();
+				isBalancedTable	= (stream.readByte()==1);
+			}
+			
+			numStringPairs = stream.readByte();
+			if (numStringPairs > 0){	// pretty sure this is always 0
+				for (int i = 0; i<numStringPairs; i++){
+					String s1 = stream.readUTF();
+					String s2 = stream.readUTF();
+				}
+			}
+			
+			this.table = new Table(isRanked, password, isBigTable, isTeamTable, teamSize, isBalancedTable);
+		}
 
 		public void sendLoginResponse() throws IOException{
 			byte opcode = 1;
@@ -112,6 +145,10 @@ public class Server{
 		public void processPackets(final DataInputStream stream) {
 			try {
 				final byte opcode = stream.readByte();
+				switch(opcode){
+				case 20:
+					receiveCreateTable();
+				}
 			} catch (Exception e) {
 				return;
 			}

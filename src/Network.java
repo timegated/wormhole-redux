@@ -97,21 +97,21 @@ public class Network extends ByteArrayInputStream
         this.sendGeneric((byte)0, (short)(-2));
     }
     
-    synchronized void createTable(final String s, final boolean b, final boolean b2, final boolean b3, final int n, final boolean b4, final String[][] array) {
+    synchronized void createTable(final String password, final boolean isRanked, final boolean isBigTable, final boolean isTeamTable, final int teamSize, final boolean isBalancedTable, final String[][] array) {
         final DataOutput stream = this.getStream(0);
         try {
             stream.writeByte(20);
-            stream.writeByte((byte)(byte)(b ? 1 : 0));
-            final boolean b5 = s.length() > 0;
-            stream.writeByte((byte)(byte)(b5 ? 1 : 0));
-            if (b5) {
-                stream.writeUTF(s);
+            stream.writeByte((byte)(isRanked ? 1 : 0));
+            final boolean hasPassword = password.length() > 0;
+            stream.writeByte((byte)(hasPassword ? 1 : 0));
+            if (hasPassword) {
+                stream.writeUTF(password);
             }
-            stream.writeByte((byte)(byte)(b2 ? 1 : 0));
-            stream.writeByte((byte)(byte)(b3 ? 1 : 0));
-            if (b3) {
-                stream.writeByte((byte)n);
-                stream.writeByte(b4 ? 1 : 0);
+            stream.writeByte((byte)(isBigTable ? 1 : 0));
+            stream.writeByte((byte)(isTeamTable ? 1 : 0));
+            if (isTeamTable) {
+                stream.writeByte((byte)teamSize);
+                stream.writeByte(isBalancedTable ? 1 : 0);
             }
             if (array != null) {
                 stream.writeByte((byte)array.length);
