@@ -2,24 +2,24 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-public class User {
+public class ServerUser {
 	private String m_username;
-	private int m_userID;
-	private int m_totalCredits;
+	private int m_userId = -1;
+	private short m_totalCredits;
 	private byte m_subscriptionLevel;
 	private short m_rank;
 	private String m_clan;
 	private ServerTable m_table; 
 	private List<String> m_icons;
 	
-	public User(String username){
+	public ServerUser(String username){
 		m_username = username;
 		m_icons = new LinkedList<String>();
 		m_table = null;
 		
 		// Set some placeholder values that we aren't really using yet.
 		m_rank = 0;
-		m_clan = "clan";
+		m_clan = "--";
 		m_icons.add("small-platinumWeapons.gif");
 		
 	}
@@ -27,17 +27,19 @@ public class User {
 	public void setTable(ServerTable table){
 		m_table = table;
 	}
-	
+	public void setUserId(int id){
+		m_userId = id;
+	}
 	public ServerTable table(){
 		return m_table;
 	}
 	public String username(){
 		return m_username;
 	}
-	public int userID(){
-		return m_userID;
+	public int userId(){
+		return m_userId;
 	}
-	public int totalCredits(){
+	public short totalCredits(){
 		return m_totalCredits;
 	}
 	public byte subscriptionLevel(){

@@ -1,14 +1,15 @@
 public class ServerTable{
-	private short 	m_id = -1;
-	private boolean m_isRanked;
-	private boolean m_hasPassword;
-	private boolean m_isBigTable;
-	private boolean m_isTeamTable;
-	private boolean m_isBalancedTable;
-	private boolean m_isPrivate;
-	private byte 	m_teamSize;
-	private byte	m_status;
-	private String 	m_password;
+	private short 		m_id = -1;
+	private boolean 	m_isRanked;
+	private boolean 	m_hasPassword;
+	private boolean 	m_isBigTable;
+	private boolean 	m_isTeamTable;
+	private boolean 	m_isBalancedTable;
+	private boolean 	m_isPrivate;
+	private byte 		m_teamSize;
+	private byte		m_status;
+	private String 		m_password;
+	private String[]	m_names;
 	
 	public ServerTable(boolean isRanked, String password, boolean isBigTable, boolean isTeamTable, byte teamSize, boolean isBalancedTable){
 		m_isRanked = isRanked;
@@ -19,16 +20,22 @@ public class ServerTable{
 		m_isBalancedTable = isBalancedTable;
 		m_isPrivate = false;
 		m_status = 0;
+		m_names = new String[isBigTable ? 8 : 4];
 			
-		if (password.length() > 0){
+		if (password.length() > 0) {
 			m_isPrivate = true;
 		}
 	}
 	
-	public void setId(short id){
+	public void setId(short id) {
 		m_id = id;
 	}
-	
+	public void addUser(String user, int slot) {
+		m_names[slot] = user;
+	}
+	public String player(int i) {
+		return m_names[i] != null ? m_names[i] : "";
+	}
 	public short id() {
 		return m_id;
 	}
@@ -53,5 +60,9 @@ public class ServerTable{
 	public byte status() {
 		return m_status;
 	}
+	public int numPlayerSlots() {
+		return m_names.length;
+	}
+
 
 }

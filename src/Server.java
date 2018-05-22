@@ -6,8 +6,8 @@ public class Server{
 	
 	static final int PORT = 4444;
 	List<ServerThread> clients = new Vector<ServerThread>();
-	List<User> users = new Vector<User>();
-	ServerTableManager tables = new ServerTableManager();
+	ServerUserManager userManager = new ServerUserManager();
+	ServerTableManager tableManager = new ServerTableManager();
 	
 	public static void main(String args[]) throws Exception{
 		new Server().process();
@@ -33,7 +33,7 @@ public class Server{
 		}
 	}
 	
-	void broadcastUser(User user) throws IOException{
+	void broadcastUser(ServerUser user) throws IOException{
 		for (ServerThread client : this.clients){
 			client.sendUser(user);
 		}
@@ -41,20 +41,20 @@ public class Server{
 	
 	void broadcastTable(ServerTable table) throws IOException{
 		for (ServerThread client : this.clients){
-			client.sendTable(table);
+			client.sendCreateTable(table);
 		}
 	}
 
-	void addUser(User user){
-		this.users.add(user);
+	void addUser(ServerUser user){
+		this.userManager.addUser(user);
 	}
 	
 	void addTable(ServerTable table){
-		this.tables.addTable(table);
+		this.tableManager.addTable(table);
 	}
 	
 	private class ServerThread extends Thread {
-		private User user;
+		private ServerUser user;
 		private PacketStreamWriter pw;
 		private PacketStreamReader pr;
 		
@@ -77,7 +77,7 @@ public class Server{
 	    	this.pw.sendPacket();
 	    }
 				
-		public User user(){
+		public ServerUser user(){
 			return user;
 		}
 		
@@ -98,7 +98,7 @@ public class Server{
 			short 	majorVersion 	= stream.readShort();
 			short 	minorVersion 	= stream.readShort();
 			
-			this.user = new User(username);
+			this.user = new ServerUser(username);
 		}
 		
 		public void receiveCreateTable() throws IOException{			
@@ -131,6 +131,7 @@ public class Server{
 			}
 			
 			ServerTable table = new ServerTable(isRanked, password, isBigTable, isTeamTable, teamSize, isBalancedTable);
+			table.addUser(user().username(), 0);
 			user().setTable(table);
 			addTable(table);
 			broadcastTable(table);
@@ -139,14 +140,14 @@ public class Server{
 		public void sendLoginResponse() throws IOException{
 			byte opcode = 1;
 			marshall( opcode );
-			marshall( user().userID() );
+			marshall( user().userId() );
 			marshall( user().totalCredits() );
 			marshall( user().subscriptionLevel() );
 			marshall( user().username() );
 			sendPacket();
 		}		
 		
-		public void sendUser(User user) throws IOException{	
+		public void sendUser(ServerUser user) throws IOException{	
 			byte opcode = 13;
 			marshall( opcode );
 			marshall( user.username() );
@@ -158,12 +159,12 @@ public class Server{
 			sendPacket();
 		}
 		
-		public void sendTable(ServerTable table) throws IOException{	
+		public void sendCreateTable(ServerTable table) throws IOException{	
 			byte opcode = 60;
 			marshall( opcode );
 			marshall( table.id() );
 			marshall( table.status() );
-			marshall( user().username() );
+			marshall( table.player(0) );	// should have just been created, so only one player, default slot 0
 			marshall( table.isRanked() );
 			marshall( table.isPrivate() );
 			marshall( table.isBigTable() );
@@ -171,6 +172,26 @@ public class Server{
 			if (table.isTeamTable()){
 				marshall( table.teamSize() );
 				marshall( table.isBalancedTable() );				
+			}
+			marshall( (byte)0 );	// number of table options
+			sendPacket();
+		}
+		
+		public void sendFullTable(ServerTable table) throws IOException{	
+			byte opcode = 101;
+			marshall( opcode );
+			marshall( table.id() );
+			marshall( table.status() );
+			marshall( table.isRanked() );
+			marshall( table.isPrivate() );
+			marshall( table.isBigTable() );
+			marshall( table.isTeamTable() );
+			if (table.isTeamTable()){
+				marshall( table.teamSize() );
+				marshall( table.isBalancedTable() );				
+			}
+			for (int i=0; i<table.numPlayerSlots(); i++) {
+				marshall( table.player(i) );
 			}
 			marshall( (byte)0 );	// number of table options
 			sendPacket();
@@ -195,8 +216,13 @@ public class Server{
 				sendLoginResponse();
 				
 				// Send current user list to client
-				for (User u : users){
-					sendUser(u);
+				for (ServerUser user : userManager.users()){
+					sendUser(user);
+				}
+				
+				// Send current table list to client
+				for (ServerTable table : tableManager.tables()){
+					sendFullTable(table);
 				}
 				
 				// Add user and broadcast to all clients

@@ -1,12 +1,14 @@
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
 public class ServerTableManager {
-	private Hashtable<Integer, ServerTable> m_tableMap;
 	List<ServerTable> tables = new Vector<ServerTable>();
 	
 	public ServerTableManager(){}
+	
+	public List<ServerTable> tables(){
+		return this.tables;
+	}
 	
 	public synchronized void addTable(ServerTable table){
 		// Loop over to find open slot, or add to end.

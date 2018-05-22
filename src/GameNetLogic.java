@@ -733,7 +733,8 @@ public class GameNetLogic implements Runnable, IListener
                     tablePanel3.addPlayerToTable(tableId, username, (byte)0);
                     this.setTableForPlayer(username, tableId);
                     tablePanel3.findTable(tableId).setOptions(isRanked, isPrivate, isTeamTable, teamSize, isBalancedTable, tableOptions);
-                    if (tableId == this.m_tableID) {
+                    if (username.equals(this.m_username)){
+                        this.setInTable(tableId, 0, (username.length() == 0) ? null : username);
                         this.m_pnlGame.getPlayingPanel().repaint();
                         return;
                     }
@@ -833,6 +834,41 @@ public class GameNetLogic implements Runnable, IListener
                 }
                 case 80: {
                     this.m_pnlGame.getPlayingPanel().getGameBoard().getModel().handleGamePacket(dataInputStream);
+                    break;
+                }
+                case 101: {	// Receive full table
+                    final CFTablePanel tablePanel3 = this.m_pnlGame.getLobbyPanel().getTablePanel();
+                    final short tableId = dataInputStream.readShort();
+                    final byte status = dataInputStream.readByte();
+                    final boolean isRanked = dataInputStream.readByte() == 1;
+                    final boolean isPrivate = dataInputStream.readByte() == 1;
+                    final int numPlayerSlots = (dataInputStream.readByte() == 1) ? 8 : 4;
+                    final boolean isTeamTable = dataInputStream.readByte() == 1;
+                    byte teamSize = -1;
+                    boolean isBalancedTable = false;
+                    if (isTeamTable) {
+                        teamSize = dataInputStream.readByte();
+                        isBalancedTable = (dataInputStream.readByte() == 1);
+                    }
+                    
+                    String[] players = new String[numPlayerSlots];
+                    for (int i=0; i < numPlayerSlots; i++) {
+                    	players[i] = dataInputStream.readUTF();
+                    }
+                    		
+                    final String[][] tableOptions = this.readTableOptions(dataInputStream);
+                    if (tablePanel3.findTable(tableId) == null) {
+                        tablePanel3.addTable(tableId, numPlayerSlots);
+                    }
+                    tablePanel3.setTableStatus(tableId, status, 0);
+                    
+                    for (int i=0; i < numPlayerSlots; i++) {
+                    	if (players[i].length() > 0) {
+                    		tablePanel3.addPlayerToTable(tableId, players[i], (byte)i);
+                    		this.setTableForPlayer(players[i], tableId);
+                    	}
+                    }
+                    tablePanel3.findTable(tableId).setOptions(isRanked, isPrivate, isTeamTable, teamSize, isBalancedTable, tableOptions);
                     break;
                 }
             }
