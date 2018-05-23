@@ -557,7 +557,7 @@ public class WormholeModel extends Model
                 else if (super.m_tableElement.getStatus() == 3) {
                     this.drawStrings(this.m_pnlPlaying.m_g, "Countdown", "" + super.m_tableElement.getCountdown());
                 }
-                else if (super.m_tableElement.getPlayers() < 2) {
+                else if (super.m_tableElement.getNumPlayers() < 2) {
                     this.drawStrings(this.m_pnlPlaying.m_g, "Waiting for", "More Players");
                 }
                 else {

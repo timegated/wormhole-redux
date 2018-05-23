@@ -30,8 +30,14 @@ public class ServerTable{
 	public void setId(short id) {
 		m_id = id;
 	}
-	public void addUser(String user, int slot) {
-		m_names[slot] = user;
+	public byte addUser(String username) {
+		for (int i=0; i<m_names.length; i++) {
+			if (m_names[i] == null) {
+				m_names[i] = username;
+				return (byte)i;
+			}
+		}
+		return (byte)-1;
 	}
 	public String player(int i) {
 		return m_names[i] != null ? m_names[i] : "";

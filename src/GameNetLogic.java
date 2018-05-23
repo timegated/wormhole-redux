@@ -837,13 +837,13 @@ public class GameNetLogic implements Runnable, IListener
                     break;
                 }
                 case 101: {	// Receive full table
-                    final CFTablePanel tablePanel3 = this.m_pnlGame.getLobbyPanel().getTablePanel();
-                    final short tableId = dataInputStream.readShort();
-                    final byte status = dataInputStream.readByte();
-                    final boolean isRanked = dataInputStream.readByte() == 1;
-                    final boolean isPrivate = dataInputStream.readByte() == 1;
-                    final int numPlayerSlots = (dataInputStream.readByte() == 1) ? 8 : 4;
-                    final boolean isTeamTable = dataInputStream.readByte() == 1;
+                    CFTablePanel tablePanel = this.m_pnlGame.getLobbyPanel().getTablePanel();
+                    short tableId = dataInputStream.readShort();
+                    byte status = dataInputStream.readByte();
+                    boolean isRanked = dataInputStream.readByte() == 1;
+                    boolean isPrivate = dataInputStream.readByte() == 1;
+                    int numPlayerSlots = (dataInputStream.readByte() == 1) ? 8 : 4;
+                    boolean isTeamTable = dataInputStream.readByte() == 1;
                     byte teamSize = -1;
                     boolean isBalancedTable = false;
                     if (isTeamTable) {
@@ -856,19 +856,52 @@ public class GameNetLogic implements Runnable, IListener
                     	players[i] = dataInputStream.readUTF();
                     }
                     		
-                    final String[][] tableOptions = this.readTableOptions(dataInputStream);
-                    if (tablePanel3.findTable(tableId) == null) {
-                        tablePanel3.addTable(tableId, numPlayerSlots);
-                    }
-                    tablePanel3.setTableStatus(tableId, status, 0);
+                    String[][] tableOptions = this.readTableOptions(dataInputStream);
                     
+                    CFTableElement table = tablePanel.findTable(tableId);
+                    if (table == null) {
+                    	tablePanel.addTable(tableId, numPlayerSlots);
+                    	table = tablePanel.findTable(tableId);
+                    }
+                    table.setStatus(status, 10);
+                    table.setOptions(isRanked, isPrivate, isTeamTable, teamSize, isBalancedTable, tableOptions);
                     for (int i=0; i < numPlayerSlots; i++) {
-                    	if (players[i].length() > 0) {
-                    		tablePanel3.addPlayerToTable(tableId, players[i], (byte)i);
-                    		this.setTableForPlayer(players[i], tableId);
+                		byte slot = (byte)i;
+                		String username = players[i];
+                    	if (username.length() > 0) {
+                    		table.addPlayer(username, slot);
+                    		this.setTableForPlayer(username, tableId);
+                            if (username.equals(this.m_username)){
+                                this.setInTable(tableId, slot, username);
+                                this.m_pnlGame.getPlayingPanel().repaint();
+                            }
                     	}
                     }
-                    tablePanel3.findTable(tableId).setOptions(isRanked, isPrivate, isTeamTable, teamSize, isBalancedTable, tableOptions);
+                    break;
+                }
+                case 102: {	// User joined a table
+                    short tableId = dataInputStream.readShort();
+                    String username = dataInputStream.readUTF();
+                    byte slot = dataInputStream.readByte();
+                    byte teamId = dataInputStream.readByte();
+                    CFTablePanel tablePanel = this.m_pnlGame.getLobbyPanel().getTablePanel();
+                    CFTableElement table = tablePanel.findTable(tableId);
+                    
+                    table.addPlayer(username, slot);
+                    this.setTableForPlayer(username, tableId);
+                    GameBoard gameBoard = this.m_pnlGame.getPlayingPanel().getGameBoard();
+                    if (this.m_tableID == tableId && this.m_bInATable) {
+                        CFPlayerElement player = this.getPlayer(username);
+                        gameBoard.addPlayer(username, player.getRank(), teamId, player.getIcons(), slot);
+                    }
+                    else if (username.equals(this.m_username)){
+                        this.setInTable(tableId, slot, username);
+                        for (byte i=0; i<table.getNumPlayers(); i++) {
+                            CFPlayerElement player = this.getPlayer(table.getPlayer(i));
+                        	gameBoard.addPlayer(player.getName(), player.getRank(), teamId, player.getIcons(), i);
+                        }
+                        this.m_pnlGame.getPlayingPanel().repaint();
+                    }
                     break;
                 }
             }

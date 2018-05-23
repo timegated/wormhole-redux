@@ -6,8 +6,11 @@ public class ServerTableManager {
 	
 	public ServerTableManager(){}
 	
-	public List<ServerTable> tables(){
+	public synchronized List<ServerTable> tables(){
 		return this.tables;
+	}
+	public synchronized ServerTable getTable(short tableId){
+		return this.tables.get(tableId);
 	}
 	
 	public synchronized void addTable(ServerTable table){

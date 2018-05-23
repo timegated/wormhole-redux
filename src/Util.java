@@ -41,8 +41,8 @@ public class Util
     }
     
     public static final Frame getParentFrame(final Component component) {
-        Component parent;
-        for (parent = component; parent != null && !((Util.class$java$awt$Frame != null) ? Util.class$java$awt$Frame : (Util.class$java$awt$Frame = class$("java.awt.Frame"))).isAssignableFrom(((Frame)parent).getClass()); parent = parent.getParent()) {}
+        Component parent = component.getParent();
+        //for (parent = component; parent != null && !((Util.class$java$awt$Frame != null) ? Util.class$java$awt$Frame : (Util.class$java$awt$Frame = class$("java.awt.Frame"))).isAssignableFrom(((Frame)parent).getClass()); parent = parent.getParent()) {}
         if (parent instanceof Frame) {
             return (Frame)parent;
         }

@@ -39,9 +39,15 @@ public class Server{
 		}
 	}
 	
-	void broadcastTable(ServerTable table) throws IOException{
+	void broadcastCreateTable(ServerTable table) throws IOException{
 		for (ServerThread client : this.clients){
-			client.sendCreateTable(table);
+			client.sendFullTable(table);
+		}
+	}
+	
+	void broadcastJoinTable(short tableId, String username, byte slot, byte teamId) throws IOException{
+		for (ServerThread client : this.clients){
+			client.sendJoinTable(tableId, username, slot, teamId);
 		}
 	}
 
@@ -131,10 +137,23 @@ public class Server{
 			}
 			
 			ServerTable table = new ServerTable(isRanked, password, isBigTable, isTeamTable, teamSize, isBalancedTable);
-			table.addUser(user().username(), 0);
+			table.addUser(user().username());
 			user().setTable(table);
 			addTable(table);
-			broadcastTable(table);
+			broadcastCreateTable(table);
+		}
+		
+		public void receiveJoinTable() throws IOException{			
+			final DataInputStream stream = this.pr.getStream();
+			
+			short 	tableId  = stream.readShort();
+			String 	username = stream.readUTF();	// don't think I need this... must be user connected to this socket
+			byte	teamId	 = 0;
+			
+			ServerTable table = tableManager.getTable(tableId);
+			byte slot = table.addUser(user().username());		// see, I am not using username variable here.
+			user().setTable(table);
+			broadcastJoinTable(tableId, user().username(), slot, teamId);
 		}
 
 		public void sendLoginResponse() throws IOException{
@@ -177,6 +196,16 @@ public class Server{
 			sendPacket();
 		}
 		
+		public void sendJoinTable(short tableId, String username, byte slot, byte teamId) throws IOException{	
+			byte opcode = 102;
+			marshall( opcode );
+			marshall( tableId );
+			marshall( username );
+			marshall( slot );	// should have just been created, so only one player, default slot 0
+			marshall( teamId );
+			sendPacket();
+		}
+		
 		public void sendFullTable(ServerTable table) throws IOException{	
 			byte opcode = 101;
 			marshall( opcode );
@@ -203,7 +232,12 @@ public class Server{
 				switch(opcode){
 				case 20:
 					receiveCreateTable();
+					break;
+				case 21:
+					receiveJoinTable();
+					break;
 				}
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 				return;

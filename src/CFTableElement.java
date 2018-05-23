@@ -119,8 +119,8 @@ class CFTableElement extends CFElement
         return this.m_numPlayers > 4;
     }
     
-    public void addPlayer(final String s, final byte b) {
-        this.m_names[b] = s;
+    public void addPlayer(final String username, final byte slot) {
+        this.m_names[slot] = username;
         ++this.m_numPlayers;
         this.repaint();
     }
@@ -164,8 +164,12 @@ class CFTableElement extends CFElement
         return this.m_bBalancedTeams;
     }
     
-    public int getPlayers() {
+    public int getNumPlayers() {
         return this.m_numPlayers;
+    }
+    
+    public String getPlayer(int i) {
+        return this.m_names[i];
     }
     
     public boolean isTeamTable() {
