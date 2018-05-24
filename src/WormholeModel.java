@@ -404,6 +404,7 @@ public class WormholeModel extends Model
                         }
                     }
                 }
+                break;
             }
             case 106: {
                 if (dataInput.readShort() != this.m_gameSession && !this.gameOver) {
@@ -419,6 +420,7 @@ public class WormholeModel extends Model
                 }
                 playerInfo.readState(dataInput);
                 this.m_bRefreshPlayerBar = true;
+                break;
             }
             case 111: {
                 final byte byte2 = dataInput.readByte();
@@ -436,6 +438,7 @@ public class WormholeModel extends Model
                 this.gameOver = true;
                 this.refreshStatus = true;
                 this.m_bRefreshPlayerBar = true;
+                break;
             }
             case 112: {
                 final byte byte3 = dataInput.readByte();
@@ -455,6 +458,7 @@ public class WormholeModel extends Model
                 this.gameOver = true;
                 this.refreshStatus = true;
                 this.m_bRefreshPlayerBar = true;
+                break;
             }
             case 110: {
                 final byte byte4 = dataInput.readByte();
@@ -475,6 +479,7 @@ public class WormholeModel extends Model
                     this.refreshStatus = true;
                 }
                 this.m_bRefreshPlayerBar = true;
+                break;
             }
             case 109: {
                 final String utf = dataInput.readUTF();
@@ -483,6 +488,7 @@ public class WormholeModel extends Model
                 }
                 this.m_vMessages.addElement(utf);
                 this.m_lastCycleForMessages = this.cycle + 200;
+                break;
             }
             case 107: {
                 final byte byte6 = dataInput.readByte();
@@ -505,6 +511,7 @@ public class WormholeModel extends Model
                     return;
                 }
                 this.addIncomingPowerup(this.m_players[translateSlot2].m_portalSprite, byte6, byte7, byte9);
+                break;
             }
             default: {}
         }
@@ -541,6 +548,7 @@ public class WormholeModel extends Model
                 this.drawStatusBar(this.m_pnlStatus.m_g);
                 this.m_pnlStatus.completeRepaint();
                 this.m_bRefreshPlayerBar = true;
+                break;
             }
             case 2: {
                 this.checkSidebar();
@@ -564,10 +572,12 @@ public class WormholeModel extends Model
                     this.drawStrings(this.m_pnlPlaying.m_g, "Press Play Button", "To Start");
                 }
                 this.m_pnlPlaying.completeRepaint();
+                break;
             }
             case 3: {
                 this.m_gameOverCycle = 0;
                 this.m_mode = 4;
+                break;
             }
             case 4: {
                 this.handleDefaultModelBehavior();

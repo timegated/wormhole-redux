@@ -10,6 +10,10 @@ public class ServerUserManager {
 		return this.users;
 	}
 	
+	public synchronized ServerUser getUser(short userId){
+		return this.users.get(userId);
+	}
+	
 	public synchronized void addUser(ServerUser user){
 		// Loop over to find open slot, or add to end.
 		// The id of the table is set to index of this list.

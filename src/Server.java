@@ -50,6 +50,12 @@ public class Server{
 			client.sendJoinTable(tableId, username, slot, teamId);
 		}
 	}
+	
+	void broadcastTableStatusChange(short tableId, byte status, short countdown) throws IOException{
+		for (ServerThread client : this.clients){
+			client.sendTableStatusChange(tableId, status, countdown);
+		}
+	}
 
 	void addUser(ServerUser user){
 		this.userManager.addUser(user);
@@ -155,6 +161,30 @@ public class Server{
 			user().setTable(table);
 			broadcastJoinTable(tableId, user().username(), slot, teamId);
 		}
+		
+		public void receiveStartGame() throws IOException{
+			final DataInputStream stream = this.pr.getStream();
+			
+			short tableId = stream.readShort();
+			
+			ServerTable table = tableManager.getTable(tableId);
+			byte status = 3;
+			short countdown = 9;
+			
+			sendGamePacketTest(tableId);
+			//broadcastTableStatusChange(tableId, status, countdown);
+		}
+		
+		public void sendTableStatusChange(short tableId, byte status, short countdown) throws IOException{
+			byte opcode = 66;
+			marshall( opcode );
+			marshall( tableId );
+			marshall( status );
+			if (status == 3) {	// countdown phase
+				marshall( countdown );
+			}
+			sendPacket();
+		}		
 
 		public void sendLoginResponse() throws IOException{
 			byte opcode = 1;
@@ -175,6 +205,29 @@ public class Server{
 			for (String iconName : user.icons())
 				marshall( iconName );
 			marshall( user.clan() );
+			sendPacket();
+		}
+		
+		public void sendGamePacketTest(short tableId) throws IOException{	
+			byte opcode = 80;
+			byte opcode2 = 100;
+			short gameId = 0;
+			short sessionId = 0;
+			marshall( opcode );
+			marshall( opcode2 );
+			marshall( gameId );
+			marshall( sessionId );
+			
+			ServerTable table = tableManager.getTable(tableId); 
+			short nPlayers = table.numPlayers();
+			marshall( nPlayers );
+			for (int i=0; i<nPlayers; i++) {
+				marshall( table.player(i) );
+				marshall( (byte)i );
+				marshall( (byte)0 );	// gameOver
+				marshall( (byte)0 );	// teamId
+			}
+			
 			sendPacket();
 		}
 		
@@ -235,6 +288,9 @@ public class Server{
 					break;
 				case 21:
 					receiveJoinTable();
+					break;
+				case 30:
+					receiveStartGame();
 					break;
 				}
 				

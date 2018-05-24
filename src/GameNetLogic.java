@@ -863,7 +863,7 @@ public class GameNetLogic implements Runnable, IListener
                     	tablePanel.addTable(tableId, numPlayerSlots);
                     	table = tablePanel.findTable(tableId);
                     }
-                    table.setStatus(status, 10);
+                    table.setStatus((byte)0, 10);
                     table.setOptions(isRanked, isPrivate, isTeamTable, teamSize, isBalancedTable, tableOptions);
                     for (int i=0; i < numPlayerSlots; i++) {
                 		byte slot = (byte)i;

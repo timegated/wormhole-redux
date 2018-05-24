@@ -1,5 +1,6 @@
 public class ServerTable{
 	private short 		m_id = -1;
+	private short 		m_numPlayers = 0;
 	private boolean 	m_isRanked;
 	private boolean 	m_hasPassword;
 	private boolean 	m_isBigTable;
@@ -34,6 +35,7 @@ public class ServerTable{
 		for (int i=0; i<m_names.length; i++) {
 			if (m_names[i] == null) {
 				m_names[i] = username;
+				m_numPlayers ++;
 				return (byte)i;
 			}
 		}
@@ -69,6 +71,10 @@ public class ServerTable{
 	public int numPlayerSlots() {
 		return m_names.length;
 	}
+	public short numPlayers() {
+		return m_numPlayers;
+	}
+
 
 
 }
