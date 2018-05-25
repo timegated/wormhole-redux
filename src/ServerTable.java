@@ -1,4 +1,4 @@
-public class ServerTable{
+public class ServerTable {
 	private short 		m_id = -1;
 	private short 		m_numPlayers = 0;
 	private boolean 	m_isRanked;
@@ -31,6 +31,11 @@ public class ServerTable{
 	public void setId(short id) {
 		m_id = id;
 	}
+	
+	public void setStatus(byte status) {
+		m_status = status;
+	}
+	
 	public byte addUser(String username) {
 		for (int i=0; i<m_names.length; i++) {
 			if (m_names[i] == null) {
@@ -62,6 +67,14 @@ public class ServerTable{
 	public boolean isPrivate() {
 		return m_isPrivate;
 	}
+	public boolean hasPlayer(String player) {
+		for (int i=0; i<m_names.length; i++) {
+			if (m_names[i] != null && m_names[i].equals(player)) {
+				return true;
+			}
+		}
+		return false;
+	}
 	public byte teamSize() {
 		return m_teamSize;
 	}
@@ -74,7 +87,4 @@ public class ServerTable{
 	public short numPlayers() {
 		return m_numPlayers;
 	}
-
-
-
 }
