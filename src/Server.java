@@ -354,7 +354,7 @@ public class Server{
 		
 		public void run() {
 			try {
-				for (int i=0; i<TABLE_COUNTDOWN+1; i++) {
+				for (int i=0; i<TABLE_COUNTDOWN; i++) {
 					broadcastTableStatusChange(table.id(), table.status(), countdown);
 					countdown --;
 					Thread.sleep(1000);
