@@ -166,9 +166,11 @@ public class Sprite
         switch (this.spriteType) {
             case 2: {
                 Sprite.model.goodGuys.remove(this.secondaryIndex);
+                break;
             }
             case 1: {
                 Sprite.model.badGuys.remove(this.secondaryIndex);
+                break;
             }
             default: {}
         }
