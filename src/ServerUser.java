@@ -7,6 +7,7 @@ public class ServerUser {
 	private int m_userId = -1;
 	private short m_totalCredits;
 	private byte m_subscriptionLevel;
+	private byte m_slot;
 	private short m_rank;
 	private String m_clan;
 	private ServerTable m_table; 
@@ -29,6 +30,9 @@ public class ServerUser {
 	}
 	public void setUserId(int id){
 		m_userId = id;
+	}
+	public void setSlot(byte s) {
+		m_slot = s;
 	}
 	public ServerTable table(){
 		return m_table;
@@ -56,6 +60,9 @@ public class ServerUser {
 	}
 	public short numIcons(){
 		return (short) m_icons.size();
+	}
+	public byte slot() {
+		return m_slot;
 	}
 
 }

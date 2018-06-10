@@ -491,26 +491,26 @@ public class WormholeModel extends Model
                 break;
             }
             case 107: {
-                final byte byte6 = dataInput.readByte();
-                final byte byte7 = dataInput.readByte();
-                final byte byte8 = dataInput.readByte();
-                final short short1 = dataInput.readShort();
+                final byte powerupType = dataInput.readByte();
+                final byte fromSlot = dataInput.readByte();
+                final byte toSlot = dataInput.readByte();
+                final short gameSession = dataInput.readShort();
                 final byte byte9 = dataInput.readByte();
-                if (short1 != this.m_gameSession && !this.gameOver) {
+                if (gameSession != this.m_gameSession && !this.gameOver) {
                     return;
                 }
-                final byte translateSlot2 = this.translateSlot(byte7);
-                if (byte7 != super.m_slot && translateSlot2 < 0) {
+                final byte translateSlot2 = this.translateSlot(fromSlot);
+                if (fromSlot != super.m_slot && translateSlot2 < 0) {
                     return;
                 }
-                if (byte8 != super.m_slot) {
+                if (toSlot != super.m_slot) {
                     this.m_bRefreshPlayerBar = true;
                     return;
                 }
                 if (this.gameOver) {
                     return;
                 }
-                this.addIncomingPowerup(this.m_players[translateSlot2].m_portalSprite, byte6, byte7, byte9);
+                this.addIncomingPowerup(this.m_players[translateSlot2].m_portalSprite, powerupType, fromSlot, byte9);
                 break;
             }
             default: {}
@@ -1192,19 +1192,19 @@ public class WormholeModel extends Model
         return (Image[])WormholeModel.g_mediaTable.get(s);
     }
     
-    void addIncomingPowerup(final PortalSprite portalSprite, final byte b, final byte incomingSlot, final byte b2) {
+    void addIncomingPowerup(final PortalSprite portalSprite, final byte powerupType, final byte incomingSlot, final byte b2) {
         if (portalSprite == null) {
             return;
         }
-        portalSprite.genBadPowerupEffect(b, incomingSlot, b2);
+        portalSprite.genBadPowerupEffect(powerupType, incomingSlot, b2);
         this.m_incomingCycle = 40;
         this.m_incomingIconCycle = 160;
         this.m_incomingWhoStack[this.m_incomingIconIndex] = incomingSlot;
         this.m_incomingSlot = incomingSlot;
         this.m_currentShade = 0;
-        this.m_incomingTypeStack[this.m_incomingIconIndex] = b;
+        this.m_incomingTypeStack[this.m_incomingIconIndex] = powerupType;
         this.m_incomingIconIndex = Math.min(29, this.m_incomingIconIndex + 1);
-        if (b == 14) {
+        if (powerupType == 14) {
             this.m_incomingNukeCycle = 40;
         }
     }
@@ -1331,16 +1331,16 @@ public class WormholeModel extends Model
         }
     }
     
-    public void usePowerup(final byte b, final byte b2, final byte b3, final short n, final short n2) {
+    public void usePowerup(final byte powerupType, final byte upgradeLevel, final byte toSlot, final short gameSession, final short gameId) {
         super.m_logic.addCredits(1);
         synchronized (super.m_logic.getNetwork()) {
-            final DataOutput stream = super.m_logic.getNetwork().getStream(n2);
+            final DataOutput stream = super.m_logic.getNetwork().getStream(gameId);
             try {
                 stream.writeByte(107);
-                stream.writeShort(n);
-                stream.writeByte(b);
-                stream.writeByte(b3);
-                stream.writeByte(b2);
+                stream.writeShort(gameSession);
+                stream.writeByte(powerupType);
+                stream.writeByte(toSlot);
+                stream.writeByte(upgradeLevel);
                 super.m_logic.getNetwork().sendPacket();
             }
             catch (Exception ex) {}

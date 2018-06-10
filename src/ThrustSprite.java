@@ -11,11 +11,12 @@ public class ThrustSprite extends Sprite
         this.m_radius = 10;
         this.init("thrust", n, n2, false);
         super.spriteType = 0;
-        super.shapeRect = new Rectangle(0, 0);
+        super.shapeRect = new Rectangle(super.intx, super.inty);
         super.m_color = ThrustSprite.g_colors[WHUtil.randABSInt() % ThrustSprite.g_colors.length];
     }
     
     public void drawSelf(final Graphics graphics) {
+    	System.out.println("drawing thrust");
         graphics.setColor(super.m_color);
         WHUtil.drawCenteredCircle(graphics, super.x, super.y, this.m_radius);
     }

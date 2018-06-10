@@ -87,7 +87,7 @@ public class Network extends ByteArrayInputStream
     public DataOutput getStream(final int n) {
         final DataOutputStream stream = this.m_writer.getStream();
         try {
-            stream.writeShort(n);
+            //stream.writeShort(n);
         }
         catch (Exception ex) {}
         return stream;

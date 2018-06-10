@@ -3,7 +3,7 @@ import java.io.*;
 import java.util.*;
 
 public class Server{
-	public static final short TABLE_COUNTDOWN = 10;
+	public static final short TABLE_COUNTDOWN = 5;
 	
 	static final int PORT = 4444;
 	List<ServerThread> clients = new Vector<ServerThread>();
@@ -65,6 +65,14 @@ public class Server{
 			}
 		}
 	}
+	
+	void broadcastPowerup(ServerTable table, byte powerupType, byte toSlot, byte b1, short gameSession, byte b2) throws IOException {
+		for (ServerThread client : this.clients) {
+			if (table.hasPlayer(client.user().username())) {
+				client.sendPowerup(powerupType, toSlot, b1, gameSession, b2);
+			}
+		}
+	}
 
 	void addUser(ServerUser user){
 		this.userManager.addUser(user);
@@ -123,6 +131,17 @@ public class Server{
 			this.user = new ServerUser(username);
 		}
 		
+		public void receivePowerup() throws IOException {			
+			final DataInputStream stream = this.pr.getStream();
+
+			short	gameSession		= stream.readShort();
+			byte	powerupType		= stream.readByte();
+			byte	toSlot			= stream.readByte();
+			byte 	upgradeLevel	= stream.readByte();
+			
+			broadcastPowerup(user().table(), powerupType, user().slot(), toSlot, gameSession, (byte)0);
+		}
+		
 		public void receiveCreateTable() throws IOException {			
 			final DataInputStream stream = this.pr.getStream();
 			
@@ -153,7 +172,8 @@ public class Server{
 			}
 			
 			ServerTable table = new ServerTable(isRanked, password, isBigTable, isTeamTable, teamSize, isBalancedTable);
-			table.addUser(user().username());
+			byte slot = table.addUser(user().username());
+			user().setSlot(slot);
 			user().setTable(table);
 			addTable(table);
 			broadcastCreateTable(table);
@@ -288,10 +308,26 @@ public class Server{
 			sendPacket();
 		}
 		
+		public void sendPowerup(byte powerupType, byte toSlot, byte b1, short gameSession, byte b2) throws IOException {
+			byte opcode1 = 80;
+			byte opcode2 = 107;
+			marshall( opcode1 );
+			marshall( opcode2 );
+			marshall( powerupType );
+			marshall( toSlot );
+			marshall( b1 );	// should have just been created, so only one player, default slot 0
+			marshall( gameSession );
+			marshall( b2 );
+			sendPacket();
+		}
+		
 		public void processPackets(final DataInputStream stream) {
 			try {
 				final byte opcode = stream.readByte();
 				switch(opcode){
+				case 107:
+					receivePowerup();
+					break;
 				case 20:
 					receiveCreateTable();
 					break;
