@@ -313,7 +313,7 @@ public class PlayerSprite extends Sprite
         else {
             graphics.setColor(Color.green);
         }
-        final int n6 = (int)(super.m_health / super.MAX_HEALTH * 20.0);
+        final int n6 = (int)(super.m_health*1.0 / super.MAX_HEALTH * 20.0);
         graphics.drawRect(18, 18, 5, 20);
         graphics.fillRect(18, 38 - n6, 5, n6);
         Sprite.model.drawTeamShape(graphics, 25, 15);

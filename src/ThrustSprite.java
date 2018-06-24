@@ -16,7 +16,6 @@ public class ThrustSprite extends Sprite
     }
     
     public void drawSelf(final Graphics graphics) {
-    	System.out.println("drawing thrust");
         graphics.setColor(super.m_color);
         WHUtil.drawCenteredCircle(graphics, super.x, super.y, this.m_radius);
     }

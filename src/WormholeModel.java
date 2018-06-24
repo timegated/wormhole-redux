@@ -632,7 +632,8 @@ public class WormholeModel extends Model
     }
     
     void writeState(final DataOutput dataOutput) throws IOException {
-        dataOutput.writeShort((int)(this.m_player.m_health / this.m_player.MAX_HEALTH * 100.0));
+    	int heathPerc = (int)(this.m_player.m_health*1.0 / this.m_player.MAX_HEALTH * 100.0);
+        dataOutput.writeShort(heathPerc);
         dataOutput.writeByte(this.m_numPowerups);
         for (int i = 0; i < this.m_numPowerups; ++i) {
             dataOutput.writeByte(this.m_powerups[i]);
