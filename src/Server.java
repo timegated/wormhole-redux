@@ -73,6 +73,14 @@ public class Server{
 			}
 		}
 	}
+	
+	void broadcastPlayerState(ServerTable table, short gameSession, byte slot, short healthPerc, Byte[] powerups, byte shipType) throws IOException {
+		for (ServerThread client : this.clients) {
+			if (table.hasPlayer(client.user().username())) {
+				client.sendPlayerState(gameSession, slot, healthPerc, powerups, shipType);
+			}
+		}
+	}
 
 	void addUser(ServerUser user){
 		this.userManager.addUser(user);
@@ -129,6 +137,30 @@ public class Server{
 			short 	minorVersion 	= stream.readShort();
 			
 			this.user = new ServerUser(username);
+		}
+		
+		public void receivePlayerState() throws IOException {			
+			final DataInputStream stream = this.pr.getStream();
+
+			short	gameSession		= stream.readShort();
+			short	healthPerc		= stream.readShort();
+			byte	numPowerups		= stream.readByte();
+			
+			Byte[] powerups = new Byte[numPowerups];
+	        for (int i = 0; i < numPowerups; ++i) {
+	        	powerups[i] = stream.readByte();
+	        }
+	        
+	        byte shipType = stream.readByte();
+	        
+	        boolean		damagedByPlayer	= stream.readByte() == 1;
+	        if (damagedByPlayer) {
+		        String 	damagingPlayer 	= stream.readUTF();
+		        byte	damagingPowerup = stream.readByte();
+		        byte	lostHealth		= stream.readByte();
+	        }
+	        
+	        broadcastPlayerState(user().table(), gameSession, user().slot(), healthPerc, powerups, shipType);
 		}
 		
 		public void receivePowerup() throws IOException {			
@@ -188,6 +220,7 @@ public class Server{
 			
 			ServerTable table = tableManager.getTable(tableId);
 			byte slot = table.addUser(user().username());		// see, I am not using username variable here.
+			user().setSlot(slot);
 			user().setTable(table);
 			broadcastJoinTable(tableId, user().username(), slot, teamId);
 		}
@@ -253,7 +286,7 @@ public class Server{
 			for (int i=0; i<nPlayers; i++) {
 				marshall( table.player(i) );
 				marshall( (byte)i );
-				marshall( (byte)0 );	// gameOver
+				marshall( (byte)1 );	// gameOver, 1 is not gameOver because checks byte==0 in WormholeModel:setPlayers
 				marshall( (byte)0 );	// teamId
 			}
 			
@@ -321,10 +354,30 @@ public class Server{
 			sendPacket();
 		}
 		
+		public void sendPlayerState(short gameSession, byte slot, short healthPerc, Byte[] powerups, byte shipType) throws IOException {
+			byte opcode1 = 80;
+			byte opcode2 = 106;
+			byte numPowerups = (byte)powerups.length;
+			marshall( opcode1 );
+			marshall( opcode2 );
+			marshall( gameSession );
+			marshall( slot );
+			marshall( healthPerc );
+			marshall( numPowerups );
+			for (byte i=0; i<numPowerups; i++) {
+				marshall( powerups[i] );
+			}
+			marshall( shipType );
+			sendPacket();
+		}
+		
 		public void processPackets(final DataInputStream stream) {
 			try {
 				final byte opcode = stream.readByte();
 				switch(opcode){
+				case 106:
+					receivePlayerState();
+					break;
 				case 107:
 					receivePowerup();
 					break;

@@ -146,7 +146,6 @@ public class PlayerInfo
             this.m_powerups[b] = dataInput.readByte();
         }
         this.m_shipType = dataInput.readByte();
-        System.out.println("SHIP TYPE: " + this.m_shipType);
         if (this.m_shipType > 10 || this.m_shipType < 0) {
             this.m_shipType = 0;
         }

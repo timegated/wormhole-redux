@@ -410,11 +410,12 @@ public class WormholeModel extends Model
                 if (dataInput.readShort() != this.m_gameSession && !this.gameOver) {
                     return;
                 }
-                final byte byte1 = dataInput.readByte();
-                if (byte1 == super.m_slot) {
+                final byte slot = dataInput.readByte();
+                if (slot == super.m_slot) {
                     return;
                 }
-                final PlayerInfo playerInfo = this.m_players[this.translateSlot(byte1)];
+
+                final PlayerInfo playerInfo = this.m_players[this.translateSlot(slot)];
                 if (playerInfo.m_gameOver || playerInfo.m_bEmpty) {
                     return;
                 }
@@ -659,12 +660,12 @@ public class WormholeModel extends Model
         }
     }
     
-    public void updateState(final short n, final int n2) {
+    public void updateState(final short gameSession, final int gameId) {
         synchronized (super.m_logic.getNetwork()) {
-            final DataOutput stream = super.m_logic.getNetwork().getStream(n2);
+            final DataOutput stream = super.m_logic.getNetwork().getStream(gameId);
             try {
                 stream.writeByte(106);
-                stream.writeShort(n);
+                stream.writeShort(gameSession);
                 this.writeState(stream);
                 super.m_logic.getNetwork().sendPacket();
             }
