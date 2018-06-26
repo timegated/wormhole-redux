@@ -64,5 +64,4 @@ public class ServerUser {
 	public byte slot() {
 		return m_slot;
 	}
-
 }

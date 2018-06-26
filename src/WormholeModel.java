@@ -462,20 +462,20 @@ public class WormholeModel extends Model
                 break;
             }
             case 110: {
-                final byte byte4 = dataInput.readByte();
-                final byte byte5 = dataInput.readByte();
-                if (byte4 == super.m_slot) {
+                final byte deceasedSlot = dataInput.readByte();
+                final byte killerSlot = dataInput.readByte();
+                if (deceasedSlot == super.m_slot) {
                     this.gameOver = true;
                     return;
                 }
-                final PlayerInfo playerInfo4 = this.m_players[this.translateSlot(byte4)];
+                final PlayerInfo playerInfo4 = this.m_players[this.translateSlot(deceasedSlot)];
                 playerInfo4.m_gameOver = true;
                 playerInfo4.m_bRefresh = true;
                 if (playerInfo4.m_portalSprite != null) {
                     playerInfo4.m_portalSprite.killSelf();
                 }
                 playerInfo4.m_healthPercentage = 0;
-                if (byte5 == super.m_slot) {
+                if (killerSlot == super.m_slot) {
                     ++this.m_kills;
                     this.refreshStatus = true;
                 }
@@ -674,13 +674,13 @@ public class WormholeModel extends Model
         // monitorexit(super.m_logic.getNetwork())
     }
     
-    public void gameOver(final short n, final byte b, final short n2) {
+    public void gameOver(final short gameSession, final byte killedBy, final short gameId) {
         synchronized (super.m_logic.getNetwork()) {
-            final DataOutput stream = super.m_logic.getNetwork().getStream(n2);
+            final DataOutput stream = super.m_logic.getNetwork().getStream(gameId);
             try {
                 stream.writeByte(110);
-                stream.writeShort(n);
-                stream.writeByte(b);
+                stream.writeShort(gameSession);
+                stream.writeByte(killedBy);
                 super.m_logic.getNetwork().sendPacket();
             }
             catch (Exception ex) {}

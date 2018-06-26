@@ -89,7 +89,15 @@ public class Server{
 			}
 		}
 	}
-
+	
+	void broadcastGameOver(ServerTable table, short gameSession, byte deceasedSlot, byte killerSlot) throws IOException {
+		for (ServerThread client : this.clients) {
+			if (table.hasPlayer(client.user().username())) {
+				client.sendGameOver(gameSession, deceasedSlot, killerSlot);
+			}
+		}
+	}
+	
 	void addUser(ServerUser user){
 		this.userManager.addUser(user);
 	}
@@ -168,6 +176,17 @@ public class Server{
 	        }
 	        
 	        broadcastPlayerState(user().table(), gameSession, user().slot(), healthPerc, powerups, shipType);
+		}
+		
+		public void receiveGameOver() throws IOException {
+			final DataInputStream stream = this.pr.getStream();
+
+			short	gameSession		= stream.readShort();
+			byte	killedBy		= stream.readByte();
+			
+			System.out.println("killedBy "+killedBy+" userSlot "+user().slot());
+	        user().setAlive(false);
+	        broadcastGameOver(user().table(), gameSession, user().slot(), killedBy);
 		}
 		
 		public void receivePlayerEvent() throws IOException {
@@ -396,6 +415,16 @@ public class Server{
 			sendPacket();
 		}
 		
+		public void sendGameOver(short gameSession, byte deceasedSlot, byte killerSlot) throws IOException {
+			byte opcode1 = 80;
+			byte opcode2 = 110;
+			marshall( opcode1 );
+			marshall( opcode2 );
+			marshall( deceasedSlot );
+			marshall( killerSlot );
+			sendPacket();
+		}
+		
 		public void processPackets(final DataInputStream stream) {
 			try {
 				final byte opcode = stream.readByte();
@@ -408,6 +437,9 @@ public class Server{
 					break;
 				case 109:
 					receivePlayerEvent();
+					break;
+				case 110:
+					receiveGameOver();
 					break;
 				case 20:
 					receiveCreateTable();
