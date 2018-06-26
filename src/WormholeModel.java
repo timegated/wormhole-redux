@@ -1048,10 +1048,10 @@ public class WormholeModel extends Model
         synchronized (super.m_logic.getNetwork()) {
             final DataOutput stream = super.m_logic.getNetwork().getStream(n2);
             try {
-                stream.writeByte(109);
-                stream.writeShort(n);
-                stream.writeUTF(s);
-                super.m_logic.getNetwork().sendPacket();
+//                stream.writeByte(109);
+//                stream.writeShort(n);
+//                stream.writeUTF(s);
+//                super.m_logic.getNetwork().sendPacket();
             }
             catch (Exception ex) {}
         }

@@ -139,7 +139,7 @@ public class Server{
 			this.user = new ServerUser(username);
 		}
 		
-		public void receivePlayerState() throws IOException {			
+		public void receivePlayerState() throws IOException {
 			final DataInputStream stream = this.pr.getStream();
 
 			short	gameSession		= stream.readShort();
@@ -151,8 +151,7 @@ public class Server{
 	        	powerups[i] = stream.readByte();
 	        }
 	        
-	        byte shipType = stream.readByte();
-	        
+	        byte 		shipType 		= stream.readByte();
 	        boolean		damagedByPlayer	= stream.readByte() == 1;
 	        if (damagedByPlayer) {
 		        String 	damagingPlayer 	= stream.readUTF();
@@ -420,7 +419,10 @@ public class Server{
 				// Start processing packets from client
 				final DataInputStream stream = pr.getStream();
 				while (true) {
-					processPackets(stream);
+					short numBytes = stream.readShort();	// packetStreamWriter/Reader let first short be size, we do not use that here
+					if (numBytes > 0) {
+						processPackets(stream);
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
