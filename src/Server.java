@@ -81,6 +81,14 @@ public class Server{
 			}
 		}
 	}
+	
+	void broadcastPlayerEvent(ServerTable table, short gameSession, String eventString) throws IOException {
+		for (ServerThread client : this.clients) {
+			if (table.hasPlayer(client.user().username())) {
+				client.sendPlayerEvent(gameSession, eventString);
+			}
+		}
+	}
 
 	void addUser(ServerUser user){
 		this.userManager.addUser(user);
@@ -160,6 +168,15 @@ public class Server{
 	        }
 	        
 	        broadcastPlayerState(user().table(), gameSession, user().slot(), healthPerc, powerups, shipType);
+		}
+		
+		public void receivePlayerEvent() throws IOException {
+			final DataInputStream stream = this.pr.getStream();
+
+			short	gameSession		= stream.readShort();
+			String	eventString		= stream.readUTF();
+	        
+	        broadcastPlayerEvent(user().table(), gameSession, eventString);
 		}
 		
 		public void receivePowerup() throws IOException {			
@@ -370,6 +387,15 @@ public class Server{
 			sendPacket();
 		}
 		
+		public void sendPlayerEvent(short gameSession, String eventString) throws IOException {
+			byte opcode1 = 80;
+			byte opcode2 = 109;
+			marshall( opcode1 );
+			marshall( opcode2 );
+			marshall( eventString );
+			sendPacket();
+		}
+		
 		public void processPackets(final DataInputStream stream) {
 			try {
 				final byte opcode = stream.readByte();
@@ -379,6 +405,9 @@ public class Server{
 					break;
 				case 107:
 					receivePowerup();
+					break;
+				case 109:
+					receivePlayerEvent();
 					break;
 				case 20:
 					receiveCreateTable();

@@ -1044,14 +1044,14 @@ public class WormholeModel extends Model
         graphics.drawRect(0, 0, this.boardWidth - 1, this.boardHeight - 1);
     }
     
-    public void updateEvent(final String s, final short n, final int n2) {
+    public void updateEvent(final String eventString, final short gameSession, final int n2) {
         synchronized (super.m_logic.getNetwork()) {
             final DataOutput stream = super.m_logic.getNetwork().getStream(n2);
             try {
-//                stream.writeByte(109);
-//                stream.writeShort(n);
-//                stream.writeUTF(s);
-//                super.m_logic.getNetwork().sendPacket();
+                stream.writeByte(109);
+                stream.writeShort(gameSession);
+                stream.writeUTF(eventString);
+                super.m_logic.getNetwork().sendPacket();
             }
             catch (Exception ex) {}
         }
