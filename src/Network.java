@@ -178,12 +178,12 @@ public class Network extends ByteArrayInputStream
         this.sendGeneric((byte)40, b);
     }
     
-    synchronized void submitCredits(final int n, final int n2) {
+    synchronized void submitCredits(final int credits, final int timeElapsed) {
         final DataOutput stream = this.getStream(0);
         try {
             stream.writeByte(27);
-            stream.writeShort((short)n);
-            stream.writeInt(n2);
+            stream.writeShort((short)credits);
+            stream.writeInt(timeElapsed);
             this.sendPacket();
         }
         catch (Exception ex) {}

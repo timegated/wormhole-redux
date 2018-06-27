@@ -184,8 +184,6 @@ public class Server{
 			short	gameSession		= stream.readShort();
 			byte	killedBy		= stream.readByte();
 			
-			System.out.println("killedBy "+killedBy+" userSlot "+user().slot());
-	        user().setAlive(false);
 	        broadcastGameOver(user().table(), gameSession, user().slot(), killedBy);
 		}
 		
@@ -196,6 +194,16 @@ public class Server{
 			String	eventString		= stream.readUTF();
 	        
 	        broadcastPlayerEvent(user().table(), gameSession, eventString);
+		}
+		
+		/*
+		 * Do nothing here, not sure what receiveCredits is for. We will probably never use.
+		 */
+		public void receiveCredits() throws IOException {
+			final DataInputStream stream = this.pr.getStream();
+
+			short	credits			= stream.readShort();
+			int		timeElapsed		= stream.readInt();
 		}
 		
 		public void receivePowerup() throws IOException {			
@@ -446,6 +454,9 @@ public class Server{
 					break;
 				case 21:
 					receiveJoinTable();
+					break;
+				case 27:
+					receiveCredits();
 					break;
 				case 30:
 					receiveStartGame();
