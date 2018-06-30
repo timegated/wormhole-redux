@@ -790,9 +790,9 @@ public class GameNetLogic implements Runnable, IListener
                     break;
                 }
                 case 66: {
-                    final short short11 = dataInputStream.readShort();
-                    final byte byte12 = dataInputStream.readByte();
-                    this.handleTableStatusChange(short11, byte12, (short)((byte12 == 3) ? dataInputStream.readShort() : -1));
+                    final short tableId = dataInputStream.readShort();
+                    final byte status = dataInputStream.readByte();
+                    this.handleTableStatusChange(tableId, status, (short)((status == 3) ? dataInputStream.readShort() : -1));
                     break;
                 }
                 case 27: {

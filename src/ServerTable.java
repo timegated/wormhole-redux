@@ -11,6 +11,7 @@ public class ServerTable {
 	private byte		m_status;
 	private String 		m_password;
 	private String[]	m_names;
+	private ServerUser[] m_users;
 	
 	public ServerTable(boolean isRanked, String password, boolean isBigTable, boolean isTeamTable, byte teamSize, boolean isBalancedTable){
 		m_isRanked = isRanked;
@@ -22,6 +23,7 @@ public class ServerTable {
 		m_isPrivate = false;
 		m_status = 0;
 		m_names = new String[isBigTable ? 8 : 4];
+		m_users = new ServerUser[isBigTable ? 8 : 4];
 			
 		if (password.length() > 0) {
 			m_isPrivate = true;
@@ -36,11 +38,28 @@ public class ServerTable {
 		m_status = status;
 	}
 	
+	public void setPlayersAlive() {
+		for (ServerUser user : m_users) {
+			if (user != null) {
+				user.setAlive(true);
+			}
+		}
+	}
+
 	public byte addUser(String username) {
 		for (int i=0; i<m_names.length; i++) {
 			if (m_names[i] == null) {
 				m_names[i] = username;
 				m_numPlayers ++;
+				return (byte)i;
+			}
+		}
+		return (byte)-1;
+	}
+	public byte addUser(ServerUser user) {
+		for (int i=0; i<m_users.length; i++) {
+			if (m_users[i] == null) {
+				m_users[i] = user;
 				return (byte)i;
 			}
 		}
@@ -86,5 +105,20 @@ public class ServerTable {
 	}
 	public short numPlayers() {
 		return m_numPlayers;
+	}
+	public int numPlayersAlive() {
+		int count = 0;
+		for (int i=0; i<m_users.length; i++) {
+			if (m_users[i] != null) {
+				if (m_users[i].isAlive()) {
+					count ++;
+				}
+			}
+		}
+		return count;
+	}
+	
+	public ServerUser[] users() {
+		return m_users;
 	}
 }

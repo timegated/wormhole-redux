@@ -425,6 +425,7 @@ public class WormholeModel extends Model
             }
             case 111: {
                 final byte byte2 = dataInput.readByte();
+            	System.out.println("my slot "+super.m_slot+" slot "+byte2);
                 if (super.m_slot == byte2) {
                     this.m_winningPlayerString = "YOU WON";
                     ++this.m_wins;
@@ -566,10 +567,14 @@ public class WormholeModel extends Model
                 else if (super.m_tableElement.getStatus() == 3) {
                     this.drawStrings(this.m_pnlPlaying.m_g, "Countdown", "" + super.m_tableElement.getCountdown());
                 }
+                else if (super.m_tableElement.getStatus() == 5 && this.m_winningPlayerString != null) {
+                    // nothing to do for now
+                }
                 else if (super.m_tableElement.getNumPlayers() < 2) {
                     this.drawStrings(this.m_pnlPlaying.m_g, "Waiting for", "More Players");
                 }
                 else {
+                	this.m_winningPlayerString = null;
                     this.drawStrings(this.m_pnlPlaying.m_g, "Press Play Button", "To Start");
                 }
                 this.m_pnlPlaying.completeRepaint();

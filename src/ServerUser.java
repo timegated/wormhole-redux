@@ -12,6 +12,7 @@ public class ServerUser {
 	private String m_clan;
 	private ServerTable m_table; 
 	private List<String> m_icons;
+	boolean m_isAlive;
 	
 	public ServerUser(String username){
 		m_username = username;
@@ -33,6 +34,9 @@ public class ServerUser {
 	}
 	public void setSlot(byte s) {
 		m_slot = s;
+	}
+	public void setAlive(boolean val) {
+		m_isAlive = val;
 	}
 	public ServerTable table(){
 		return m_table;
@@ -63,5 +67,8 @@ public class ServerUser {
 	}
 	public byte slot() {
 		return m_slot;
+	}
+	public boolean isAlive() {
+		return m_isAlive;
 	}
 }

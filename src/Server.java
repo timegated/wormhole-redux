@@ -98,6 +98,20 @@ public class Server{
 		}
 	}
 	
+	void broadcastGameEnd(ServerTable table) throws IOException {
+		byte winnerSlot = 0;
+		for (ServerUser user : table.users()) {
+			if (user != null && user.isAlive()) {
+				winnerSlot = user.slot();
+			}
+		}
+		for (ServerThread client : this.clients) {
+			if (table.hasPlayer(client.user().username())) {
+				client.sendGameEnd(winnerSlot);
+			}
+		}
+	}
+	
 	void addUser(ServerUser user){
 		this.userManager.addUser(user);
 	}
@@ -185,6 +199,14 @@ public class Server{
 			byte	killedBy		= stream.readByte();
 			
 	        broadcastGameOver(user().table(), gameSession, user().slot(), killedBy);
+	        
+			user().setAlive(false);
+			if (user().table().numPlayersAlive() == 1) {
+				broadcastGameEnd(user().table());
+				user().table().setStatus((byte)5);
+				broadcastTableStatusChange(user().table().id(), user().table().status(), (short)-1);
+				new TableTransitionThread(user().table(), user().table().status());
+			}
 		}
 		
 		public void receivePlayerEvent() throws IOException {
@@ -248,6 +270,7 @@ public class Server{
 			
 			ServerTable table = new ServerTable(isRanked, password, isBigTable, isTeamTable, teamSize, isBalancedTable);
 			byte slot = table.addUser(user().username());
+			table.addUser(user());
 			user().setSlot(slot);
 			user().setTable(table);
 			addTable(table);
@@ -263,6 +286,7 @@ public class Server{
 			
 			ServerTable table = tableManager.getTable(tableId);
 			byte slot = table.addUser(user().username());		// see, I am not using username variable here.
+			table.addUser(user());
 			user().setSlot(slot);
 			user().setTable(table);
 			broadcastJoinTable(tableId, user().username(), slot, teamId);
@@ -277,7 +301,7 @@ public class Server{
 			
 			if (table.status() != 3) {
 				table.setStatus((byte)3);
-				new TableCountdownThread(table);
+				new TableTransitionThread(table, table.status());
 			}
 		}
 		
@@ -433,6 +457,15 @@ public class Server{
 			sendPacket();
 		}
 		
+		public void sendGameEnd(byte winnerSlot) throws IOException {
+			byte opcode1 = 80;
+			byte opcode2 = 111;
+			marshall( opcode1 );
+			marshall( opcode2 );
+			marshall( winnerSlot );
+			sendPacket();
+		}
+		
 		public void processPackets(final DataInputStream stream) {
 			try {
 				final byte opcode = stream.readByte();
@@ -505,17 +538,41 @@ public class Server{
 	
 
 	
-	private class TableCountdownThread extends Thread {
+	private class TableTransitionThread extends Thread {
 		ServerTable table;
 		short countdown; 
+		byte startStatus;
 		
-		public TableCountdownThread(ServerTable table) {
+		public TableTransitionThread(ServerTable table, byte startStatus) {
 			this.table = table;
 			this.countdown = TABLE_COUNTDOWN;
+			this.startStatus = startStatus;
 			start();
 		}
 		
+		
 		public void run() {
+			if (startStatus == 3) {
+				countDownTransition();
+			}
+			else if (startStatus == 5) {
+				endGameTransition();
+			}
+		}
+		
+		public void endGameTransition() {
+			try {
+				Thread.sleep(3000);
+				table.setStatus((byte)0);
+				broadcastTableStatusChange(table.id(), table.status(), (short)-1);		
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		public void countDownTransition() {
 			try {
 				for (int i=0; i<TABLE_COUNTDOWN; i++) {
 					broadcastTableStatusChange(table.id(), table.status(), countdown);
@@ -529,15 +586,14 @@ public class Server{
 				}
 				// Game is ready to start
 				table.setStatus((byte)4);
+				table.setPlayersAlive();
 				broadcastTableStatusChange(table.id(), table.status(), (short)-1);
-				broadcastGameStart(table);
-				
+				broadcastGameStart(table);				
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
 		}
 	}
 }
