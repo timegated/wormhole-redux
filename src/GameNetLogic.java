@@ -779,12 +779,12 @@ public class GameNetLogic implements Runnable, IListener
                 }
                 case 65: {
                     final CFTablePanel tablePanel4 = this.m_pnlGame.getLobbyPanel().getTablePanel();
-                    final short short10 = dataInputStream.readShort();
-                    final String utf14 = dataInputStream.readUTF();
-                    tablePanel4.removePlayerFromTable(short10, utf14);
-                    this.setTableForPlayer(utf14, -1);
-                    if (this.m_bInATable && this.m_tableID == short10) {
-                        this.m_pnlGame.getPlayingPanel().getGameBoard().removePlayer(utf14);
+                    final short tableId = dataInputStream.readShort();
+                    final String username = dataInputStream.readUTF();
+                    tablePanel4.removePlayerFromTable(tableId, username);
+                    this.setTableForPlayer(username, -1);
+                    if (this.m_bInATable && this.m_tableID == tableId) {
+                        this.m_pnlGame.getPlayingPanel().getGameBoard().removePlayer(username);
                         return;
                     }
                     break;

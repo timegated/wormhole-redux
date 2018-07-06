@@ -52,6 +52,12 @@ public class Server{
 		}
 	}
 	
+	void broadcastLeaveTable(short tableId, String username) throws IOException {
+		for (ServerThread client : this.clients){
+			client.sendLeaveTable(tableId, username);
+		}
+	}
+	
 	void broadcastTableStatusChange(short tableId, byte status, short countdown) throws IOException {
 		for (ServerThread client : this.clients){
 			client.sendTableStatusChange(tableId, status, countdown);
@@ -295,6 +301,12 @@ public class Server{
 			sendTableWins(table);
 		}
 		
+		public void receiveLeaveTable() throws IOException {			
+			user().table().removeUser(user());
+			broadcastLeaveTable(user().table().id(), user().username());
+			user().setTable(null);
+		}
+		
 		public void receiveStartGame() throws IOException, InterruptedException {
 			final DataInputStream stream = this.pr.getStream();
 			
@@ -388,6 +400,14 @@ public class Server{
 			marshall( username );
 			marshall( slot );
 			marshall( teamId );
+			sendPacket();
+		}
+		
+		public void sendLeaveTable(short tableId, String username) throws IOException {	
+			byte opcode = 65;
+			marshall( opcode );
+			marshall( tableId );
+			marshall( username );
 			sendPacket();
 		}
 		
@@ -506,6 +526,9 @@ public class Server{
 					break;
 				case 21:
 					receiveJoinTable();
+					break;
+				case 22:
+					receiveLeaveTable();
 					break;
 				case 27:
 					receiveCredits();

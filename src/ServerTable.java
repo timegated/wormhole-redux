@@ -34,6 +34,14 @@ public class ServerTable {
 		}
 	}
 	
+	public void removeUser(ServerUser user) {
+		byte slot = user.slot();
+		m_names[slot] = null;
+		m_users[slot] = null;
+		m_wins[slot] = 0;
+		m_numPlayers --;
+	}
+	
 	public void increaseWinCount(byte slot) {
 		m_wins[slot] ++;
 	}
