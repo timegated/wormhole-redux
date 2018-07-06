@@ -98,13 +98,7 @@ public class Server{
 		}
 	}
 	
-	void broadcastGameEnd(ServerTable table) throws IOException {
-		byte winnerSlot = 0;
-		for (ServerUser user : table.users()) {
-			if (user != null && user.isAlive()) {
-				winnerSlot = user.slot();
-			}
-		}
+	void broadcastGameEnd(ServerTable table, byte winnerSlot) throws IOException {
 		for (ServerThread client : this.clients) {
 			if (table.hasPlayer(client.user().username())) {
 				client.sendGameEnd(winnerSlot);
@@ -198,14 +192,22 @@ public class Server{
 			short	gameSession		= stream.readShort();
 			byte	killedBy		= stream.readByte();
 			
-	        broadcastGameOver(user().table(), gameSession, user().slot(), killedBy);
-	        
+			ServerTable table = user().table();			
+	        broadcastGameOver(table, gameSession, user().slot(), killedBy);
+				        
 			user().setAlive(false);
-			if (user().table().numPlayersAlive() == 1) {
-				broadcastGameEnd(user().table());
-				user().table().setStatus((byte)5);
-				broadcastTableStatusChange(user().table().id(), user().table().status(), (short)-1);
-				new TableTransitionThread(user().table(), user().table().status());
+			if (table.numPlayersAlive() == 1) {
+				byte winnerSlot = 0;
+				for (ServerUser user : table.users()) {
+					if (user != null && user.isAlive()) {
+						winnerSlot = user.slot();
+					}
+				}
+				table.increaseWinCount(winnerSlot);
+				broadcastGameEnd(table, winnerSlot);
+				table.setStatus((byte)5);
+				broadcastTableStatusChange(table.id(), table.status(), (short)-1);
+				new TableTransitionThread(table, table.status());
 			}
 		}
 		
@@ -290,6 +292,7 @@ public class Server{
 			user().setSlot(slot);
 			user().setTable(table);
 			broadcastJoinTable(tableId, user().username(), slot, teamId);
+			sendTableWins(table);
 		}
 		
 		public void receiveStartGame() throws IOException, InterruptedException {
@@ -383,8 +386,24 @@ public class Server{
 			marshall( opcode );
 			marshall( tableId );
 			marshall( username );
-			marshall( slot );	// should have just been created, so only one player, default slot 0
+			marshall( slot );
 			marshall( teamId );
+			sendPacket();
+		}
+		
+		public void sendTableWins(ServerTable table) throws IOException {	
+			byte opcode = 80;
+			byte opcode2 = 120;
+			marshall( opcode );
+			marshall( opcode2 );
+			marshall( table.numPlayers() );
+			
+			for (ServerUser user : table.users()) {
+				if (user != null) {
+					marshall( user.slot() );
+					marshall( table.winCountOf(user.slot()) );
+				}
+			}
 			sendPacket();
 		}
 		
@@ -588,7 +607,16 @@ public class Server{
 				table.setStatus((byte)4);
 				table.setPlayersAlive();
 				broadcastTableStatusChange(table.id(), table.status(), (short)-1);
-				broadcastGameStart(table);				
+				broadcastGameStart(table);
+				
+				// artificial game end
+//				Thread.sleep(4000);
+//				broadcastGameOver(table, (short)0, (byte)0, (byte)1);
+//				broadcastGameOver(table, (short)0, (byte)1, (byte)2);
+//				table.setStatus((byte)5);
+//				broadcastGameEnd(table, (byte)2);
+//				broadcastTableStatusChange(table.id(), table.status(), (short)-1);
+//				new TableTransitionThread(table, table.status());
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} catch (IOException e) {

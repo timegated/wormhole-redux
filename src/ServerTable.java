@@ -11,6 +11,7 @@ public class ServerTable {
 	private byte		m_status;
 	private String 		m_password;
 	private String[]	m_names;
+	private short[]		m_wins;
 	private ServerUser[] m_users;
 	
 	public ServerTable(boolean isRanked, String password, boolean isBigTable, boolean isTeamTable, byte teamSize, boolean isBalancedTable){
@@ -22,12 +23,19 @@ public class ServerTable {
 		m_isBalancedTable = isBalancedTable;
 		m_isPrivate = false;
 		m_status = 0;
-		m_names = new String[isBigTable ? 8 : 4];
-		m_users = new ServerUser[isBigTable ? 8 : 4];
+		
+		int numSlots = isBigTable ? 8 : 4;
+		m_names = new String[numSlots];
+		m_users = new ServerUser[numSlots];
+		m_wins = new short[numSlots];
 			
 		if (password.length() > 0) {
 			m_isPrivate = true;
 		}
+	}
+	
+	public void increaseWinCount(byte slot) {
+		m_wins[slot] ++;
 	}
 	
 	public void setId(short id) {
@@ -120,5 +128,9 @@ public class ServerTable {
 	
 	public ServerUser[] users() {
 		return m_users;
+	}
+	
+	public short winCountOf(byte slot) {
+		return m_wins[slot];
 	}
 }

@@ -425,7 +425,6 @@ public class WormholeModel extends Model
             }
             case 111: {
                 final byte byte2 = dataInput.readByte();
-            	System.out.println("my slot "+super.m_slot+" slot "+byte2);
                 if (super.m_slot == byte2) {
                     this.m_winningPlayerString = "YOU WON";
                     ++this.m_wins;
@@ -514,6 +513,18 @@ public class WormholeModel extends Model
                 }
                 this.addIncomingPowerup(this.m_players[translateSlot2].m_portalSprite, powerupType, fromSlot, byte9);
                 break;
+            }
+            case 120: {
+            	short numPlayers = dataInput.readShort();
+            	for (int i=0; i<numPlayers; i++) {
+            		byte slot = dataInput.readByte();
+            		short winCount	= dataInput.readShort();
+            		
+            		byte translateSlot = this.translateSlot(slot);
+                    PlayerInfo playerInfo = this.m_players[translateSlot];
+                    playerInfo.m_wins = winCount;                    
+                    this.refreshStatus = true;
+            	}
             }
             default: {}
         }
