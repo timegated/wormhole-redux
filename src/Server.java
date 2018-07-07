@@ -289,16 +289,21 @@ public class Server{
 			final DataInputStream stream = this.pr.getStream();
 			
 			short 	tableId  = stream.readShort();
-			String 	username = stream.readUTF();	// don't think I need this... must be user connected to this socket
+			String 	password = stream.readUTF();
 			byte	teamId	 = 0;
 			
 			ServerTable table = tableManager.getTable(tableId);
-			byte slot = table.addUser(user().username());		// see, I am not using username variable here.
-			table.addUser(user());
-			user().setSlot(slot);
-			user().setTable(table);
-			broadcastJoinTable(tableId, user().username(), slot, teamId);
-			sendTableWins(table);
+			if (!table.isPrivate() || password.equals(table.password())) {
+				byte slot = table.addUser(user().username());
+				table.addUser(user());
+				user().setSlot(slot);
+				user().setTable(table);
+				broadcastJoinTable(tableId, user().username(), slot, teamId);
+				sendTableWins(table);
+			}
+			else {	// user entered the wrong password to join the table
+				sendIncorrectTablePassword();
+			}
 		}
 		
 		public void receiveLeaveTable() throws IOException {	
@@ -405,6 +410,12 @@ public class Server{
 			marshall( username );
 			marshall( slot );
 			marshall( teamId );
+			sendPacket();
+		}
+		
+		public void sendIncorrectTablePassword() throws IOException {	
+			byte opcode = 103;
+			marshall( opcode );
 			sendPacket();
 		}
 		

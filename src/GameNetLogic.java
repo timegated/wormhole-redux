@@ -901,8 +901,16 @@ public class GameNetLogic implements Runnable, IListener
                         	gameBoard.addPlayer(player.getName(), player.getRank(), teamId, player.getIcons(), i);
                         }
                         this.m_pnlGame.getPlayingPanel().repaint();
+                        final CFPrivateTableDialog privateTableDialog = this.findPrivateTableDialog();
+                        if (privateTableDialog != null) {
+                        	privateTableDialog.handleClosing();
+                        }
                     }
                     break;
+                }
+                case 103: {
+                    final CFPrivateTableDialog privateTableDialog = this.findPrivateTableDialog();
+                    privateTableDialog.setStatus("Incorrect password.");
                 }
             }
         }

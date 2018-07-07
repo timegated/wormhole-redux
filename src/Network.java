@@ -12,12 +12,12 @@ public class Network extends ByteArrayInputStream
     private DataInputStream m_dataStream;
     public boolean m_bConnected;
     
-    synchronized void joinTable(final int n, final String s) {
+    synchronized void joinTable(final int tableId, final String password) {
         final DataOutput stream = this.getStream(0);
         try {
             stream.writeByte(21);
-            stream.writeShort((short)n);
-            stream.writeUTF((s == null) ? "" : s);
+            stream.writeShort((short)tableId);
+            stream.writeUTF((password == null) ? "" : password);
             this.sendPacket();
         }
         catch (Exception ex) {}

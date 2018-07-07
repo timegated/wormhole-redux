@@ -2,7 +2,6 @@ public class ServerTable {
 	private short 		m_id = -1;
 	private short 		m_numPlayers = 0;
 	private boolean 	m_isRanked;
-	private boolean 	m_hasPassword;
 	private boolean 	m_isBigTable;
 	private boolean 	m_isTeamTable;
 	private boolean 	m_isBalancedTable;
@@ -136,6 +135,10 @@ public class ServerTable {
 	
 	public ServerUser[] users() {
 		return m_users;
+	}
+	
+	public String password() {
+		return m_password;
 	}
 	
 	public short winCountOf(byte slot) {
