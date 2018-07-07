@@ -28,4 +28,8 @@ public class ServerTableManager {
 			tables.set(idx, table);
 		}
 	}
+	
+	public synchronized void removeTable(ServerTable table){
+		tables.set(table.id(), null);
+	}
 }

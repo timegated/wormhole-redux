@@ -301,10 +301,15 @@ public class Server{
 			sendTableWins(table);
 		}
 		
-		public void receiveLeaveTable() throws IOException {			
-			user().table().removeUser(user());
-			broadcastLeaveTable(user().table().id(), user().username());
+		public void receiveLeaveTable() throws IOException {	
+			ServerTable table = user().table();
+			table.removeUser(user());
+			broadcastLeaveTable(table.id(), user().username());
 			user().setTable(null);
+			if (table.numPlayers() <= 0) {
+				broadcastTableStatusChange(table.id(), (byte)1, (short)-1);	
+				tableManager.removeTable(table);
+			}
 		}
 		
 		public void receiveStartGame() throws IOException, InterruptedException {
@@ -314,7 +319,7 @@ public class Server{
 			
 			ServerTable table = tableManager.getTable(tableId);
 			
-			if (table.status() != 3) {
+			if (table.status() != 3 && table.numPlayers() > 1) {
 				table.setStatus((byte)3);
 				new TableTransitionThread(table, table.status());
 			}
@@ -556,7 +561,9 @@ public class Server{
 				
 				// Send current table list to client
 				for (ServerTable table : tableManager.tables()) {
-					sendFullTable(table);
+					if (table != null) {
+						sendFullTable(table);
+					}
 				}
 				
 				// Add user and broadcast to all clients
