@@ -8,6 +8,7 @@ public class ServerUser {
 	private short m_totalCredits;
 	private byte m_subscriptionLevel;
 	private byte m_slot;
+	private byte m_teamId;
 	private short m_rank;
 	private String m_clan;
 	private ServerTable m_table; 
@@ -18,14 +19,17 @@ public class ServerUser {
 		m_username = username;
 		m_icons = new LinkedList<String>();
 		m_table = null;
+		m_teamId = 0;
 		
 		// Set some placeholder values that we aren't really using yet.
 		m_rank = 0;
 		m_clan = "--";
 		m_icons.add("small-platinumWeapons.gif");
-		
 	}
 	
+	public void setTeamId(byte teamId) {
+		m_teamId = teamId;
+	}
 	public void setTable(ServerTable table){
 		m_table = table;
 	}

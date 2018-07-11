@@ -525,6 +525,21 @@ public class WormholeModel extends Model
                     playerInfo.m_wins = winCount;                    
                     this.refreshStatus = true;
             	}
+            	break;
+            }
+            case 121: {
+            	byte slot = dataInput.readByte();
+            	byte teamId = dataInput.readByte();
+            	if (slot == super.m_slot) {
+            		this.m_teamID = teamId;
+            	}
+            	else {
+                	byte translateSlot = this.translateSlot(slot);
+            		PlayerInfo playerInfo = this.m_players[translateSlot];
+            		playerInfo.m_teamID = teamId;
+            	}
+            	this.m_bRefreshPlayerBar = true;
+            	break;
             }
             default: {}
         }

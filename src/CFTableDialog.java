@@ -58,7 +58,7 @@ public class CFTableDialog extends Dialog implements IListener, WindowListener, 
         }
         final boolean enabled = !this.m_choiceTeamTable.getSelectedItem().equals(CFSkin.STR_TEAMS[0]);
         this.m_cbBalancedTeams.setEnabled(enabled);
-        this.m_cbRanking.setEnabled(!enabled);
+        //this.m_cbRanking.setEnabled(!enabled);
         if (!enabled) {
             this.m_cbBalancedTeams.setState(false);
             return;

@@ -96,6 +96,8 @@ public class GameNetLogic implements Runnable, IListener
                 if (this.m_bGuestAccount) {
                     generateCFTableDialog.m_cbRanking.setState(false);
                     generateCFTableDialog.m_cbRanking.setEnabled(false);
+                    generateCFTableDialog.m_cbBigTable.setEnabled(true);
+                    generateCFTableDialog.m_choiceTeamTable.setEnabled(true);
                 }
                 generateCFTableDialog.show();
                 if (generateCFTableDialog.ok()) {
@@ -142,14 +144,14 @@ public class GameNetLogic implements Runnable, IListener
                             this.addLine("Only registered members can join Ranked tables!!!");
                             return;
                         }
-                        if (cfTableElement.isTeamTable()) {
-                            this.addLine("Only Team plan members can join Team tables!!!");
-                            return;
-                        }
-                        if (cfTableElement.isBigTable()) {
-                            this.addLine("Only Team plan members can join Huge tables!!!");
-                            return;
-                        }
+//                        if (cfTableElement.isTeamTable()) {
+//                            this.addLine("Only Team plan members can join Team tables!!!");
+//                            return;
+//                        }
+//                        if (cfTableElement.isBigTable()) {
+//                            this.addLine("Only Team plan members can join Huge tables!!!");
+//                            return;
+//                        }
                     }
                     if (this.m_subscriptionLevel < 2 && this.m_subscriptionLevel != -1) {
                         if (cfTableElement.isTeamTable()) {

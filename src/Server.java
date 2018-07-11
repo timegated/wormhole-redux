@@ -64,6 +64,14 @@ public class Server{
 		}
 	}
 	
+	void broadcastTeamChange(ServerTable table, byte slot, byte teamId) throws IOException {
+		for (ServerThread client : this.clients){
+			if (table.hasPlayer(client.user().username())) {
+				client.sendTeamChange(table.id(), slot, teamId);
+			}
+		}
+	}
+	
 	void broadcastGameStart(ServerTable table) throws IOException {
 		for (ServerThread client : this.clients) {
 			if (table.hasPlayer(client.user().username())) {
@@ -236,6 +244,14 @@ public class Server{
 			int		timeElapsed		= stream.readInt();
 		}
 		
+		public void receiveTeamChange() throws IOException {
+			final DataInputStream stream = this.pr.getStream();
+
+			byte teamId = (byte)stream.readShort();	// sendGeneric sends as a short... not sure why use sendGeneric
+			user().setTeamId(teamId);
+			broadcastTeamChange(user().table(), user.slot(), teamId);
+		}
+		
 		public void receivePowerup() throws IOException {			
 			final DataInputStream stream = this.pr.getStream();
 
@@ -290,7 +306,7 @@ public class Server{
 			
 			short 	tableId  = stream.readShort();
 			String 	password = stream.readUTF();
-			byte	teamId	 = 0;
+			byte	teamId	 = 1;
 			
 			ServerTable table = tableManager.getTable(tableId);
 			if (!table.isPrivate() || password.equals(table.password())) {
@@ -339,8 +355,20 @@ public class Server{
 				marshall( countdown );
 			}
 			sendPacket();
-		}		
+		}	
+		
+		public void sendTeamChange(short tableId, byte slot, byte teamId) throws IOException {
+			byte opcode = 80;
+			byte opcode2 = 121;
 
+			marshall( opcode );
+			marshall( opcode2 );
+			//marshall( tableId );
+			marshall( slot );
+			marshall( teamId );
+			sendPacket();
+		}	
+		
 		public void sendLoginResponse() throws IOException {
 			byte opcode = 1;
 			marshall( opcode );
@@ -551,6 +579,9 @@ public class Server{
 					break;
 				case 30:
 					receiveStartGame();
+					break;
+				case 40:
+					receiveTeamChange();
 					break;
 				}
 				
