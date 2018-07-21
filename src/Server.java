@@ -266,7 +266,7 @@ public class Server{
 		public void receiveCreateTable() throws IOException {			
 			final DataInputStream stream = this.pr.getStream();
 			
-			byte teamSize = 0, numStringPairs;
+			byte boardSize = 0, numStringPairs;
 			boolean isRanked, hasPassword, isBigTable, isTeamTable, isBalancedTable = false;
 			String password = "";
 
@@ -280,7 +280,7 @@ public class Server{
 			isBigTable	= (stream.readByte()==1);
 			isTeamTable = (stream.readByte()==1);
 			if (isTeamTable){
-				teamSize = stream.readByte();
+				boardSize = stream.readByte();
 				isBalancedTable	= (stream.readByte()==1);
 			}
 			
@@ -292,7 +292,7 @@ public class Server{
 				}
 			}
 			
-			ServerTable table = new ServerTable(isRanked, password, isBigTable, isTeamTable, teamSize, isBalancedTable);
+			ServerTable table = new ServerTable(isRanked, password, isBigTable, isTeamTable, boardSize, isBalancedTable);
 			byte slot = table.addUser(user().username());
 			table.addUser(user());
 			user().setSlot(slot);
@@ -427,7 +427,7 @@ public class Server{
 			marshall( table.isBigTable() );
 			marshall( table.isTeamTable() );
 			if (table.isTeamTable()){
-				marshall( table.teamSize() );
+				marshall( table.boardSize() );
 				marshall( table.isBalancedTable() );				
 			}
 			marshall( (byte)0 );	// number of table options
@@ -492,7 +492,7 @@ public class Server{
 			marshall( table.isBigTable() );
 			marshall( table.isTeamTable() );
 			if (table.isTeamTable()) {
-				marshall( table.teamSize() );
+				marshall( table.boardSize() );
 				marshall( table.isBalancedTable() );				
 			}
 			for (int i=0; i<table.numPlayerSlots(); i++) {

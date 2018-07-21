@@ -6,19 +6,19 @@ public class ServerTable {
 	private boolean 	m_isTeamTable;
 	private boolean 	m_isBalancedTable;
 	private boolean 	m_isPrivate;
-	private byte 		m_teamSize;
+	private byte 		m_boardSize;
 	private byte		m_status;
 	private String 		m_password;
 	private String[]	m_names;
 	private short[]		m_wins;
 	private ServerUser[] m_users;
 	
-	public ServerTable(boolean isRanked, String password, boolean isBigTable, boolean isTeamTable, byte teamSize, boolean isBalancedTable){
+	public ServerTable(boolean isRanked, String password, boolean isBigTable, boolean isTeamTable, byte boardSize, boolean isBalancedTable){
 		m_isRanked = isRanked;
 		m_password = password;
 		m_isBigTable = isBigTable;
 		m_isTeamTable = isTeamTable;
-		m_teamSize = teamSize;
+		m_boardSize = boardSize;
 		m_isBalancedTable = isBalancedTable;
 		m_isPrivate = false;
 		m_status = 0;
@@ -109,8 +109,8 @@ public class ServerTable {
 		}
 		return false;
 	}
-	public byte teamSize() {
-		return m_teamSize;
+	public byte boardSize() {
+		return m_boardSize;
 	}
 	public byte status() {
 		return m_status;

@@ -11,7 +11,7 @@ class CFTableElement extends CFElement
     private boolean m_bPrivate;
     private boolean m_bRanked;
     private boolean m_bTeamTable;
-    private byte m_teamSize;
+    private byte m_boardSize;
     private boolean m_bBalancedTeams;
     private String m_text;
     private int m_countdown;
@@ -55,11 +55,11 @@ class CFTableElement extends CFElement
         this.m_bOver = true;
     }
     
-    public void setOptions(final boolean bRanked, final boolean bPrivate, final boolean bTeamTable, final byte teamSize, final boolean bBalancedTeams, final String[][] options) {
+    public void setOptions(final boolean bRanked, final boolean bPrivate, final boolean bTeamTable, final byte boardSize, final boolean bBalancedTeams, final String[][] options) {
         this.m_bRanked = bRanked;
         this.m_bPrivate = bPrivate;
         this.m_bTeamTable = bTeamTable;
-        this.m_teamSize = teamSize;
+        this.m_boardSize = boardSize;
         this.m_bBalancedTeams = bBalancedTeams;
         this.m_options = options;
         this.repaint();
@@ -129,8 +129,8 @@ class CFTableElement extends CFElement
         return this.m_names;
     }
     
-    public byte getTeamSize() {
-        return this.m_teamSize;
+    public byte getBoardSize() {
+        return this.m_boardSize;
     }
     
     public int getTableID() {

@@ -1269,7 +1269,7 @@ public class WormholeModel extends Model
         if (super.m_tableElement != null && super.m_tableElement.getNames().length > 4) {
             int totalOpposingPlayingPlayers = this.m_totalOpposingPlayingPlayers;
             if (super.m_tableElement.isTeamTable()) {
-                switch (super.m_tableElement.getTeamSize()) {
+                switch (super.m_tableElement.getBoardSize()) {
                 	// setting local totalOpposingPlayingPlayers to change the board size
                     case 2: {
                         totalOpposingPlayingPlayers = 1;

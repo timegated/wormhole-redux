@@ -97,7 +97,7 @@ public class Network extends ByteArrayInputStream
         this.sendGeneric((byte)0, (short)(-2));
     }
     
-    synchronized void createTable(final String password, final boolean isRanked, final boolean isBigTable, final boolean isTeamTable, final int teamSize, final boolean isBalancedTable, final String[][] array) {
+    synchronized void createTable(final String password, final boolean isRanked, final boolean isBigTable, final boolean isTeamTable, final int boardSize, final boolean isBalancedTable, final String[][] array) {
         final DataOutput stream = this.getStream(0);
         try {
             stream.writeByte(20);
@@ -110,7 +110,7 @@ public class Network extends ByteArrayInputStream
             stream.writeByte((byte)(isBigTable ? 1 : 0));
             stream.writeByte((byte)(isTeamTable ? 1 : 0));
             if (isTeamTable) {
-                stream.writeByte((byte)teamSize);
+                stream.writeByte((byte)boardSize);
                 stream.writeByte(isBalancedTable ? 1 : 0);
             }
             if (array != null) {

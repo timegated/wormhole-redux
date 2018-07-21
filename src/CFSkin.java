@@ -556,7 +556,7 @@ public class CFSkin extends MouseAdapter
         final int playerRank = this.m_logic.getPlayerRank(playingPanel.getUsername());
         final CFTableElement tableElement = playingPanel.getTableElement();
         graphics.drawString("Rank: " + ((playerRank < 0) ? "n/a  " : (playerRank + "  ")), 10, 39);
-        graphics.drawString("Table: " + (tableElement.isRanked() ? "Ranked" : "Unranked") + (tableElement.isTeamTable() ? ((tableElement.isBalancedTeams() ? ", Bal., " : ", ") + CFSkin.STR_TEAMS_SHORT[tableElement.getTeamSize()] + " Board") : ""), 10, 52);
+        graphics.drawString("Table: " + (tableElement.isRanked() ? "Ranked" : "Unranked") + (tableElement.isTeamTable() ? ((tableElement.isBalancedTeams() ? ", Bal., " : ", ") + CFSkin.STR_TEAMS_SHORT[tableElement.getBoardSize()] + " Board") : ""), 10, 52);
     }
     
     private void defaultPaintLoginPanel(final Graphics graphics, final LoginPanel loginPanel) {
@@ -678,7 +678,7 @@ public class CFSkin extends MouseAdapter
             if (cfTableElement.isRanked()) {
                 s2 += ", ";
             }
-            s2 = s2 + (cfTableElement.isBalancedTeams() ? "Bal. " : "") + CFSkin.STR_TEAMS_SHORT[cfTableElement.getTeamSize()];
+            s2 = s2 + (cfTableElement.isBalancedTeams() ? "Bal. " : "") + CFSkin.STR_TEAMS_SHORT[cfTableElement.getBoardSize()];
         }
         graphics.drawString(s2, n + 21, 32);
         graphics.setFont(CFSkin.FONTNORMAL);

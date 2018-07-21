@@ -118,7 +118,7 @@ public class CFTableDialog extends Dialog implements IListener, WindowListener, 
         this.m_listener = listener;
     }
     
-    public int getTeamSize() {
+    public int getBoardSize() {
         final String selectedItem = this.m_choiceTeamTable.getSelectedItem();
         if (selectedItem == null) {
             return 0;

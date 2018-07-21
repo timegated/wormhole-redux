@@ -101,7 +101,7 @@ public class GameNetLogic implements Runnable, IListener
                 }
                 generateCFTableDialog.show();
                 if (generateCFTableDialog.ok()) {
-                    this.m_network.createTable(generateCFTableDialog.getPassword(), !this.m_bGuestAccount && generateCFTableDialog.isRanked(), generateCFTableDialog.isBigTable(), generateCFTableDialog.isTeamTable(), generateCFTableDialog.getTeamSize(), generateCFTableDialog.isBalancedTable(), CFSkin.getSkin().getTableOptions(generateCFTableDialog));
+                    this.m_network.createTable(generateCFTableDialog.getPassword(), !this.m_bGuestAccount && generateCFTableDialog.isRanked(), generateCFTableDialog.isBigTable(), generateCFTableDialog.isTeamTable(), generateCFTableDialog.getBoardSize(), generateCFTableDialog.isBalancedTable(), CFSkin.getSkin().getTableOptions(generateCFTableDialog));
                 }
                 this.m_pnlGame.setEnabled(true);
                 return;
@@ -721,10 +721,10 @@ public class GameNetLogic implements Runnable, IListener
                     final boolean isPrivate = dataInputStream.readByte() == 1;
                     final int numPlayerSlots = (dataInputStream.readByte() == 1) ? 8 : 4;
                     final boolean isTeamTable = dataInputStream.readByte() == 1;
-                    byte teamSize = -1;
+                    byte boardSize = -1;
                     boolean isBalancedTable = false;
                     if (isTeamTable) {
-                        teamSize = dataInputStream.readByte();
+                    	boardSize = dataInputStream.readByte();
                         isBalancedTable = (dataInputStream.readByte() == 1);
                     }
                     final String[][] tableOptions = this.readTableOptions(dataInputStream);
@@ -734,7 +734,7 @@ public class GameNetLogic implements Runnable, IListener
                     tablePanel3.setTableStatus(tableId, status, 0);
                     tablePanel3.addPlayerToTable(tableId, username, (byte)0);
                     this.setTableForPlayer(username, tableId);
-                    tablePanel3.findTable(tableId).setOptions(isRanked, isPrivate, isTeamTable, teamSize, isBalancedTable, tableOptions);
+                    tablePanel3.findTable(tableId).setOptions(isRanked, isPrivate, isTeamTable, boardSize, isBalancedTable, tableOptions);
                     if (username.equals(this.m_username)){
                         this.setInTable(tableId, 0, (username.length() == 0) ? null : username);
                         this.m_pnlGame.getPlayingPanel().repaint();
@@ -846,10 +846,10 @@ public class GameNetLogic implements Runnable, IListener
                     boolean isPrivate = dataInputStream.readByte() == 1;
                     int numPlayerSlots = (dataInputStream.readByte() == 1) ? 8 : 4;
                     boolean isTeamTable = dataInputStream.readByte() == 1;
-                    byte teamSize = -1;
+                    byte boardSize = -1;
                     boolean isBalancedTable = false;
                     if (isTeamTable) {
-                        teamSize = dataInputStream.readByte();
+                    	boardSize = dataInputStream.readByte();
                         isBalancedTable = (dataInputStream.readByte() == 1);
                     }
                     
@@ -866,7 +866,7 @@ public class GameNetLogic implements Runnable, IListener
                     	table = tablePanel.findTable(tableId);
                     }
                     table.setStatus(status);
-                    table.setOptions(isRanked, isPrivate, isTeamTable, teamSize, isBalancedTable, tableOptions);
+                    table.setOptions(isRanked, isPrivate, isTeamTable, boardSize, isBalancedTable, tableOptions);
                     for (int i=0; i < numPlayerSlots; i++) {
                 		byte slot = (byte)i;
                 		String username = players[i];
