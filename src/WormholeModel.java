@@ -537,6 +537,7 @@ public class WormholeModel extends Model
                 	byte translateSlot = this.translateSlot(slot);
             		PlayerInfo playerInfo = this.m_players[translateSlot];
             		playerInfo.m_teamID = teamId;
+            		playerInfo.m_bRefresh = true;
             	}
             	this.m_bRefreshPlayerBar = true;
             	break;
@@ -1269,6 +1270,7 @@ public class WormholeModel extends Model
             int totalOpposingPlayingPlayers = this.m_totalOpposingPlayingPlayers;
             if (super.m_tableElement.isTeamTable()) {
                 switch (super.m_tableElement.getTeamSize()) {
+                	// setting local totalOpposingPlayingPlayers to change the board size
                     case 2: {
                         totalOpposingPlayingPlayers = 1;
                         break;

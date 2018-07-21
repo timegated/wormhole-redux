@@ -75,4 +75,7 @@ public class ServerUser {
 	public boolean isAlive() {
 		return m_isAlive;
 	}
+	public byte teamId() {
+		return m_teamId;
+	}
 }

@@ -46,9 +46,9 @@ public class Server{
 		}
 	}
 	
-	void broadcastJoinTable(short tableId, String username, byte slot, byte teamId) throws IOException {
+	void broadcastJoinTable(ServerTable table, String username, byte slot, byte teamId) throws IOException {
 		for (ServerThread client : this.clients){
-			client.sendJoinTable(tableId, username, slot, teamId);
+			client.sendJoinTable(table, username, slot, teamId);
 		}
 	}
 	
@@ -67,7 +67,7 @@ public class Server{
 	void broadcastTeamChange(ServerTable table, byte slot, byte teamId) throws IOException {
 		for (ServerThread client : this.clients){
 			if (table.hasPlayer(client.user().username())) {
-				client.sendTeamChange(table.id(), slot, teamId);
+				client.sendTeamChange(slot, teamId);
 			}
 		}
 	}
@@ -297,6 +297,7 @@ public class Server{
 			table.addUser(user());
 			user().setSlot(slot);
 			user().setTable(table);
+			user().setTeamId((byte)1);
 			addTable(table);
 			broadcastCreateTable(table);
 		}
@@ -314,7 +315,8 @@ public class Server{
 				table.addUser(user());
 				user().setSlot(slot);
 				user().setTable(table);
-				broadcastJoinTable(tableId, user().username(), slot, teamId);
+				user().setTeamId(teamId);
+				broadcastJoinTable(table, user().username(), slot, teamId);
 				sendTableWins(table);
 			}
 			else {	// user entered the wrong password to join the table
@@ -357,13 +359,12 @@ public class Server{
 			sendPacket();
 		}	
 		
-		public void sendTeamChange(short tableId, byte slot, byte teamId) throws IOException {
+		public void sendTeamChange(byte slot, byte teamId) throws IOException {
 			byte opcode = 80;
 			byte opcode2 = 121;
 
 			marshall( opcode );
 			marshall( opcode2 );
-			//marshall( tableId );
 			marshall( slot );
 			marshall( teamId );
 			sendPacket();
@@ -403,11 +404,13 @@ public class Server{
 			
 			short nPlayers = table.numPlayers();
 			marshall( nPlayers );
-			for (int i=0; i<nPlayers; i++) {
-				marshall( table.player(i) );
-				marshall( (byte)i );
-				marshall( (byte)1 );	// gameOver, 1 is not gameOver because checks byte==0 in WormholeModel:setPlayers
-				marshall( (byte)0 );	// teamId
+			for (ServerUser user : table.users()) {
+				if (user != null) {
+					marshall( user.username() );
+					marshall( user.slot() );
+					marshall( (byte)1 );	// gameOver, 1 is not gameOver because checks byte==0 in WormholeModel:setPlayers
+					marshall( user.teamId() );	// teamId
+				}
 			}
 			
 			sendPacket();
@@ -431,13 +434,21 @@ public class Server{
 			sendPacket();
 		}
 		
-		public void sendJoinTable(short tableId, String username, byte slot, byte teamId) throws IOException {	
+		public void sendJoinTable(ServerTable table, String username, byte slot, byte teamId) throws IOException {	
 			byte opcode = 102;
 			marshall( opcode );
-			marshall( tableId );
+			marshall( table.id() );
 			marshall( username );
 			marshall( slot );
 			marshall( teamId );
+			// if team table, then we need to send to the new player the teamIds of the other players
+			if (table.isTeamTable() && user.username() == username) {
+				for (ServerUser user : table.users()) {
+					if (user != null) {
+						marshall(user.teamId());
+					}
+				}
+			}
 			sendPacket();
 		}
 		

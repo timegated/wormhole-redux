@@ -900,7 +900,10 @@ public class GameNetLogic implements Runnable, IListener
                         this.setInTable(tableId, slot, username);
                         for (byte i=0; i<table.getNumPlayers(); i++) {
                             CFPlayerElement player = this.getPlayer(table.getPlayer(i));
-                        	gameBoard.addPlayer(player.getName(), player.getRank(), teamId, player.getIcons(), i);
+                            if (player != null) {
+                                teamId = dataInputStream.readByte();
+                            	gameBoard.addPlayer(player.getName(), player.getRank(), teamId, player.getIcons(), i);
+                            }
                         }
                         this.m_pnlGame.getPlayingPanel().repaint();
                         final CFPrivateTableDialog privateTableDialog = this.findPrivateTableDialog();
