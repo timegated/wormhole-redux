@@ -41,10 +41,6 @@ public class ServerTable {
 		m_numPlayers --;
 	}
 	
-	public void increaseWinCount(byte slot) {
-		m_wins[slot] ++;
-	}
-	
 	public void setId(short id) {
 		m_id = id;
 	}
@@ -121,6 +117,7 @@ public class ServerTable {
 	public short numPlayers() {
 		return m_numPlayers;
 	}
+	
 	public int numPlayersAlive() {
 		int count = 0;
 		for (int i=0; i<m_users.length; i++) {
@@ -131,6 +128,50 @@ public class ServerTable {
 			}
 		}
 		return count;
+	}
+	
+	public int numPlayersAlive(byte teamId) {
+		int count = 0;
+		for (int i=0; i<m_users.length; i++) {
+			if (m_users[i] != null) {
+				if (m_users[i].isAlive() && m_users[i].teamId() == teamId) {
+					count ++;
+				}
+			}
+		}
+		return count;
+	}
+	
+	public boolean gameOver() {
+		if (isTeamTable()) {
+			boolean goldTeamDead = numPlayersAlive(Team.GOLDTEAM) == 0;
+			boolean blueTeamDead = numPlayersAlive(Team.BLUETEAM) == 0;
+			return goldTeamDead || blueTeamDead;
+		}
+
+		return numPlayersAlive() == 1;
+	}
+	
+	public void increaseWinCounts() {
+		for (ServerUser user : users()) {
+			if (user != null && user.isAlive()) {
+				m_wins[user.slot()] ++;
+			}
+		}
+	}
+	
+	public byte winnerSlot() {
+		if (isTeamTable()) {
+			return numPlayersAlive(Team.GOLDTEAM) > 0 ? Team.GOLDTEAM : Team.BLUETEAM; 
+		}
+		
+		for (ServerUser user : users()) {
+			if (user != null && user.isAlive()) {
+				return user.slot();
+			}
+		}
+		
+		return -1;
 	}
 	
 	public ServerUser[] users() {

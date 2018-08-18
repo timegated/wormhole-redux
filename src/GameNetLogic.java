@@ -2,6 +2,7 @@ import java.util.*;
 import java.awt.*;
 import java.io.*;
 
+
 public class GameNetLogic implements Runnable, IListener
 {
     private int m_userID;

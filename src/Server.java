@@ -112,10 +112,10 @@ public class Server{
 		}
 	}
 	
-	void broadcastGameEnd(ServerTable table, byte winnerSlot) throws IOException {
+	void broadcastGameEnd(ServerTable table) throws IOException {
 		for (ServerThread client : this.clients) {
 			if (table.hasPlayer(client.user().username())) {
-				client.sendGameEnd(winnerSlot);
+				client.sendGameEnd(table);
 			}
 		}
 	}
@@ -200,7 +200,7 @@ public class Server{
 	        broadcastPlayerState(user().table(), gameSession, user().slot(), healthPerc, powerups, shipType);
 		}
 		
-		public void receiveGameOver() throws IOException {
+		public void receivePlayerDeath() throws IOException {
 			final DataInputStream stream = this.pr.getStream();
 
 			short	gameSession		= stream.readShort();
@@ -210,15 +210,9 @@ public class Server{
 	        broadcastGameOver(table, gameSession, user().slot(), killedBy);
 				        
 			user().setAlive(false);
-			if (table.numPlayersAlive() == 1) {
-				byte winnerSlot = 0;
-				for (ServerUser user : table.users()) {
-					if (user != null && user.isAlive()) {
-						winnerSlot = user.slot();
-					}
-				}
-				table.increaseWinCount(winnerSlot);
-				broadcastGameEnd(table, winnerSlot);
+			if (table.gameOver()) {
+				table.increaseWinCounts();
+				broadcastGameEnd(table);
 				table.setStatus((byte)5);
 				broadcastTableStatusChange(table.id(), table.status(), (short)-1);
 				new TableTransitionThread(table, table.status());
@@ -551,12 +545,12 @@ public class Server{
 			sendPacket();
 		}
 		
-		public void sendGameEnd(byte winnerSlot) throws IOException {
+		public void sendGameEnd(ServerTable table) throws IOException {
 			byte opcode1 = 80;
-			byte opcode2 = 111;
+			byte opcode2 = table.isTeamTable() ? (byte)112 : (byte)111;
 			marshall( opcode1 );
 			marshall( opcode2 );
-			marshall( winnerSlot );
+			marshall( table.winnerSlot() );
 			sendPacket();
 		}
 		
@@ -574,7 +568,7 @@ public class Server{
 					receivePlayerEvent();
 					break;
 				case 110:
-					receiveGameOver();
+					receivePlayerDeath();
 					break;
 				case 20:
 					receiveCreateTable();
