@@ -369,21 +369,21 @@ public class GameNetLogic implements Runnable, IListener
         final CFTablePanel tablePanel = this.m_pnlGame.getLobbyPanel().getTablePanel();
         tablePanel.setTableStatus(n, b, n2);
         switch (b) {
-            case 1: {
+            case TableStatus.DELETE: {
                 final CFPrivateTableDialog privateTableDialog = this.findPrivateTableDialog();
                 if (privateTableDialog != null) {
                     privateTableDialog.setTableRemoved();
                 }
                 tablePanel.removeTable(n);
             }
-            case 4: {
+            case TableStatus.PLAYING: {
                 if (this.m_tableID == n) {
                     this.m_pnlGame.getPlayingPanel().setInCountdown(false, n2);
                     return;
                 }
                 break;
             }
-            case 3: {
+            case TableStatus.COUNTDOWN: {
                 if (this.m_tableID == n) {
                     this.m_pnlGame.getPlayingPanel().setInCountdown(true, n2);
                     return;
@@ -902,7 +902,6 @@ public class GameNetLogic implements Runnable, IListener
                         for (byte i=0; i<table.getNumPlayers(); i++) {
                             CFPlayerElement player = this.getPlayer(table.getPlayer(i));
                             if (player != null) {
-                                teamId = dataInputStream.readByte();
                             	gameBoard.addPlayer(player.getName(), player.getRank(), teamId, player.getIcons(), i);
                             }
                         }

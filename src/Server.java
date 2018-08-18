@@ -213,7 +213,7 @@ public class Server{
 			if (table.gameOver()) {
 				table.increaseWinCounts();
 				broadcastGameEnd(table);
-				table.setStatus((byte)5);
+				table.setStatus(TableStatus.GAMEOVER);
 				broadcastTableStatusChange(table.id(), table.status(), (short)-1);
 				new TableTransitionThread(table, table.status());
 			}
@@ -291,7 +291,7 @@ public class Server{
 			table.addUser(user());
 			user().setSlot(slot);
 			user().setTable(table);
-			user().setTeamId((byte)1);
+			user().setTeamId(table.isTeamTable() ? Team.GOLDTEAM : Team.NOTEAM);
 			addTable(table);
 			broadcastCreateTable(table);
 		}
@@ -299,11 +299,11 @@ public class Server{
 		public void receiveJoinTable() throws IOException {			
 			final DataInputStream stream = this.pr.getStream();
 			
-			short 	tableId  = stream.readShort();
-			String 	password = stream.readUTF();
-			byte	teamId	 = 1;
+			short 		tableId		= stream.readShort();
+			String 		password	= stream.readUTF();
+			ServerTable table 		= tableManager.getTable(tableId);
+			byte 		teamId		= table.isTeamTable() ? Team.GOLDTEAM : Team.NOTEAM;
 			
-			ServerTable table = tableManager.getTable(tableId);
 			if (!table.isPrivate() || password.equals(table.password())) {
 				byte slot = table.addUser(user().username());
 				table.addUser(user());
@@ -336,8 +336,8 @@ public class Server{
 			
 			ServerTable table = tableManager.getTable(tableId);
 			
-			if (table.status() != 3 && table.numPlayers() > 1) {
-				table.setStatus((byte)3);
+			if (table.status() != TableStatus.COUNTDOWN && table.numPlayers() > 1) {
+				table.setStatus(TableStatus.COUNTDOWN);
 				new TableTransitionThread(table, table.status());
 			}
 		}
@@ -659,7 +659,7 @@ public class Server{
 		public void endGameTransition() {
 			try {
 				Thread.sleep(3000);
-				table.setStatus((byte)0);
+				table.setStatus(TableStatus.IDLE);
 				broadcastTableStatusChange(table.id(), table.status(), (short)-1);		
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -675,13 +675,13 @@ public class Server{
 					countdown --;
 					Thread.sleep(1000);
 					if (table.numPlayers() < 2) {	// People left below the limit, we need to stop counting down
-						table.setStatus((byte)0);
+						table.setStatus(TableStatus.IDLE);
 						broadcastTableStatusChange(table.id(), table.status(), TABLE_COUNTDOWN);
 						return;
 					}
 				}
 				// Game is ready to start
-				table.setStatus((byte)4);
+				table.setStatus(TableStatus.PLAYING);
 				table.setPlayersAlive();
 				broadcastTableStatusChange(table.id(), table.status(), (short)-1);
 				broadcastGameStart(table);
@@ -690,7 +690,7 @@ public class Server{
 //				Thread.sleep(4000);
 //				broadcastGameOver(table, (short)0, (byte)0, (byte)1);
 //				broadcastGameOver(table, (short)0, (byte)1, (byte)2);
-//				table.setStatus((byte)5);
+//				table.setStatus(TableStatus.GAMEOVER);
 //				broadcastGameEnd(table, (byte)2);
 //				broadcastTableStatusChange(table.id(), table.status(), (short)-1);
 //				new TableTransitionThread(table, table.status());

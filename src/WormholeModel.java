@@ -424,13 +424,13 @@ public class WormholeModel extends Model
                 break;
             }
             case 111: {
-                final byte byte2 = dataInput.readByte();
-                if (super.m_slot == byte2) {
+                final byte slot = dataInput.readByte();
+                if (super.m_slot == slot) {
                     this.m_winningPlayerString = "YOU WON";
                     ++this.m_wins;
                 }
                 else {
-                    final byte translateSlot = this.translateSlot(byte2);
+                    final byte translateSlot = this.translateSlot(slot);
                     this.m_winningPlayerString = this.m_players[translateSlot].m_username + " WON";
                     final PlayerInfo playerInfo2 = this.m_players[translateSlot];
                     ++playerInfo2.m_wins;
@@ -442,14 +442,14 @@ public class WormholeModel extends Model
                 break;
             }
             case 112: {
-                final byte byte3 = dataInput.readByte();
-                this.m_winningPlayerString = CFSkin.TEAM_NAMES[byte3] + " WON";
-                if (this.m_teamID == byte3) {
+                final byte teamId = dataInput.readByte();
+                this.m_winningPlayerString = CFSkin.TEAM_NAMES[teamId] + " WON";
+                if (this.m_teamID == teamId) {
                     ++this.m_wins;
                 }
                 else {
                     for (int k = 0; k < this.m_players.length; ++k) {
-                        if (this.m_players[k].m_teamID == byte3) {
+                        if (this.m_players[k].m_teamID == teamId) {
                             final PlayerInfo playerInfo3 = this.m_players[k];
                             ++playerInfo3.m_wins;
                             this.m_players[k].m_gameOver = true;
