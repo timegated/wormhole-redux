@@ -46,7 +46,7 @@ public class ServerUser {
 		return m_table;
 	}
 	public String username(){
-		return m_username;
+		return m_username != null ? m_username : "";
 	}
 	public int userId(){
 		return m_userId;

@@ -168,8 +168,8 @@ class CFTableElement extends CFElement
         return this.m_numPlayers;
     }
     
-    public String getPlayer(int i) {
-        return this.m_names[i];
+    public String getPlayer(int slot) {
+        return this.m_names[slot];
     }
     
     public boolean isTeamTable() {

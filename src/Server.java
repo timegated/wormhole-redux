@@ -489,8 +489,8 @@ public class Server{
 				marshall( table.boardSize() );
 				marshall( table.isBalancedTable() );				
 			}
-			for (int i=0; i<table.numPlayerSlots(); i++) {
-				marshall( table.player(i) );
+			for (ServerUser user : table.users()) {
+				marshall( user != null ? user.username() : "" );
 			}
 			marshall( (byte)0 );	// number of table options
 			sendPacket();
