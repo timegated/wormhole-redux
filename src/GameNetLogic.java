@@ -98,7 +98,7 @@ public class GameNetLogic implements Runnable, IListener
                     generateCFTableDialog.m_cbRanking.setState(false);
                     generateCFTableDialog.m_cbRanking.setEnabled(false);
                     generateCFTableDialog.m_cbBigTable.setEnabled(true);
-                    generateCFTableDialog.m_choiceTeamTable.setEnabled(true);
+                    generateCFTableDialog.m_choiceTeamTable.setEnabled(false);
                 }
                 generateCFTableDialog.show();
                 if (generateCFTableDialog.ok()) {

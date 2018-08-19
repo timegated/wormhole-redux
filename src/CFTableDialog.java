@@ -50,20 +50,25 @@ public class CFTableDialog extends Dialog implements IListener, WindowListener, 
     public void itemStateChanged(final ItemEvent itemEvent) {
         if (itemEvent.getSource() != this.m_choiceTeamTable) {
             final byte subscriptionLevel = CFSkin.getSkin().getLogic().getSubscriptionLevel();
-            if (subscriptionLevel >= 2 || subscriptionLevel == -1) {
+            //if (subscriptionLevel >= 2) {
+            if (subscriptionLevel >= -1) {
                 this.m_choiceTeamTable.setEnabled(this.m_cbBigTable.getState());
                 this.m_cbBalancedTeams.setEnabled(this.m_choiceTeamTable.isEnabled() && !this.m_choiceTeamTable.getSelectedItem().equals(CFSkin.STR_TEAMS[0]));
+                if (!this.m_choiceTeamTable.isEnabled()) {
+                	this.m_choiceTeamTable.select(0);
+                	this.m_cbBalancedTeams.setState(false);
+                }
             }
             return;
         }
+
         final boolean enabled = !this.m_choiceTeamTable.getSelectedItem().equals(CFSkin.STR_TEAMS[0]);
         this.m_cbBalancedTeams.setEnabled(enabled);
-        //this.m_cbRanking.setEnabled(!enabled);
         if (!enabled) {
             this.m_cbBalancedTeams.setState(false);
             return;
         }
-        this.m_cbRanking.setState(false);
+	    this.m_cbRanking.setState(false);
     }
     
     public void paint(final Graphics graphics) {
