@@ -84,13 +84,13 @@ playingpanel_btnname0=Instructions & Tips
 # dialogs
 # create table dialog
 table_dialog=280,160,300,187
-table_dialog_tf_password=7,85,255,20
-table_dialog_btn_ok=6,110,100,20
-table_dialog_btn_cancel=125,110,100,20
-table_dialog_cb_ranking=12,26,100,14
-table_dialog_cb_bigtable=134,26,100,14
-table_dialog_cb_balancedteams=134,44,120,14
-table_dialog_choice_teams=12,44,115,14
+table_dialog_tf_password=7,95,255,20
+table_dialog_btn_ok=6,120,100,20
+table_dialog_btn_cancel=125,120,100,20
+table_dialog_cb_ranking=12,36,100,14
+table_dialog_cb_bigtable=134,36,100,14
+table_dialog_cb_balancedteams=134,54,120,14
+table_dialog_choice_teams=12,54,115,14
 # join table dialog
 jointable_dialog=280,130,155,144
 jointable_dialog_tf_password=8,41,135,20

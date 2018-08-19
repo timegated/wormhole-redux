@@ -96,7 +96,9 @@ public class CFSkin extends MouseAdapter
     public void defaultPaintCFTableDialog(final Graphics graphics, final CFTableDialog cfTableDialog) {
         graphics.setColor(cfTableDialog.getForeground());
         graphics.setFont(CFSkin.FONTNORMAL);
-        graphics.drawString("Password (Optional)", 10, 80);
+        int pwTextXPos = this.m_cfProps.getRect("table_dialog_tf_password").x + 3;
+        int pwTextYPos = this.m_cfProps.getRect("table_dialog_tf_password").y - 5;
+        graphics.drawString("Password (Optional)", pwTextXPos, pwTextYPos);
         if (!cfTableDialog.m_cbBigTable.isEnabled()) {
             graphics.drawString("Sign up for the team plan to access more options.", 10, cfTableDialog.m_cfBtnOK.getLocation().y + cfTableDialog.m_cfBtnOK.getSize().height + 14);
         }
@@ -399,7 +401,8 @@ public class CFSkin extends MouseAdapter
         this.setColors(colors.m_choiceTeamTable);
         colors.m_cbRanking.setBounds(this.m_cfProps.getRect("table_dialog_cb_ranking"));
         colors.m_cbBigTable.setBounds(this.m_cfProps.getRect("table_dialog_cb_bigtable"));
-        colors.m_cbBigTable.setEnabled(this.m_logic.getSubscriptionLevel() >= 2);
+        //colors.m_cbBigTable.setEnabled(this.m_logic.getSubscriptionLevel() >= 2);
+        colors.m_cbBigTable.setEnabled(this.m_logic.getSubscriptionLevel() >= -1);
         colors.m_cbBalancedTeams.setBounds(this.m_cfProps.getRect("table_dialog_cb_balancedteams"));
         colors.m_choiceTeamTable.setBounds(this.m_cfProps.getRect("table_dialog_choice_teams"));
         colors.m_tfPassword.setBounds(this.m_cfProps.getRect("table_dialog_tf_password"));
