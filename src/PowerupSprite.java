@@ -63,26 +63,33 @@ public class PowerupSprite extends Sprite
         switch (this.powerupType) {
             case 0: {
                 playerSprite.upgradeShot();
+                break;
             }
             case 1: {
                 playerSprite.upgradeThrust(0.1);
+                break;
             }
             case 2: {
                 playerSprite.enableRetros();
+                break;
             }
             case 3: {
                 playerSprite.m_shieldCyclesLeft = Math.min(450, playerSprite.m_shieldCyclesLeft + 200);
+                break;
             }
             case 4: {
                 Sprite.model.clearScreen();
+                break;
             }
             case 5: {
                 playerSprite.changeHealth(30);
+                break;
             }
             default: {
                 if (playerSprite.passOnPowerup(this.powerupType)) {
                     Sprite.model.addPowerup(this.powerupType);
                 }
+                break;
             }
         }
     }
