@@ -157,6 +157,14 @@ public class Server{
 			return user;
 		}
 		
+		public void handleGameEnd(ServerTable table) throws IOException {
+			table.increaseWinCounts();
+			broadcastGameEnd(table);
+			table.setStatus(TableStatus.GAMEOVER);
+			broadcastTableStatusChange(table.id(), table.status(), (short)-1);
+			new TableTransitionThread(table, table.status());
+		}
+		
 		public ServerThread(Socket socket) throws IOException {
 			this.pw = new PacketStreamWriter(socket.getOutputStream());
 			this.pr = new PacketStreamReader(socket.getInputStream());
@@ -211,11 +219,7 @@ public class Server{
 				        
 			user().setAlive(false);
 			if (table.gameOver()) {
-				table.increaseWinCounts();
-				broadcastGameEnd(table);
-				table.setStatus(TableStatus.GAMEOVER);
-				broadcastTableStatusChange(table.id(), table.status(), (short)-1);
-				new TableTransitionThread(table, table.status());
+				handleGameEnd(table);
 			}
 		}
 		
@@ -324,8 +328,11 @@ public class Server{
 			broadcastLeaveTable(table.id(), user().username());
 			user().setTable(null);
 			if (table.numPlayers() <= 0) {
-				broadcastTableStatusChange(table.id(), (byte)1, (short)-1);	
+				broadcastTableStatusChange(table.id(), TableStatus.DELETE, (short)-1);	
 				tableManager.removeTable(table);
+			}
+			if (table.status() == TableStatus.PLAYING && table.gameOver()) {
+				handleGameEnd(table);
 			}
 		}
 		
