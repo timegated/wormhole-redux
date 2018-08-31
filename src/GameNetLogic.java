@@ -548,7 +548,8 @@ public class GameNetLogic implements Runnable, IListener
             this.disconnect("Please enter username");
             return;
         }
-        if (isGuestAccount) {
+        //if (isGuestAccount) {
+        if (false) {
             if (username.length() > 5) {
                 this.disconnect("Guest usernames cannot exceed 5 characters");
                 return;

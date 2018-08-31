@@ -1,7 +1,10 @@
+import java.util.Set;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
 
 public class ServerUserManager {
+	Set<String> usernames = new HashSet<String>();
 	List<ServerUser> users = new Vector<ServerUser>();
 	
 	public ServerUserManager(){}
@@ -12,6 +15,10 @@ public class ServerUserManager {
 	
 	public synchronized ServerUser getUser(short userId){
 		return this.users.get(userId);
+	}
+	
+	public boolean usernameTaken(String username) {
+		return usernames.contains(username);
 	}
 	
 	public synchronized void addUser(ServerUser user){
@@ -28,5 +35,11 @@ public class ServerUserManager {
 		else{
 			users.set(idx, user);
 		}
+		usernames.add(user.username());
+	}
+	
+	public synchronized void removeUser(ServerUser user){
+		users.set(user.userId(), null);
+		usernames.remove(user.username());
 	}
 }

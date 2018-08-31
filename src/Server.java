@@ -172,6 +172,7 @@ public class Server{
 		}
 		
 		public void handleUserLogout() throws IOException {
+			userManager.removeUser(user());
 			clients.remove(this);
 			if (user().table() != null) {
 				receiveLeaveTable();
@@ -385,7 +386,7 @@ public class Server{
 			sendPacket();
 		}	
 		
-		public void sendLoginResponse() throws IOException {
+		public void sendLoginSucceed() throws IOException {
 			byte opcode = 1;
 			marshall( opcode );
 			marshall( user().userId() );
@@ -393,7 +394,14 @@ public class Server{
 			marshall( user().subscriptionLevel() );
 			marshall( user().username() );
 			sendPacket();
-		}		
+		}
+		
+		public void sendLoginFailed() throws IOException {
+			byte opcode = 0;
+			marshall( opcode );
+			marshall( "Username already taken" );
+			sendPacket();
+		}	
 		
 		public void sendUser(ServerUser user) throws IOException {	
 			byte opcode = 13;
@@ -627,11 +635,20 @@ public class Server{
 		public void run() {
 			try {
 				receiveLogin();
-				sendLoginResponse();
+				
+				if (userManager.usernameTaken(user().username())){
+					sendLoginFailed();
+					clients.remove(this);
+					return;
+				}
+				
+				sendLoginSucceed();
 				
 				// Send current user list to client
 				for (ServerUser user : userManager.users()) {
-					sendUser(user);
+					if (user != null) {
+						sendUser(user);
+					}
 				}
 				
 				// Send current table list to client
