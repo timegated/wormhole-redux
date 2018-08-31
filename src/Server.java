@@ -40,6 +40,12 @@ public class Server{
 		}
 	}
 	
+	void broadcastUserLogout(ServerUser user) throws IOException{
+		for (ServerThread client : this.clients){
+			client.sendUserLogout(user);
+		}
+	}
+	
 	void broadcastCreateTable(ServerTable table) throws IOException {
 		for (ServerThread client : this.clients){
 			client.sendFullTable(table);
@@ -163,6 +169,14 @@ public class Server{
 			table.setStatus(TableStatus.GAMEOVER);
 			broadcastTableStatusChange(table.id(), table.status(), (short)-1);
 			new TableTransitionThread(table, table.status());
+		}
+		
+		public void handleUserLogout() throws IOException {
+			clients.remove(this);
+			if (user().table() != null) {
+				receiveLeaveTable();
+			}
+			broadcastUserLogout(user());
 		}
 		
 		public ServerThread(Socket socket) throws IOException {
@@ -390,6 +404,13 @@ public class Server{
 			for (String iconName : user.icons())
 				marshall( iconName );
 			marshall( user.clan() );
+			sendPacket();
+		}
+		
+		public void sendUserLogout(ServerUser user) throws IOException {	
+			byte opcode = 14;
+			marshall( opcode );
+			marshall( user.username() );
 			sendPacket();
 		}
 		
@@ -627,9 +648,15 @@ public class Server{
 				// Start processing packets from client
 				final DataInputStream stream = pr.getStream();
 				while (true) {
-					short numBytes = stream.readShort();	// packetStreamWriter/Reader let first short be size, we do not use that here
-					if (numBytes > 0) {
-						processPackets(stream);
+					try {
+						short numBytes = stream.readShort();	// packetStreamWriter/Reader let first short be size, we do not use that here
+						if (numBytes > 0) {
+							processPackets(stream);
+						}
+					} catch (EOFException e) {
+						// No more communication to client
+						handleUserLogout();
+						break;
 					}
 				}
 			} catch (Exception e) {
