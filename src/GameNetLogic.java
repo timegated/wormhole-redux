@@ -466,6 +466,7 @@ public class GameNetLogic implements Runnable, IListener
                 }
                 if (s3 != null) {
                     this.addLine("[Error] " + s3);
+                    return;
                 }
                 if (b) {
                     this.setIgnoreUser(s2, true);

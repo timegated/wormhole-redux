@@ -126,6 +126,23 @@ public class Server{
 		}
 	}
 	
+	void broadcastGlobalMessage(String username, String message) throws IOException {
+		for (ServerThread client : this.clients) {
+			client.sendGlobalMessage(username, message);
+		}
+	}
+	
+	void broadcastPrivateMessage(String fromUser, String toUser, String message) throws IOException {
+		for (ServerThread client : this.clients) {
+			if (client.user().username().equals(toUser)) {
+				client.sendPrivateMessage(fromUser, toUser, message);
+			}
+			if (client.user().username().equals(fromUser)) {
+				client.sendPrivateMessage(fromUser, toUser, message);
+			}
+		}
+	}
+	
 	void addUser(ServerUser user){
 		this.userManager.addUser(user);
 	}
@@ -351,6 +368,23 @@ public class Server{
 			}
 		}
 		
+		public void receiveSay() throws IOException {	
+			final DataInputStream stream = this.pr.getStream();
+			
+			String text = stream.readUTF();
+			
+			broadcastGlobalMessage(user().username(), text);
+		}
+		
+		public void receiveWhisper() throws IOException {	
+			final DataInputStream stream = this.pr.getStream();
+			
+			String user = stream.readUTF();
+			String text = stream.readUTF();
+			
+			broadcastPrivateMessage(user().username(), user, text);
+		}
+		
 		public void receiveStartGame() throws IOException, InterruptedException {
 			final DataInputStream stream = this.pr.getStream();
 			
@@ -362,6 +396,23 @@ public class Server{
 				table.setStatus(TableStatus.COUNTDOWN);
 				new TableTransitionThread(table, table.status());
 			}
+		}
+		
+		public void sendGlobalMessage(String username, String message) throws IOException {
+			byte opcode = 5;
+			marshall( opcode );
+			marshall( username );
+			marshall( message );
+			sendPacket();
+		}	
+		
+		public void sendPrivateMessage(String fromUser, String toUser, String message) throws IOException {
+			byte opcode = 6;
+			marshall( opcode );
+			marshall( fromUser );
+			marshall( toUser );
+			marshall( message );
+			sendPacket();
 		}
 		
 		public void sendTableStatusChange(short tableId, byte status, short countdown) throws IOException {
@@ -594,6 +645,15 @@ public class Server{
 			try {
 				final byte opcode = stream.readByte();
 				switch(opcode){
+				case 0:
+					// NOOP, heartbeat
+					break;
+				case 5:
+					receiveSay();
+					break;
+				case 6:
+					receiveWhisper();
+					break;
 				case 106:
 					receivePlayerState();
 					break;
