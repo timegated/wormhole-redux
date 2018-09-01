@@ -99,10 +99,10 @@ jointable_dialog_btn_cancel=80,70,65,20
 # player info dialog
 player_dialog=350,150,270,170
 player_dialog_btn_view=0,0,0,0
-player_dialog_tf_whisper=70,59,172,20
-player_dialog_btn_send=0,0,0,0
-player_dialog_btn_close=30,102,190,20
-player_dialog_cb_ignore=9,82,300,19
+player_dialog_tf_whisper=70,69,172,20
+player_dialog_btn_send=0,10,0,0
+player_dialog_btn_close=30,112,190,20
+player_dialog_cb_ignore=9,92,300,19
 player_dialog_icon_URL=http://www.centerfleet.com/wormholeNewGround/medalsIcons/index.html
 player_dialog_clan_URL=http://www.centerfleet.com/wormholeNewGround/clans/wormholeNG-clanInfo.jsp?clanSymbol=
 # colors

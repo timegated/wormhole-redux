@@ -424,13 +424,13 @@ public class CFSkin extends MouseAdapter
         graphics.setColor(cfPlayerDialog.getForeground());
         graphics.setFont(CFSkin.FONTNORMAL);
         if (!cfPlayerElement.getName().equals(this.m_logic.getUsername())) {
-            graphics.drawString(cfPlayerDialog.isLoggedOff() ? "User logged off" : "Whisper:", 9, 74);
+            graphics.drawString(cfPlayerDialog.isLoggedOff() ? "User logged off" : "Whisper:", 9, 84);
         }
         final int rank = cfPlayerElement.getRank();
-        graphics.drawString("Clan: " + ((cfPlayerElement.getClan().length() == 0) ? "---" : cfPlayerElement.getClan()), CFSkin.m_rectCFPD_Clan.x, CFSkin.m_rectCFPD_Clan.y + 12);
-        graphics.drawString("Rank: " + ((rank >= 0) ? ("" + rank) : "N/A"), CFSkin.m_rectCFPD_Icons.x, CFSkin.m_rectCFPD_Icons.y + 12);
-        this.drawRankSquare(graphics, CFSkin.m_rectCFPD_Icons.x + 68, CFSkin.m_rectCFPD_Icons.y, rank);
-        this.drawIcons(graphics, cfPlayerElement.getIcons(), CFSkin.m_rectCFPD_Icons.x + 83, CFSkin.m_rectCFPD_Icons.y, 15, 10);
+        graphics.drawString("Clan: " + ((cfPlayerElement.getClan().length() == 0) ? "---" : cfPlayerElement.getClan()), CFSkin.m_rectCFPD_Clan.x, CFSkin.m_rectCFPD_Clan.y + 22);
+        graphics.drawString("Rank: " + ((rank >= 0) ? ("" + rank) : "N/A"), CFSkin.m_rectCFPD_Icons.x, CFSkin.m_rectCFPD_Icons.y + 22);
+        this.drawRankSquare(graphics, CFSkin.m_rectCFPD_Icons.x + 68, CFSkin.m_rectCFPD_Icons.y + 10, rank);
+        this.drawIcons(graphics, cfPlayerElement.getIcons(), CFSkin.m_rectCFPD_Icons.x + 83, CFSkin.m_rectCFPD_Icons.y + 10, 15, 10);
     }
     
     private void shadeInternals(final Graphics graphics, final CFScroller cfScroller, final Color[] array) {
