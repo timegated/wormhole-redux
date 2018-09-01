@@ -127,8 +127,18 @@ public class Server{
 	}
 	
 	void broadcastGlobalMessage(String username, String message) throws IOException {
+		boolean isForLobby = true;
 		for (ServerThread client : this.clients) {
-			client.sendGlobalMessage(username, message);
+			client.sendGlobalMessage(username, message, isForLobby);
+		}
+	}
+	
+	void broadcastGlobalMessage(ServerTable table, String username, String message) throws IOException {
+		boolean isForLobby = false;
+		for (ServerThread client : this.clients) {
+			if (client.user().table() == table) {
+				client.sendGlobalMessage(username, message, isForLobby);
+			}
 		}
 	}
 	
@@ -370,10 +380,16 @@ public class Server{
 		
 		public void receiveSay() throws IOException {	
 			final DataInputStream stream = this.pr.getStream();
-			
 			String text = stream.readUTF();
-			
 			broadcastGlobalMessage(user().username(), text);
+		}
+		
+		public void receiveTableSay() throws IOException {	
+			final DataInputStream stream = this.pr.getStream();
+			String text = stream.readUTF();
+			if (user().table() != null) {
+				broadcastGlobalMessage(user().table(), user().username(), text);
+			}
 		}
 		
 		public void receiveWhisper() throws IOException {	
@@ -398,8 +414,8 @@ public class Server{
 			}
 		}
 		
-		public void sendGlobalMessage(String username, String message) throws IOException {
-			byte opcode = 5;
+		public void sendGlobalMessage(String username, String message, boolean isForLobby) throws IOException {
+			byte opcode = isForLobby ? (byte)5 : (byte)18;
 			marshall( opcode );
 			marshall( username );
 			marshall( message );
@@ -653,6 +669,9 @@ public class Server{
 					break;
 				case 6:
 					receiveWhisper();
+					break;
+				case 18:
+					receiveTableSay();
 					break;
 				case 106:
 					receivePlayerState();

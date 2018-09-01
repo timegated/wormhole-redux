@@ -153,11 +153,11 @@ public class Network extends ByteArrayInputStream
         this.m_socket = null;
     }
     
-    synchronized void tableSay(final String s) {
+    synchronized void tableSay(final String message) {
         final DataOutput stream = this.getStream(0);
         try {
             stream.writeByte(18);
-            stream.writeUTF(s);
+            stream.writeUTF(message);
             this.sendPacket();
         }
         catch (Exception ex) {}
@@ -193,11 +193,11 @@ public class Network extends ByteArrayInputStream
         this.sendGeneric((byte)30, (short)n);
     }
     
-    synchronized void say(final String s) {
+    synchronized void say(final String message) {
         final DataOutput stream = this.getStream(0);
         try {
             stream.writeByte(5);
-            stream.writeUTF(s);
+            stream.writeUTF(message);
             this.sendPacket();
         }
         catch (Exception ex) {}

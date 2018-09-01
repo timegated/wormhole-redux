@@ -414,7 +414,7 @@ public class GameNetLogic implements Runnable, IListener
         if (s == null || s.length() < 1) {
             return;
         }
-        String s2 = null;
+        String username = null;
         int i = 0;
         while (i < GameNetLogic.g_commands.length) {
             if (s.toLowerCase().startsWith(GameNetLogic.g_commands[i])) {
@@ -430,18 +430,18 @@ public class GameNetLogic implements Runnable, IListener
                     case 5: {
                         final int index = s.indexOf(32);
                         if (index > 0) {
-                            s2 = s.substring(0, index);
+                        	username = s.substring(0, index);
                             s = s.substring(index + 1);
                         }
                         if (b || b2) {
-                            s2 = s.toLowerCase();
+                        	username = s.toLowerCase();
                             break;
                         }
                         break;
                     }
                     case 6:
                     case 7: {
-                        s2 = this.m_lastWhisperer;
+                    	username = this.m_lastWhisperer;
                         break;
                     }
                     default: {
@@ -454,29 +454,29 @@ public class GameNetLogic implements Runnable, IListener
                         return;
                     }
                 }
-                String s3 = null;
-                if (s2 == null) {
-                    s3 = "User (" + s + ") not found";
+                String errorMsg = null;
+                if (username == null) {
+                	errorMsg = "User (" + s + ") not found";
                 }
-                else if (s2.equalsIgnoreCase(this.m_username)) {
-                    s3 = "Cannot target yourself for chat command";
+                else if (username.equalsIgnoreCase(this.m_username)) {
+                	errorMsg = "Cannot target yourself for chat command";
                 }
-                else if (this.getPlayer(s2) == null) {
-                    s3 = "User (" + s2 + ") not found";
+                else if (this.getPlayer(username) == null) {
+                	errorMsg = "User (" + username + ") not found";
                 }
-                if (s3 != null) {
-                    this.addLine("[Error] " + s3);
+                if (errorMsg != null) {
+                    this.addLine("[Error] " + errorMsg);
                     return;
                 }
                 if (b) {
-                    this.setIgnoreUser(s2, true);
+                    this.setIgnoreUser(username, true);
                     return;
                 }
                 if (b2) {
-                    this.setIgnoreUser(s2, false);
+                    this.setIgnoreUser(username, false);
                     return;
                 }
-                this.m_network.whisper(s2, s);
+                this.m_network.whisper(username, s);
                 return;
             }
             else {
@@ -623,13 +623,13 @@ public class GameNetLogic implements Runnable, IListener
                 }
                 case 5:
                 case 18: {
-                    final String utf5 = dataInputStream.readUTF();
-                    final String utf6 = dataInputStream.readUTF();
-                    final CFPlayerElement player2 = this.getPlayer(utf5);
+                    final String username = dataInputStream.readUTF();
+                    final String message = dataInputStream.readUTF();
+                    final CFPlayerElement player2 = this.getPlayer(username);
                     if (player2 != null && player2.getIgnored()) {
                         return;
                     }
-                    ((byte1 == 5) ? this.m_pnlGame.getLobbyPanel().getChatPanel() : this.m_pnlGame.getPlayingPanel().getChatPanel()).addLine(utf5, utf6);
+                    ((byte1 == 5) ? this.m_pnlGame.getLobbyPanel().getChatPanel() : this.m_pnlGame.getPlayingPanel().getChatPanel()).addLine(username, message);
                     break;
                 }
                 case 13: {
