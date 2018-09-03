@@ -1,11 +1,13 @@
 import java.applet.*;
 import java.awt.*;
 import java.awt.image.*;
+import javax.swing.*;
 
 public class GameLoadingAnimator implements Runnable
 {
     private int m_loads;
-    Applet m_applet;
+    //Applet m_applet;
+    JPanel m_applet;
     int m_width;
     int m_height;
     int m_total;
@@ -24,7 +26,8 @@ public class GameLoadingAnimator implements Runnable
     private static final Color CLR_BOX_FG;
     private static final Color CLR_BOX_BG;
     
-    public GameLoadingAnimator(final Applet applet, final String brand, final int total, final int width, final int height) {
+    //public GameLoadingAnimator(final Applet applet, final String brand, final int total, final int width, final int height) {
+    public GameLoadingAnimator(final JPanel applet, final String brand, final int total, final int width, final int height) {
         this.m_gradients = new Color[25];
         this.m_bKeepRunning = true;
         this.m_applet = applet;

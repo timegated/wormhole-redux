@@ -8,7 +8,7 @@ public class CreditsPanel extends Panel implements IListener
     private int m_totalCredits;
     
     public void fireEvent(final Object o, final Object o2) {
-        Util.openPage("http://www.centerfleet.com/prizeCenter/prizeAbout.html", 400, 400, "Prize Center");
+        //Util.openPage("http://www.centerfleet.com/prizeCenter/prizeAbout.html", 400, 400, "Prize Center");
     }
     
     public void setRegistered(final boolean bRegistered) {

@@ -1,13 +1,17 @@
 import java.util.*;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.net.*;
 import java.io.*;
 import java.applet.*;
 import java.awt.image.*;
 import java.awt.*;
 
-public class GameLoader extends Applet implements Runnable
+public class GameLoader extends JPanel implements Runnable
 {
-    public int m_screenWidth;
+	private static final long serialVersionUID = 1L;
+	public int m_screenWidth;
     public int m_screenHeight;
     public static Thread m_gameThread;
     public MediaTracker m_mediaTracker;
@@ -35,10 +39,11 @@ public class GameLoader extends Applet implements Runnable
     public void doLoading() {
         try {
             try {
-                this.m_props.load(new URL(this.getDocumentBase(), (this.getParameter("propfile") == null) ? "prop.txt" : this.getParameter("propfile")).openStream());
+                //this.m_props.load(new URL(this.getDocumentBase(), (this.getParameter("propfile") == null) ? "prop.txt" : this.getParameter("propfile")).openStream());
+            	this.m_props.load(getClass().getResourceAsStream("cba-prop.txt"));
             }
             catch (IOException ex2) {}
-            if (this.getDocumentBase().getHost().equals(this.m_props.getProperty("releaseHost", "b"))) {}
+            //if (this.getDocumentBase().getHost().equals(this.m_props.getProperty("releaseHost", "b"))) {}
             this.m_brand = this.m_props.getProperty("brand", "Center Fleet");
             final int intProperty = Util.getIntProperty(this.m_props, "NumImgs", 0);
             final int intProperty2 = Util.getIntProperty(this.m_props, "NumSnds", 0);
@@ -46,28 +51,17 @@ public class GameLoader extends Applet implements Runnable
             this.m_animator = new GameLoadingAnimator(this, this.m_brand, intProperty3 + intProperty + intProperty2, this.m_screenWidth, this.m_screenHeight);
             new Thread(this.m_animator).start();
             for (int i = 0; i < intProperty; ++i) {
-                this.m_loadingImageArray[i] = this.getImage(this.getCodeBase(), this.m_props.getProperty("IP" + i));
+                //this.m_loadingImageArray[i] = this.getImage(this.getCodeBase(), this.m_props.getProperty("IP" + i));
+            	this.m_loadingImageArray[i] = ImageIO.read(getClass().getResourceAsStream(this.m_props.getProperty("IP" + i)));
                 this.m_mediaTracker.addImage(this.m_loadingImageArray[i], i);
             }
-            for (int j = 0; j < intProperty3; ++j) {
-                try {
-                    String s = "" + (char)(97 + j % 26);
-                    if (j / 26 > 0) {
-                        s += (char)(97 + j / 26);
-                    }
-                    Class.forName(s);
-                    this.m_animator.notifyLoad();
-                    sleep(50);
-                }
-                catch (Exception ex3) {}
-            }
-            for (int k = 0; k < intProperty2; ++k) {
-                final AudioClip audioClip = this.getAudioClip(this.getCodeBase(), this.m_props.getProperty("SP" + k));
-                audioClip.play();
-                audioClip.stop();
-                GameLoader.g_mediaElements.put(this.m_props.getProperty("SN" + k), audioClip);
-                this.m_animator.notifyLoad();
-            }
+//            for (int k = 0; k < intProperty2; ++k) {
+//                final AudioClip audioClip = this.getAudioClip(this.getCodeBase(), this.m_props.getProperty("SP" + k));
+//                audioClip.play();
+//                audioClip.stop();
+//                GameLoader.g_mediaElements.put(this.m_props.getProperty("SN" + k), audioClip);
+//                this.m_animator.notifyLoad();
+//            }
             for (int l = 0; l < intProperty; ++l) {
                 this.m_mediaTracker.waitForID(l);
                 this.m_animator.notifyLoad();
@@ -83,7 +77,7 @@ public class GameLoader extends Applet implements Runnable
             ex.printStackTrace();
         }
         sleep(200);
-        this.m_animator.m_bKeepRunning = false;
+        //this.m_animator.m_bKeepRunning = false;
         this.setLayout(null);
         this.add(this.m_gamePanel = new GamePanel(this.m_props, this, this.m_screenWidth, this.m_screenHeight));
         this.m_gamePanel.validate();
@@ -94,6 +88,7 @@ public class GameLoader extends Applet implements Runnable
     public GameLoader() {
         this.m_loadingImageArray = new Image[64];
         this.m_props = new Properties();
+        init();
     }
     
     public void update(final Graphics graphics) {
@@ -149,9 +144,19 @@ public class GameLoader extends Applet implements Runnable
         this.setBackground(Color.black);
         this.setForeground(Color.white);
         final Dimension size = this.getSize();
-        this.m_screenWidth = size.width;
-        this.m_screenHeight = size.height;
+        this.m_screenWidth = 800;
+        this.m_screenHeight = 525;
         this.m_mediaTracker = new MediaTracker(this);
         this.repaint();
     }
+    
+    public static void main (String [] args) {
+        JFrame jf = new JFrame();
+        Container c = jf.getContentPane();
+        jf.setBounds(10, 10, 800,525);
+        GameLoader gameLoader = new GameLoader();
+        jf.setVisible(true);
+        gameLoader.start();
+        c.add(gameLoader);
+      }
 }

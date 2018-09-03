@@ -249,9 +249,9 @@ public class GameNetLogic implements Runnable, IListener
             final String iconName = dataInputStream.readUTF();
             iconNames[i] = iconName;
             if (this.m_htLoadedIcons.get(iconName) == null && this.m_htUnloadedIcons.get(iconName) == null) {
-                final Image image = GamePanel.m_applet.getImage(GamePanel.m_applet.getCodeBase(), "images/icons/" + iconName);
-                this.m_htUnloadedIcons.put(iconName, image);
-                this.m_mtIcons.addImage(image, 0);
+                //final Image image = GamePanel.m_applet.getImage(GamePanel.m_applet.getCodeBase(), "images/icons/" + iconName);
+                //this.m_htUnloadedIcons.put(iconName, image);
+                //this.m_mtIcons.addImage(image, 0);
             }
         }
         this.m_pnlGame.getLobbyPanel().getPlayerPanel().addPlayer(username, dataInputStream.readUTF(), rank, iconNames);
@@ -519,9 +519,9 @@ public class GameNetLogic implements Runnable, IListener
         this.m_mtIcons = new MediaTracker(GamePanel.m_applet);
         this.m_loginPort = cfProps.getInt("loginserviceport", 6041);
         this.m_loginPort2 = cfProps.getInt("loginserviceport2", 7042);
-        final String host = GamePanel.m_applet.getCodeBase().getHost();
-        this.m_host2 = host;
-        this.m_host = host;
+        //final String host = GamePanel.m_applet.getCodeBase().getHost();
+        //this.m_host2 = host;
+        //this.m_host = host;
         this.nextTime = System.currentTimeMillis() + 10000000L;
     }
     

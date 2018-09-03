@@ -80,7 +80,7 @@ public class CFButton extends Canvas implements MouseListener
     }
     
     public void openURLPage() {
-        Util.openPage(this.m_url, this.m_urlW, this.m_urlH, this.m_urlTitle);
+        //Util.openPage(this.m_url, this.m_urlW, this.m_urlH, this.m_urlTitle);
     }
     
     public void update(final Graphics graphics) {

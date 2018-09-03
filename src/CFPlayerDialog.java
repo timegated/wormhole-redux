@@ -33,7 +33,7 @@ public class CFPlayerDialog extends Dialog implements IListener, WindowListener,
             return;
         }
         if (o == this.m_cfBtnOpenGameCard) {
-            Util.openPage("http://www.centerfleet.com/", 500, 400, "Ranking");
+            //Util.openPage("http://www.centerfleet.com/", 500, 400, "Ranking");
             return;
         }
         if (o == this.m_cfBtnClose) {
