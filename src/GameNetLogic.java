@@ -1,5 +1,10 @@
 import java.util.*;
+
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import com.sun.glass.events.WindowEvent;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
 import java.io.*;
 
 
@@ -19,7 +24,7 @@ public class GameNetLogic implements Runnable, IListener
     private String m_host;
     private String m_host2;
     private long nextTime;
-    private static long NOOP_DURATION;
+    public static long NOOP_DURATION;
     private MediaTracker m_mtIcons;
     private Hashtable<String, Image> m_htLoadedIcons;
     private Hashtable<String, Image> m_htUnloadedIcons;
@@ -568,7 +573,7 @@ public class GameNetLogic implements Runnable, IListener
     }
     
     static {
-        GameNetLogic.NOOP_DURATION = 20000L;
+        GameNetLogic.NOOP_DURATION = 10000L;
         g_commands = new String[] { "/whisper ", "/w ", "/ignore ", "/i ", "/unignore ", "/u ", "/reply ", "/r ", "/help", "/h", "/?" };
     }
     
@@ -942,8 +947,8 @@ public class GameNetLogic implements Runnable, IListener
         do
             try
             {
-                while (true)
-                    if ((this.m_network != null) && (this.m_network.m_bConnected))
+                while (true) {
+                    if ((this.m_network != null) && (this.m_network.m_bConnected)) {
                         try
                         {
                             DataInputStream localDataInputStream = this.m_network.readPacket();
@@ -953,14 +958,18 @@ public class GameNetLogic implements Runnable, IListener
                         {
                           return;
                         }
-                    else
+                    }
+                    else {
                         Thread.sleep(500L);
+                    }
+                }
             }
             catch (Exception localException)
             {
             }
         while (this.m_network == null);
-            disconnect("Connection Lost");
+        
+        disconnect("Connection Lost");
     }
     
     public int getPlayerRank(final String s) {

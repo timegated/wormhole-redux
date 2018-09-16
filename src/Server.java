@@ -166,6 +166,7 @@ public class Server{
 		private ServerUser user;
 		private PacketStreamWriter pw;
 		private PacketStreamReader pr;
+		private long nextTime;
 		
 	    public void marshall(boolean b) throws IOException {
 	    	this.pw.getStream().writeByte((byte)(b ? 1 : 0));
@@ -182,8 +183,14 @@ public class Server{
 	    public void marshall(String s) throws IOException {
 	    	this.pw.getStream().writeUTF(s);
 	    }
-	    public void sendPacket() throws IOException {
-	    	this.pw.sendPacket();
+	    public void sendPacket() {
+	    	try {
+	    		this.pw.sendPacket();
+	    	}
+	    	catch (IOException e) {
+	    		// Do not need to do anything here.
+	    		// We need this because client could be closed, but not yet removed from server's list.
+	    	}
 	    }
 				
 		public ServerUser user() {
@@ -743,11 +750,21 @@ public class Server{
 				
 				// Start processing packets from client
 				final DataInputStream stream = pr.getStream();
+				this.nextTime = System.currentTimeMillis() + GameNetLogic.NOOP_DURATION*2;
 				while (true) {
 					try {
-						short numBytes = stream.readShort();	// packetStreamWriter/Reader let first short be size, we do not use that here
-						if (numBytes > 0) {
-							processPackets(stream);
+						if (stream.available() > 0) {
+							short numBytes = stream.readShort();	// packetStreamWriter/Reader let first short be size, we do not use that here
+							if (numBytes > 0) {
+								processPackets(stream);
+							}
+							this.nextTime = System.currentTimeMillis() + GameNetLogic.NOOP_DURATION*2;
+						}
+						else {
+							if (System.currentTimeMillis() > this.nextTime) {	// no communication from client
+								handleUserLogout();
+								break;
+							}
 						}
 					} catch (EOFException e) {
 						// No more communication to client

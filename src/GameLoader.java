@@ -2,9 +2,7 @@ import java.util.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.net.*;
 import java.io.*;
-import java.applet.*;
 import java.awt.image.*;
 import java.awt.*;
 
@@ -152,11 +150,12 @@ public class GameLoader extends JPanel implements Runnable
     
     public static void main (String [] args) {
         JFrame jf = new JFrame();
-        Container c = jf.getContentPane();
+        jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         jf.setBounds(10, 10, 800,525);
-        GameLoader gameLoader = new GameLoader();
+        
         jf.setVisible(true);
+        GameLoader gameLoader = new GameLoader();
         gameLoader.start();
-        c.add(gameLoader);
-      }
+        jf.getContentPane().add(gameLoader);
+    }
 }
