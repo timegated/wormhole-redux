@@ -1,5 +1,4 @@
 import java.util.*;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.io.*;
@@ -149,13 +148,15 @@ public class GameLoader extends JPanel implements Runnable
     }
     
     public static void main (String [] args) {
-        JFrame jf = new JFrame();
-        jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        jf.setBounds(10, 10, 800,525);
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         
-        jf.setVisible(true);
+        frame.setBounds(10, 10, 800,525);
+        frame.setTitle("Wormhole Redux");
+        
+        frame.setVisible(true);
         GameLoader gameLoader = new GameLoader();
         gameLoader.start();
-        jf.getContentPane().add(gameLoader);
+        frame.getContentPane().add(gameLoader);
     }
 }

@@ -136,6 +136,13 @@ public class Network extends ByteArrayInputStream
     
     public void disconnect() {
         this.m_bConnected = false;
+        final DataOutput stream = this.getStream(0);
+        try {	// Send disconnect flag
+            stream.writeByte(1);
+            this.sendPacket();
+        }
+        catch (Exception ex) {}
+        
         try {
             this.m_reader.m_iStream.close();
         }

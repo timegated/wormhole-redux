@@ -166,6 +166,7 @@ public class Server{
 		private ServerUser user;
 		private PacketStreamWriter pw;
 		private PacketStreamReader pr;
+		private Socket socket;
 		private long nextTime;
 		
 	    public void marshall(boolean b) throws IOException {
@@ -217,6 +218,7 @@ public class Server{
 		public ServerThread(Socket socket) throws IOException {
 			this.pw = new PacketStreamWriter(socket.getOutputStream());
 			this.pr = new PacketStreamReader(socket.getInputStream());
+			this.socket = socket;
 			start();
 		}
 		
@@ -670,6 +672,9 @@ public class Server{
 				switch(opcode){
 				case 0:
 					// NOOP, heartbeat
+					break;
+				case 1:
+					handleUserLogout();
 					break;
 				case 5:
 					receiveSay();

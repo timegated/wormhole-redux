@@ -1,11 +1,9 @@
 import java.util.*;
-
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
-import com.sun.glass.events.WindowEvent;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
 import java.io.*;
+import java.awt.event.*;
 
 
 public class GameNetLogic implements Runnable, IListener
@@ -528,6 +526,18 @@ public class GameNetLogic implements Runnable, IListener
         //this.m_host2 = host;
         //this.m_host = host;
         this.nextTime = System.currentTimeMillis() + 10000000L;
+        
+        JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(GamePanel.m_applet);
+        topFrame.addWindowListener(new WindowAdapter() {
+	    	@Override
+			public void windowClosing(WindowEvent event) {
+				System.out.println("close event ok");
+				if (m_network != null && m_network.m_bConnected) {
+					System.out.println("here");
+					disconnect("Connection closed");
+				}
+			}
+        });
     }
     
     public void addCredits(final int n) {
