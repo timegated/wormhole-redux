@@ -168,6 +168,7 @@ public class Server{
 		private PacketStreamWriter pw;
 		private PacketStreamReader pr;
 		private long nextTime;
+		String clientVersion;
 		public Queue<Runnable> sendMessages = new ConcurrentLinkedQueue<>();
 		
 	    public void marshall(boolean b) {
@@ -252,8 +253,10 @@ public class Server{
 			int 	gameId 			= stream.readInt();
 			short 	majorVersion 	= stream.readShort();
 			short 	minorVersion 	= stream.readShort();
+			String 	clientVersion	= stream.readUTF();
 			
 			this.user = new ServerUser(username);
+			this.clientVersion = clientVersion;
 		}
 		
 		public void receivePlayerState() throws IOException {
@@ -492,10 +495,10 @@ public class Server{
 			sendPacket();
 		}
 		
-		public void sendLoginFailed() {
+		public void sendLoginFailed(String errorMsg) {
 			byte opcode = 0;
 			marshall( opcode );
-			marshall( "Username already taken" );
+			marshall( errorMsg );
 			sendPacket();
 		}	
 		
@@ -730,7 +733,13 @@ public class Server{
 				receiveLogin();
 				
 				if (userManager.usernameTaken(user().username())){
-					sendLoginFailed();
+					sendLoginFailed("Username already taken");
+					clients.remove(this);
+					return;
+				}
+				
+				if (!this.clientVersion.equals("version1")){
+					sendLoginFailed("Wrong client version, check website for updated client");
 					clients.remove(this);
 					return;
 				}
