@@ -1,5 +1,6 @@
 import java.applet.*;
 import java.util.*;
+import javax.swing.*;
 import java.awt.*;
 
 public class GamePanel extends Panel
@@ -9,7 +10,7 @@ public class GamePanel extends Panel
     private LoginPanel m_pnlLogin;
     private PlayingPanel m_pnlPlaying;
     private GameNetLogic m_netLogic;
-    public static Applet m_applet;
+    public static JPanel m_applet;
     public static Vector g_vDialogs;
     private CFProps m_cfProps;
     
@@ -17,7 +18,8 @@ public class GamePanel extends Panel
         return this.m_netLogic;
     }
     
-    public GamePanel(final Properties properties, final Applet applet, final int n, final int n2) {
+    //public GamePanel(final Properties properties, final Applet applet, final int n, final int n2) {
+    public GamePanel(final Properties properties, final JPanel applet, final int n, final int n2) {
         this.m_cardLayout = new CardLayout();
         this.setSize(n, n2);
         GamePanel.m_applet = applet;

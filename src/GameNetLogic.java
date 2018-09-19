@@ -1,6 +1,9 @@
 import java.util.*;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import java.awt.*;
 import java.io.*;
+import java.awt.event.*;
 
 
 public class GameNetLogic implements Runnable, IListener
@@ -19,7 +22,7 @@ public class GameNetLogic implements Runnable, IListener
     private String m_host;
     private String m_host2;
     private long nextTime;
-    private static long NOOP_DURATION;
+    public static long NOOP_DURATION;
     private MediaTracker m_mtIcons;
     private Hashtable<String, Image> m_htLoadedIcons;
     private Hashtable<String, Image> m_htUnloadedIcons;
@@ -249,9 +252,9 @@ public class GameNetLogic implements Runnable, IListener
             final String iconName = dataInputStream.readUTF();
             iconNames[i] = iconName;
             if (this.m_htLoadedIcons.get(iconName) == null && this.m_htUnloadedIcons.get(iconName) == null) {
-                final Image image = GamePanel.m_applet.getImage(GamePanel.m_applet.getCodeBase(), "images/icons/" + iconName);
-                this.m_htUnloadedIcons.put(iconName, image);
-                this.m_mtIcons.addImage(image, 0);
+                //final Image image = GamePanel.m_applet.getImage(GamePanel.m_applet.getCodeBase(), "images/icons/" + iconName);
+                //this.m_htUnloadedIcons.put(iconName, image);
+                //this.m_mtIcons.addImage(image, 0);
             }
         }
         this.m_pnlGame.getLobbyPanel().getPlayerPanel().addPlayer(username, dataInputStream.readUTF(), rank, iconNames);
@@ -519,10 +522,22 @@ public class GameNetLogic implements Runnable, IListener
         this.m_mtIcons = new MediaTracker(GamePanel.m_applet);
         this.m_loginPort = cfProps.getInt("loginserviceport", 6041);
         this.m_loginPort2 = cfProps.getInt("loginserviceport2", 7042);
-        final String host = GamePanel.m_applet.getCodeBase().getHost();
-        this.m_host2 = host;
-        this.m_host = host;
+        //final String host = GamePanel.m_applet.getCodeBase().getHost();
+        //this.m_host2 = host;
+        //this.m_host = host;
         this.nextTime = System.currentTimeMillis() + 10000000L;
+        
+        JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(GamePanel.m_applet);
+        topFrame.addWindowListener(new WindowAdapter() {
+	    	@Override
+			public void windowClosing(WindowEvent event) {
+				System.out.println("close event ok");
+				if (m_network != null && m_network.m_bConnected) {
+					System.out.println("here");
+					disconnect("Connection closed");
+				}
+			}
+        });
     }
     
     public void addCredits(final int n) {
@@ -568,7 +583,7 @@ public class GameNetLogic implements Runnable, IListener
     }
     
     static {
-        GameNetLogic.NOOP_DURATION = 20000L;
+        GameNetLogic.NOOP_DURATION = 10000L;
         g_commands = new String[] { "/whisper ", "/w ", "/ignore ", "/i ", "/unignore ", "/u ", "/reply ", "/r ", "/help", "/h", "/?" };
     }
     
@@ -942,8 +957,8 @@ public class GameNetLogic implements Runnable, IListener
         do
             try
             {
-                while (true)
-                    if ((this.m_network != null) && (this.m_network.m_bConnected))
+                while (true) {
+                    if ((this.m_network != null) && (this.m_network.m_bConnected)) {
                         try
                         {
                             DataInputStream localDataInputStream = this.m_network.readPacket();
@@ -953,14 +968,18 @@ public class GameNetLogic implements Runnable, IListener
                         {
                           return;
                         }
-                    else
+                    }
+                    else {
                         Thread.sleep(500L);
+                    }
+                }
             }
             catch (Exception localException)
             {
             }
         while (this.m_network == null);
-            disconnect("Connection Lost");
+        
+        disconnect("Connection Lost");
     }
     
     public int getPlayerRank(final String s) {

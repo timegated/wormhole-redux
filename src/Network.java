@@ -59,6 +59,7 @@ public class Network extends ByteArrayInputStream
         try {
             //(this.m_socket = new Socket(InetAddress.getByName(host), port)).setSoTimeout(10000);
             (this.m_socket = new Socket("127.0.0.1", 4444)).setSoTimeout(10000);
+            //(this.m_socket = new Socket("209.97.144.187", 4444)).setSoTimeout(5000);
         }
         catch (Exception ex) {
             System.out.println(ex);
@@ -136,6 +137,15 @@ public class Network extends ByteArrayInputStream
     
     public void disconnect() {
         this.m_bConnected = false;
+        try {	// Send disconnect flag
+            final DataOutput stream = this.getStream(0);
+            if (stream != null) {
+            	stream.writeByte(1);
+            	this.sendPacket();
+            }
+        }
+        catch (Exception ex) {}
+        
         try {
             this.m_reader.m_iStream.close();
         }

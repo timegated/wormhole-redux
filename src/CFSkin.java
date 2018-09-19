@@ -237,7 +237,7 @@ public class CFSkin extends MouseAdapter
         if (CFSkin.m_rectCFPD_Clan.contains(mouseEvent.getX(), mouseEvent.getY())) {
             final String clan = ((CFPlayerDialog)mouseEvent.getSource()).getCFPlayerElement().getClan();
             if (clan.length() > 0) {
-                Util.openPage(this.m_cfProps.getString("player_dialog_clan_URL" + clan, ""), 300, 300, "Wormhole Clans");
+                //Util.openPage(this.m_cfProps.getString("player_dialog_clan_URL" + clan, ""), 300, 300, "Wormhole Clans");
             }
         }
     }
