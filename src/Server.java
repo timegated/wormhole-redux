@@ -1,6 +1,7 @@
 import java.net.*;
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Server{
 	public static final short TABLE_COUNTDOWN = 5;
@@ -34,121 +35,121 @@ public class Server{
 		}
 	}
 	
-	void broadcastUser(ServerUser user) throws IOException{
+	void broadcastUser(ServerUser user) {
 		for (ServerThread client : this.clients){
-			client.sendUser(user);
+			client.sendMessages.add(()->client.sendUser(user));
 		}
 	}
 	
-	void broadcastUserLogout(ServerUser user) throws IOException{
+	void broadcastUserLogout(ServerUser user) {
 		for (ServerThread client : this.clients){
-			client.sendUserLogout(user);
+			client.sendMessages.add(()->client.sendUserLogout(user));
 		}
 	}
 	
-	void broadcastCreateTable(ServerTable table) throws IOException {
+	void broadcastCreateTable(ServerTable table) {
 		for (ServerThread client : this.clients){
-			client.sendFullTable(table);
+			client.sendMessages.add(()->client.sendFullTable(table));
 		}
 	}
 	
-	void broadcastJoinTable(ServerTable table, String username, byte slot, byte teamId) throws IOException {
+	void broadcastJoinTable(ServerTable table, String username, byte slot, byte teamId) {
 		for (ServerThread client : this.clients){
-			client.sendJoinTable(table, username, slot, teamId);
+			client.sendMessages.add(()->client.sendJoinTable(table, username, slot, teamId));
 		}
 	}
 	
-	void broadcastLeaveTable(short tableId, String username) throws IOException {
+	void broadcastLeaveTable(short tableId, String username) {
 		for (ServerThread client : this.clients){
-			client.sendLeaveTable(tableId, username);
+			client.sendMessages.add(()->client.sendLeaveTable(tableId, username));
 		}
 	}
 	
-	void broadcastTableStatusChange(short tableId, byte status, short countdown) throws IOException {
+	void broadcastTableStatusChange(short tableId, byte status, short countdown) {
 		for (ServerThread client : this.clients){
-			client.sendTableStatusChange(tableId, status, countdown);
+			client.sendMessages.add(()->client.sendTableStatusChange(tableId, status, countdown));
 		}
 	}
 	
-	void broadcastTeamChange(ServerTable table, byte slot, byte teamId) throws IOException {
+	void broadcastTeamChange(ServerTable table, byte slot, byte teamId) {
 		for (ServerThread client : this.clients){
 			if (table.hasPlayer(client.user().username())) {
-				client.sendTeamChange(slot, teamId);
+				client.sendMessages.add(()->client.sendTeamChange(slot, teamId));
 			}
 		}
 	}
 	
-	void broadcastGameStart(ServerTable table) throws IOException {
+	void broadcastGameStart(ServerTable table) {
 		for (ServerThread client : this.clients) {
 			if (table.hasPlayer(client.user().username())) {
-				client.sendGameStart(table);
+				client.sendMessages.add(()->client.sendGameStart(table));
 			}
 		}
 	}
 	
-	void broadcastPowerup(ServerTable table, byte powerupType, byte toSlot, byte b1, short gameSession, byte b2) throws IOException {
+	void broadcastPowerup(ServerTable table, byte powerupType, byte toSlot, byte b1, short gameSession, byte b2) {
 		for (ServerThread client : this.clients) {
 			if (table.hasPlayer(client.user().username())) {
-				client.sendPowerup(powerupType, toSlot, b1, gameSession, b2);
+				client.sendMessages.add(()->client.sendPowerup(powerupType, toSlot, b1, gameSession, b2));
 			}
 		}
 	}
 	
-	void broadcastPlayerState(ServerTable table, short gameSession, byte slot, short healthPerc, Byte[] powerups, byte shipType) throws IOException {
+	void broadcastPlayerState(ServerTable table, short gameSession, byte slot, short healthPerc, Byte[] powerups, byte shipType) {
 		for (ServerThread client : this.clients) {
 			if (table.hasPlayer(client.user().username())) {
-				client.sendPlayerState(gameSession, slot, healthPerc, powerups, shipType);
+				client.sendMessages.add(()->client.sendPlayerState(gameSession, slot, healthPerc, powerups, shipType));
 			}
 		}
 	}
 	
-	void broadcastPlayerEvent(ServerTable table, short gameSession, String eventString) throws IOException {
+	void broadcastPlayerEvent(ServerTable table, short gameSession, String eventString) {
 		for (ServerThread client : this.clients) {
 			if (table.hasPlayer(client.user().username())) {
-				client.sendPlayerEvent(gameSession, eventString);
+				client.sendMessages.add(()->client.sendPlayerEvent(gameSession, eventString));
 			}
 		}
 	}
 	
-	void broadcastGameOver(ServerTable table, short gameSession, byte deceasedSlot, byte killerSlot) throws IOException {
+	void broadcastGameOver(ServerTable table, short gameSession, byte deceasedSlot, byte killerSlot) {
 		for (ServerThread client : this.clients) {
 			if (table.hasPlayer(client.user().username())) {
-				client.sendGameOver(gameSession, deceasedSlot, killerSlot);
+				client.sendMessages.add(()->client.sendGameOver(gameSession, deceasedSlot, killerSlot));
 			}
 		}
 	}
 	
-	void broadcastGameEnd(ServerTable table) throws IOException {
+	void broadcastGameEnd(ServerTable table) {
 		for (ServerThread client : this.clients) {
 			if (table.hasPlayer(client.user().username())) {
-				client.sendGameEnd(table);
+				client.sendMessages.add(()->client.sendGameEnd(table));
 			}
 		}
 	}
 	
-	void broadcastGlobalMessage(String username, String message) throws IOException {
+	void broadcastGlobalMessage(String username, String message) {
 		boolean isForLobby = true;
 		for (ServerThread client : this.clients) {
-			client.sendGlobalMessage(username, message, isForLobby);
+			client.sendMessages.add(()->client.sendGlobalMessage(username, message, isForLobby));
 		}
 	}
 	
-	void broadcastGlobalMessage(ServerTable table, String username, String message) throws IOException {
+	void broadcastGlobalMessage(ServerTable table, String username, String message) {
 		boolean isForLobby = false;
 		for (ServerThread client : this.clients) {
 			if (client.user().table() == table) {
-				client.sendGlobalMessage(username, message, isForLobby);
+				client.sendMessages.add(()->client.sendGlobalMessage(username, message, isForLobby));
 			}
 		}
 	}
 	
-	void broadcastPrivateMessage(String fromUser, String toUser, String message) throws IOException {
+	void broadcastPrivateMessage(String fromUser, String toUser, String message) {
 		for (ServerThread client : this.clients) {
 			if (client.user().username().equals(toUser)) {
-				client.sendPrivateMessage(fromUser, toUser, message);
+				client.sendMessages.add(()->client.sendPrivateMessage(fromUser, toUser, message));
 			}
 			if (client.user().username().equals(fromUser)) {
-				client.sendPrivateMessage(fromUser, toUser, message);
+				client.sendMessages.add(()->client.sendPrivateMessage(fromUser, toUser, message));
 			}
 		}
 	}
@@ -166,30 +167,50 @@ public class Server{
 		private ServerUser user;
 		private PacketStreamWriter pw;
 		private PacketStreamReader pr;
-		private Socket socket;
 		private long nextTime;
+		public Queue<Runnable> sendMessages = new ConcurrentLinkedQueue<>();
 		
-	    public void marshall(boolean b) throws IOException {
-	    	this.pw.getStream().writeByte((byte)(b ? 1 : 0));
+	    public void marshall(boolean b) {
+	    	try {
+				this.pw.getStream().writeByte((byte)(b ? 1 : 0));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 	    }
-	    public void marshall(byte b) throws IOException {
-	    	this.pw.getStream().writeByte(b);
+	    public void marshall(byte b) {
+	    	try {
+				this.pw.getStream().writeByte(b);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 	    }
-	    public void marshall(short s) throws IOException {
-	    	this.pw.getStream().writeShort(s);
+	    public void marshall(short s) {
+	    	try {
+				this.pw.getStream().writeShort(s);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 	    }
-	    public void marshall(int i) throws IOException {
-	    	this.pw.getStream().writeInt(i);
+	    public void marshall(int i) {
+	    	try {
+				this.pw.getStream().writeInt(i);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 	    }
-	    public void marshall(String s) throws IOException {
-	    	this.pw.getStream().writeUTF(s);
+	    public void marshall(String s) {
+	    	try {
+				this.pw.getStream().writeUTF(s);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 	    }
 	    public void sendPacket() {
 	    	try {
 	    		this.pw.sendPacket();
 	    	}
 	    	catch (IOException e) {
-	    		// Do not need to do anything here.
+	    		// Do not need to do anything here?
 	    		// We need this because client could be closed, but not yet removed from server's list.
 	    	}
 	    }
@@ -218,7 +239,6 @@ public class Server{
 		public ServerThread(Socket socket) throws IOException {
 			this.pw = new PacketStreamWriter(socket.getOutputStream());
 			this.pr = new PacketStreamReader(socket.getInputStream());
-			this.socket = socket;
 			start();
 		}
 		
@@ -423,7 +443,7 @@ public class Server{
 			}
 		}
 		
-		public void sendGlobalMessage(String username, String message, boolean isForLobby) throws IOException {
+		public void sendGlobalMessage(String username, String message, boolean isForLobby) {
 			byte opcode = isForLobby ? (byte)5 : (byte)18;
 			marshall( opcode );
 			marshall( username );
@@ -431,7 +451,7 @@ public class Server{
 			sendPacket();
 		}	
 		
-		public void sendPrivateMessage(String fromUser, String toUser, String message) throws IOException {
+		public void sendPrivateMessage(String fromUser, String toUser, String message) {
 			byte opcode = 6;
 			marshall( opcode );
 			marshall( fromUser );
@@ -440,7 +460,7 @@ public class Server{
 			sendPacket();
 		}
 		
-		public void sendTableStatusChange(short tableId, byte status, short countdown) throws IOException {
+		public void sendTableStatusChange(short tableId, byte status, short countdown) {
 			byte opcode = 66;
 			marshall( opcode );
 			marshall( tableId );
@@ -451,7 +471,7 @@ public class Server{
 			sendPacket();
 		}	
 		
-		public void sendTeamChange(byte slot, byte teamId) throws IOException {
+		public void sendTeamChange(byte slot, byte teamId)  {
 			byte opcode = 80;
 			byte opcode2 = 121;
 
@@ -462,7 +482,7 @@ public class Server{
 			sendPacket();
 		}	
 		
-		public void sendLoginSucceed() throws IOException {
+		public void sendLoginSucceed() {
 			byte opcode = 1;
 			marshall( opcode );
 			marshall( user().userId() );
@@ -472,14 +492,14 @@ public class Server{
 			sendPacket();
 		}
 		
-		public void sendLoginFailed() throws IOException {
+		public void sendLoginFailed() {
 			byte opcode = 0;
 			marshall( opcode );
 			marshall( "Username already taken" );
 			sendPacket();
 		}	
 		
-		public void sendUser(ServerUser user) throws IOException {	
+		public void sendUser(ServerUser user) {	
 			byte opcode = 13;
 			marshall( opcode );
 			marshall( user.username() );
@@ -491,14 +511,14 @@ public class Server{
 			sendPacket();
 		}
 		
-		public void sendUserLogout(ServerUser user) throws IOException {	
+		public void sendUserLogout(ServerUser user) {	
 			byte opcode = 14;
 			marshall( opcode );
 			marshall( user.username() );
 			sendPacket();
 		}
 		
-		public void sendGameStart(ServerTable table) throws IOException {	
+		public void sendGameStart(ServerTable table) {	
 			byte opcode = 80;
 			byte opcode2 = 100;
 			short gameId = 0;
@@ -522,25 +542,7 @@ public class Server{
 			sendPacket();
 		}
 		
-		public void sendCreateTable(ServerTable table) throws IOException {	
-			byte opcode = 60;
-			marshall( opcode );
-			marshall( table.id() );
-			marshall( table.status() );
-			marshall( table.player(0) );	// should have just been created, so only one player, default slot 0
-			marshall( table.isRanked() );
-			marshall( table.isPrivate() );
-			marshall( table.isBigTable() );
-			marshall( table.isTeamTable() );
-			if (table.isTeamTable()){
-				marshall( table.boardSize() );
-				marshall( table.isBalancedTable() );				
-			}
-			marshall( (byte)0 );	// number of table options
-			sendPacket();
-		}
-		
-		public void sendJoinTable(ServerTable table, String username, byte slot, byte teamId) throws IOException {	
+		public void sendJoinTable(ServerTable table, String username, byte slot, byte teamId) {	
 			byte opcode = 102;
 			marshall( opcode );
 			marshall( table.id() );
@@ -558,13 +560,13 @@ public class Server{
 			sendPacket();
 		}
 		
-		public void sendIncorrectTablePassword() throws IOException {	
+		public void sendIncorrectTablePassword() {	
 			byte opcode = 103;
 			marshall( opcode );
 			sendPacket();
 		}
 		
-		public void sendLeaveTable(short tableId, String username) throws IOException {	
+		public void sendLeaveTable(short tableId, String username) {	
 			byte opcode = 65;
 			marshall( opcode );
 			marshall( tableId );
@@ -572,7 +574,7 @@ public class Server{
 			sendPacket();
 		}
 		
-		public void sendTableWins(ServerTable table) throws IOException {	
+		public void sendTableWins(ServerTable table) {	
 			byte opcode = 80;
 			byte opcode2 = 120;
 			marshall( opcode );
@@ -588,7 +590,7 @@ public class Server{
 			sendPacket();
 		}
 		
-		public void sendFullTable(ServerTable table) throws IOException {	
+		public void sendFullTable(ServerTable table) {	
 			byte opcode = 101;
 			marshall( opcode );
 			marshall( table.id() );
@@ -608,7 +610,7 @@ public class Server{
 			sendPacket();
 		}
 		
-		public void sendPowerup(byte powerupType, byte toSlot, byte b1, short gameSession, byte b2) throws IOException {
+		public void sendPowerup(byte powerupType, byte toSlot, byte b1, short gameSession, byte b2) {
 			byte opcode1 = 80;
 			byte opcode2 = 107;
 			marshall( opcode1 );
@@ -621,7 +623,7 @@ public class Server{
 			sendPacket();
 		}
 		
-		public void sendPlayerState(short gameSession, byte slot, short healthPerc, Byte[] powerups, byte shipType) throws IOException {
+		public void sendPlayerState(short gameSession, byte slot, short healthPerc, Byte[] powerups, byte shipType) {
 			byte opcode1 = 80;
 			byte opcode2 = 106;
 			byte numPowerups = (byte)powerups.length;
@@ -638,7 +640,7 @@ public class Server{
 			sendPacket();
 		}
 		
-		public void sendPlayerEvent(short gameSession, String eventString) throws IOException {
+		public void sendPlayerEvent(short gameSession, String eventString) {
 			byte opcode1 = 80;
 			byte opcode2 = 109;
 			marshall( opcode1 );
@@ -647,7 +649,7 @@ public class Server{
 			sendPacket();
 		}
 		
-		public void sendGameOver(short gameSession, byte deceasedSlot, byte killerSlot) throws IOException {
+		public void sendGameOver(short gameSession, byte deceasedSlot, byte killerSlot) {
 			byte opcode1 = 80;
 			byte opcode2 = 110;
 			marshall( opcode1 );
@@ -657,7 +659,7 @@ public class Server{
 			sendPacket();
 		}
 		
-		public void sendGameEnd(ServerTable table) throws IOException {
+		public void sendGameEnd(ServerTable table) {
 			byte opcode1 = 80;
 			byte opcode2 = table.isTeamTable() ? (byte)112 : (byte)111;
 			marshall( opcode1 );
@@ -741,7 +743,7 @@ public class Server{
 						sendUser(user);
 					}
 				}
-				
+								
 				// Send current table list to client
 				for (ServerTable table : tableManager.tables()) {
 					if (table != null) {
@@ -758,6 +760,9 @@ public class Server{
 				this.nextTime = System.currentTimeMillis() + GameNetLogic.NOOP_DURATION*2;
 				while (true) {
 					try {
+						while (!sendMessages.isEmpty()) {
+							sendMessages.poll().run();
+						}
 						if (stream.available() > 0) {
 							short numBytes = stream.readShort();	// packetStreamWriter/Reader let first short be size, we do not use that here
 							if (numBytes > 0) {
@@ -815,8 +820,6 @@ public class Server{
 				broadcastTableStatusChange(table.id(), table.status(), (short)-1);		
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
 		}
 		
@@ -847,8 +850,6 @@ public class Server{
 //				broadcastTableStatusChange(table.id(), table.status(), (short)-1);
 //				new TableTransitionThread(table, table.status());
 			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
