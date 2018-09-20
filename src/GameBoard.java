@@ -1,7 +1,7 @@
-import java.applet.*;
 import java.util.*;
 import java.io.*;
 import java.awt.*;
+import javax.sound.sampled.*;
 
 public class GameBoard extends Panel
 {
@@ -9,9 +9,10 @@ public class GameBoard extends Panel
     private Model m_model;
     private CFTableElement m_tableElement;
     
-    public static void playSound(final AudioClip audioClip) {
+    public static void playSound(final Clip audioClip) {
         if (audioClip != null && GameBoard.m_bPlaySound) {
-            audioClip.play();
+        	audioClip.setFramePosition(0);
+        	audioClip.start();
         }
     }
     

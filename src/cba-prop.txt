@@ -26,15 +26,15 @@ IP4=images/cba_bg.gif
 #
 NumSnds=5
 SN0=snd_silence
-SP0=sounds/silence.au
+SP0=sounds/silence.wav
 SN1=snd_explosion
-SP1=sounds/explosion.au
+SP1=sounds/explosion.wav
 SN2=snd_fire
-SP2=sounds/fire.au
+SP2=sounds/fire.wav
 SN3=snd_powerup
-SP3=sounds/magic.au
+SP3=sounds/magic.wav
 SN4=snd_thrust
-SP4=sounds/thrust.au
+SP4=sounds/thrust.wav
 #branding
 brand=Center Fleet
 # CUSTOM SKIN VARS

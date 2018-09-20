@@ -1,6 +1,7 @@
 import java.util.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.sound.sampled.*;
 import java.io.*;
 import java.awt.image.*;
 import java.awt.*;
@@ -12,7 +13,7 @@ public class GameLoader extends JPanel implements Runnable
     public int m_screenHeight;
     public static Thread m_gameThread;
     public MediaTracker m_mediaTracker;
-    public static Hashtable g_mediaElements;
+    public static Hashtable<String, Object> g_mediaElements;
     public Image[] m_loadingImageArray;
     public GamePanel m_gamePanel;
     public GameLoadingAnimator m_animator;
@@ -52,13 +53,15 @@ public class GameLoader extends JPanel implements Runnable
             	this.m_loadingImageArray[i] = ImageIO.read(getClass().getResourceAsStream(this.m_props.getProperty("IP" + i)));
                 this.m_mediaTracker.addImage(this.m_loadingImageArray[i], i);
             }
-//            for (int k = 0; k < intProperty2; ++k) {
-//                final AudioClip audioClip = this.getAudioClip(this.getCodeBase(), this.m_props.getProperty("SP" + k));
-//                audioClip.play();
-//                audioClip.stop();
-//                GameLoader.g_mediaElements.put(this.m_props.getProperty("SN" + k), audioClip);
-//                this.m_animator.notifyLoad();
-//            }
+            for (int k = 0; k < intProperty2; ++k) {
+            	AudioInputStream audioStream = AudioSystem.getAudioInputStream(getClass().getResourceAsStream(this.m_props.getProperty("SP" + k)));
+            	AudioFormat format = audioStream.getFormat();
+            	Clip audioClip = (Clip) AudioSystem.getLine(new DataLine.Info(Clip.class, format));
+            	audioClip.open(audioStream);
+            	audioClip.start();
+                GameLoader.g_mediaElements.put(this.m_props.getProperty("SN" + k), audioClip);
+                this.m_animator.notifyLoad();
+            }
             for (int l = 0; l < intProperty; ++l) {
                 this.m_mediaTracker.waitForID(l);
                 this.m_animator.notifyLoad();

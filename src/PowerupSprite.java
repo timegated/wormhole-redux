@@ -1,6 +1,6 @@
 import java.awt.*;
 import java.awt.image.*;
-import java.applet.*;
+import javax.sound.sampled.*;
 
 public class PowerupSprite extends Sprite
 {
@@ -59,7 +59,7 @@ public class PowerupSprite extends Sprite
     }
     
     void givePowerupTo(final PlayerSprite playerSprite) {
-        GameBoard.playSound((AudioClip)WormholeModel.g_mediaTable.get("snd_powerup"));
+        GameBoard.playSound((Clip)WormholeModel.g_mediaTable.get("snd_powerup"));
         switch (this.powerupType) {
             case 0: {
                 playerSprite.upgradeShot();

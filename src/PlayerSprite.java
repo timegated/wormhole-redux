@@ -1,5 +1,5 @@
 import java.awt.*;
-import java.applet.*;
+import javax.sound.sampled.*;
 
 public class PlayerSprite extends Sprite
 {
@@ -431,7 +431,7 @@ public class PlayerSprite extends Sprite
     }
     
     private void fireBullet(final double n) {
-        GameBoard.playSound((AudioClip)WormholeModel.g_mediaTable.get("snd_fire"));
+        GameBoard.playSound((Clip)WormholeModel.g_mediaTable.get("snd_fire"));
         final BulletSprite bulletSprite = new BulletSprite((int)(Math.cos(n) * 12.0 + super.x), (int)(Math.sin(n) * 12.0 + super.y), this.m_bulletDamage, this.m_bulletSize, PlayerSprite.g_bulletColors[this.m_bulletType], 2);
         bulletSprite.setPlayer(super.m_slot);
         bulletSprite.setVelocity(Math.cos(n) * 10.0 + super.vectorx, Math.sin(n) * 10.0 + super.vectory);
@@ -510,14 +510,14 @@ public class PlayerSprite extends Sprite
     void handleThrust() {
         this.m_bThrusting = true;
         this.doMaxThrust(this.m_thrust);
-        GameBoard.playSound((AudioClip)WormholeModel.g_mediaTable.get("snd_thrust"));
+        GameBoard.playSound((Clip)WormholeModel.g_mediaTable.get("snd_thrust"));
     }
     
     void firePowerup() {
         if (Sprite.model.m_numPowerups > 0) {
             final int n = (int)(Math.cos(super.radAngle) * 12.0 + super.x);
             final int n2 = (int)(Math.sin(super.radAngle) * 12.0 + super.y);
-            GameBoard.playSound((AudioClip)WormholeModel.g_mediaTable.get("snd_fire"));
+            GameBoard.playSound((Clip)WormholeModel.g_mediaTable.get("snd_fire"));
             Sprite.model.refreshStatus = true;
             final WormholeModel model = Sprite.model;
             --model.m_numPowerups;
