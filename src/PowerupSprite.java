@@ -59,7 +59,7 @@ public class PowerupSprite extends Sprite
     }
     
     void givePowerupTo(final PlayerSprite playerSprite) {
-        GameBoard.playSound((Clip)WormholeModel.g_mediaTable.get("snd_powerup"));
+        GameBoard.playSound("snd_powerup");
         switch (this.powerupType) {
             case 0: {
                 playerSprite.upgradeShot();

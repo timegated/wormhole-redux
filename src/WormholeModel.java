@@ -555,7 +555,7 @@ public class WormholeModel extends Model
     }
     
     public void doOneCycle() {
-        GameBoard.playSound((Clip)WormholeModel.g_mediaTable.get("snd_silence"));
+        //GameBoard.playSound((Clip)WormholeModel.g_mediaTable.get("snd_silence"));
         switch (this.m_mode) {
             case 0: {
                 this.handleDefaultModelBehavior();

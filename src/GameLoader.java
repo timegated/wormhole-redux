@@ -54,13 +54,28 @@ public class GameLoader extends JPanel implements Runnable
                 this.m_mediaTracker.addImage(this.m_loadingImageArray[i], i);
             }
             for (int k = 0; k < intProperty2; ++k) {
-            	AudioInputStream audioStream = AudioSystem.getAudioInputStream(getClass().getResourceAsStream(this.m_props.getProperty("SP" + k)));
+            	// Create byte array to store audio so we don't read from inputstream each time
+            	InputStream inputStream = getClass().getResourceAsStream(this.m_props.getProperty("SP" + k));
+            	byte[] streamBytes = new byte[inputStream.available()];
+            	inputStream.read(streamBytes, 0, streamBytes.length);
+            	
+            	// Play all sounds on game load
+            	AudioInputStream audioStream = AudioSystem.getAudioInputStream(new ByteArrayInputStream(streamBytes));
             	AudioFormat format = audioStream.getFormat();
             	Clip audioClip = (Clip) AudioSystem.getLine(new DataLine.Info(Clip.class, format));
             	audioClip.open(audioStream);
             	audioClip.start();
-                GameLoader.g_mediaElements.put(this.m_props.getProperty("SN" + k), audioClip);
+            	
+            	// Store sound for later
+            	if (k == 4) {
+            		// For thrust we just use a single clip, it sounds better this way since keypress and hold is common
+            		GameLoader.g_mediaElements.put(this.m_props.getProperty("SN" + k), audioClip);
+            	}
+            	else {
+            		GameLoader.g_mediaElements.put(this.m_props.getProperty("SN" + k), streamBytes);
+            	}
                 this.m_animator.notifyLoad();
+                audioStream.close();
             }
             for (int l = 0; l < intProperty; ++l) {
                 this.m_mediaTracker.waitForID(l);

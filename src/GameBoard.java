@@ -9,10 +9,29 @@ public class GameBoard extends Panel
     private Model m_model;
     private CFTableElement m_tableElement;
     
-    public static void playSound(final Clip audioClip) {
-        if (audioClip != null && GameBoard.m_bPlaySound) {
-        	audioClip.setFramePosition(0);
-        	audioClip.start();
+    public static void playSound(String sound) {
+    	if (!GameBoard.m_bPlaySound) {
+    		return;
+    	}
+    	if (sound.equals("snd_thrust")) {
+    		Clip thrustClip = (Clip)WormholeModel.g_mediaTable.get(sound);
+    		if (!thrustClip.isRunning()) {
+    			thrustClip.setFramePosition(0);
+    			thrustClip.start();
+    		}
+    	}
+    	else {	// sound is something other than thrust
+        	byte[] audioBytes = (byte[])WormholeModel.g_mediaTable.get(sound);
+			try {
+	            AudioInputStream audioStream = AudioSystem.getAudioInputStream(new ByteArrayInputStream(audioBytes));
+	            AudioFormat format = audioStream.getFormat();
+	        	Clip audioClip = (Clip) AudioSystem.getLine(new DataLine.Info(Clip.class, format));
+	        	audioClip.open(audioStream);
+	        	audioClip.start();
+	        	audioStream.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
         }
     }
     

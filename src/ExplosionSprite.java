@@ -24,7 +24,7 @@ public class ExplosionSprite extends Sprite
         this.init("explosion", n, n2, true);
         super.spriteType = 0;
         super.shapeRect = new Rectangle(n - 50, n2 - 50, 100, 100);
-        GameBoard.playSound((Clip)WormholeModel.g_mediaTable.get("snd_explosion"));
+        GameBoard.playSound("snd_explosion");
     }
     
     ExplosionSprite(final int n, final int n2, final int colorType) {
