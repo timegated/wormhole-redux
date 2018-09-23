@@ -25,7 +25,7 @@ public class WormholeModel extends Model
     public static final Font fontNine;
     public Color m_color;
     private Rectangle m_rectLogo;
-    private Image m_imgLogo;
+    private Image m_imgLogo;		// background image in the center of the wormholes
     public static short m_gameID;
     public byte m_teamID;
     short m_gameSession;
@@ -1344,7 +1344,7 @@ public class WormholeModel extends Model
         }
         this.m_winningPlayerString = null;
         this.m_player = new PlayerSprite(this.m_boardCenterX, this.m_boardCenterY, this.m_playerFighterType);
-        this.m_imgLogo = (Image)super.m_mediaTable.get("img_bg_logo");
+        this.m_imgLogo = null;
         if (this.m_imgLogo != null) {
             this.m_rectLogo.setBounds(this.m_boardCenterX - this.m_imgLogo.getWidth(null) / 2, this.m_boardCenterY - this.m_imgLogo.getHeight(null) / 2, this.m_imgLogo.getWidth(null), this.m_imgLogo.getHeight(null));
         }

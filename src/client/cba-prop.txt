@@ -8,7 +8,7 @@ loginserviceport2=7049
 #
 #images
 #
-NumImgs=5
+NumImgs=4
 IN0=img_powerups
 IP0=images/powerups-ex.gif
 IX0=18
@@ -19,8 +19,6 @@ IN2=img_r2title
 IP2=images/title_ng.gif
 IN3=img_r2background
 IP3=images/NG.gif
-IN4=img_bg_logo
-IP4=images/cba_bg.gif
 #
 #sounds
 #
