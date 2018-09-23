@@ -4,6 +4,7 @@ import java.util.List;
 
 public class ServerUser {
 	private String m_username;
+	private ServerThread m_serverThread;
 	private int m_userId = -1;
 	private short m_totalCredits;
 	private byte m_subscriptionLevel;
@@ -15,7 +16,8 @@ public class ServerUser {
 	private List<String> m_icons;
 	boolean m_isAlive;
 	
-	public ServerUser(String username){
+	public ServerUser(ServerThread serverThread, String username){
+		m_serverThread = serverThread;
 		m_username = username;
 		m_icons = new LinkedList<String>();
 		m_table = null;
@@ -27,6 +29,9 @@ public class ServerUser {
 		m_icons.add("small-platinumWeapons.gif");
 	}
 	
+	public ServerThread client() {
+		return m_serverThread;
+	}	
 	public void setTeamId(byte teamId) {
 		m_teamId = teamId;
 	}
