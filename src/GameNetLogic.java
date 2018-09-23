@@ -388,6 +388,7 @@ public class GameNetLogic implements Runnable, IListener
             }
             case TableStatus.COUNTDOWN: {
                 if (this.m_tableID == n) {
+                	GameBoard.playSound("snd_fire");
                     this.m_pnlGame.getPlayingPanel().setInCountdown(true, n2);
                     return;
                 }
@@ -531,9 +532,7 @@ public class GameNetLogic implements Runnable, IListener
         topFrame.addWindowListener(new WindowAdapter() {
 	    	@Override
 			public void windowClosing(WindowEvent event) {
-				System.out.println("close event ok");
 				if (m_network != null && m_network.m_bConnected) {
-					System.out.println("here");
 					disconnect("Connection closed");
 				}
 			}
