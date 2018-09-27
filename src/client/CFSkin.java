@@ -574,7 +574,6 @@ public class CFSkin extends MouseAdapter
         if (width - this.r2Counter > 0) {
             this.r2Counter += 38;
         }
-        this.m_loginOffScreenG.drawImage((Image)GameLoader.g_mediaElements.get("img_r2background"), width - this.r2Counter, 0, null);
         if (this.titleCounter < loginPanel.m_tfUsername.getLocation().x - 70) {
             this.titleCounter += 12;
         }

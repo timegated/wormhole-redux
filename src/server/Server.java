@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 
 public class Server{
-	static final int PORT = 4444;
+	static final int PORT = 6049;
 	List<ServerThread> clients = new Vector<ServerThread>();
 	ServerUserManager userManager = new ServerUserManager();
 	ServerTableManager tableManager = new ServerTableManager();

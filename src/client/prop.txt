@@ -1,14 +1,11 @@
-# Centerscore, Inc. 2001 (c)  Do not use without permission.
 # props file for gui skeleton
 NumClasses=60
-releaseHost=72.3.247.41
-hostname=games.centerscore.com
+hostname=wormholeredux.com
 loginserviceport=6049
-loginserviceport2=7049
 #
 #images
 #
-NumImgs=4
+NumImgs=3
 IN0=img_powerups
 IP0=images/powerups-ex.gif
 IX0=18
@@ -17,8 +14,6 @@ IP1=images/small_powerups-ex.gif
 IX1=14
 IN2=img_r2title
 IP2=images/title_ng.gif
-IN3=img_r2background
-IP3=images/NG.gif
 #
 #sounds
 #
@@ -33,8 +28,6 @@ SN3=snd_powerup
 SP3=sounds/magic.wav
 SN4=snd_thrust
 SP4=sounds/thrust.wav
-#branding
-brand=Center Fleet
 # CUSTOM SKIN VARS
 # placements
 # login
@@ -50,21 +43,21 @@ lobbypanel_btn_createtable=296,5,100,20
 lobbypanel_btn_createtableoptions=408,5,130,20
 # lobby URL buttons
 lobbypanel_btn0=5,31,231,20
-lobbypanel_btnurl0=http://www.centerfleet.com/wormholeNewGround/info/index.html
+lobbypanel_btnurl0=
 lobbypanel_btnname0=Instructions & Tips
 lobbypanel_btn1=5,56,112,20
-lobbypanel_btnurl1=http://www.centerfleet.com/wormholeNewGround/missions/wormholeNG-missionChart-preview.html
+lobbypanel_btnurl1=
 lobbypanel_btnname1=Missions
 lobbypanel_btn2=124,56,112,20
-lobbypanel_btnurl2=http://www.centerfleet.com/wormholeNewGround/clans/index.jsp
+lobbypanel_btnurl2=
 lobbypanel_btnname2=Clans
 lobbypanel_btn3=5,81,112,20
-lobbypanel_btnurl3=http://www.centerfleet.com/wormholeNewGround/ServiceSignup.jsp?gamename=wormhole
+lobbypanel_btnurl3=
 lobbypanel_btnname3=Sign Up!
 lobbypanel_btnsubmin3=-1
 lobbypanel_btnsubmax3=0
 lobbypanel_btn4=5,81,112,20
-lobbypanel_btnurl4=http://www.centerfleet.com/locker/mylocker.jsp
+lobbypanel_btnurl4=
 lobbypanel_btnname4=My Locker
 lobbypanel_btnsubmin4=1
 lobbypanel_btnsubmax4=2
@@ -77,7 +70,7 @@ playingpanel_gameboard=213,3,576,472
 playingpanel_credits=0,0,0,0
 # playing URL buttons
 playingpanel_btn0=5,105,200,20
-playingpanel_btnurl0=http://www.centerfleet.com/wormholeNewGround/info/index.html
+playingpanel_btnurl0=
 playingpanel_btnname0=Instructions & Tips
 # dialogs
 # create table dialog
@@ -101,8 +94,8 @@ player_dialog_tf_whisper=70,69,172,20
 player_dialog_btn_send=0,10,0,0
 player_dialog_btn_close=30,112,190,20
 player_dialog_cb_ignore=9,92,300,19
-player_dialog_icon_URL=http://www.centerfleet.com/wormholeNewGround/medalsIcons/index.html
-player_dialog_clan_URL=http://www.centerfleet.com/wormholeNewGround/clans/wormholeNG-clanInfo.jsp?clanSymbol=
+player_dialog_icon_URL=
+player_dialog_clan_URL=
 # colors
 clr_bg=115,90,73
 clr_fg=192,151,96
@@ -144,11 +137,8 @@ welcome3=Yellow tables are about to start.
 welcome4=Red tables are playing.
 welcome5=Type '/help' to list chat commands.
 welcome6=----------------------------------------------------------------------
-welcome7=Center Fleet Command is currently running a special preview of Wormhole New Ground!
-welcome8=All players have preview access to the Huge Table and Team Tables of the Team Plan.
-welcome9=Red players have special preview access to the new ships and powerups of the
-welcome10=Advanced Plan.  This preview is for a limited time, so sign up now to use these 
-welcome11=and other features permanently!
+welcome7=Welcome to Wormhole Redux! Enjoy your stay :)
+welcome8=This is a preview version with no permanent accounts and no ranked games.
 instr0=Help: this message
 instr1=Whisper:  /whisper [username] 
 instr2=Reply:   /reply [message]
@@ -168,4 +158,3 @@ cftablepanel_gutter=8,8,8,8
 cfplayerpanel_gutter=5,5,25,50
 #assorted
 guest_string=guest-
-

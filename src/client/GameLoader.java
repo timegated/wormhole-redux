@@ -39,7 +39,7 @@ public class GameLoader extends JPanel implements Runnable
         try {
             try {
                 //this.m_props.load(new URL(this.getDocumentBase(), (this.getParameter("propfile") == null) ? "prop.txt" : this.getParameter("propfile")).openStream());
-            	this.m_props.load(getClass().getResourceAsStream("cba-prop.txt"));
+            	this.m_props.load(getClass().getResourceAsStream("prop.txt"));
             }
             catch (IOException ex2) {}
             //if (this.getDocumentBase().getHost().equals(this.m_props.getProperty("releaseHost", "b"))) {}

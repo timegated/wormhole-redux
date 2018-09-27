@@ -58,9 +58,8 @@ public class Network extends ByteArrayInputStream
     
     public String login(final int gameId, final short majorVersion, final short minorVersion, final String username, final String password, final boolean guestAccount, final String host, final int port) {
         try {
-            //(this.m_socket = new Socket(InetAddress.getByName(host), port)).setSoTimeout(10000);
-            (this.m_socket = new Socket("127.0.0.1", 4444)).setSoTimeout(10000);
-            //(this.m_socket = new Socket("209.97.144.187", 4444)).setSoTimeout(5000);
+            (this.m_socket = new Socket(InetAddress.getByName(host), port)).setSoTimeout(10000);
+            //(this.m_socket = new Socket("127.0.0.1", 4444)).setSoTimeout(10000);
         }
         catch (Exception ex) {
             System.out.println(ex);
