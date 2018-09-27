@@ -1,6 +1,5 @@
 package client;
 import java.util.*;
-import netscape.javascript.*;
 import java.net.*;
 import java.awt.*;
 

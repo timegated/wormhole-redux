@@ -526,7 +526,7 @@ public class GameNetLogic implements Runnable, IListener
         this.m_loginPort2 = cfProps.getInt("loginserviceport2", 7042);
         //final String host = GamePanel.m_applet.getCodeBase().getHost();
         //this.m_host2 = host;
-        this.m_host = cfProps.getString("host", "wormhole-redux.com");
+        this.m_host = cfProps.getString("host", "wormholeredux.com");
         this.nextTime = System.currentTimeMillis() + 10000000L;
         
         JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(GamePanel.m_applet);
