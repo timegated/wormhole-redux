@@ -298,12 +298,12 @@ public class GameNetLogic implements Runnable, IListener
         this.m_pnlGame.getLobbyPanel().getChatPanel().addLine(s);
     }
     
-    private void setInTable(final short tableID, final int slot, final String s) {
+    private void setInTable(final short tableID, final int slot, final String tablePassword) {
         final CFTableElement table = this.m_pnlGame.getLobbyPanel().getTablePanel().findTable(tableID);
         final PlayingPanel playingPanel = this.m_pnlGame.getPlayingPanel();
         playingPanel.getGameBoard().getModel().reset();
         playingPanel.getGameBoard().getModel().setSlot(slot);
-        playingPanel.setTableInfo(this.m_username, s);
+        playingPanel.setTableInfo(this.m_username, tablePassword);
         playingPanel.setTable(table);
         this.m_tableID = tableID;
         this.m_bInATable = true;
@@ -892,7 +892,8 @@ public class GameNetLogic implements Runnable, IListener
                     		table.addPlayer(username, slot);
                     		this.setTableForPlayer(username, tableId);
                             if (username.equals(this.m_username)){
-                                this.setInTable(tableId, slot, username);
+                            	String tablePassword = dataInputStream.readUTF();
+                                this.setInTable(tableId, slot, tablePassword);
                                 this.m_pnlGame.getPlayingPanel().repaint();
                             }
                     	}
@@ -915,7 +916,8 @@ public class GameNetLogic implements Runnable, IListener
                         gameBoard.addPlayer(username, player.getRank(), teamId, player.getIcons(), slot);
                     }
                     else if (username.equals(this.m_username)){
-                        this.setInTable(tableId, slot, username);
+                    	String tablePassword = dataInputStream.readUTF();
+                        this.setInTable(tableId, slot, tablePassword);
                         for (byte i=0; i<table.getNumPlayers(); i++) {
                             CFPlayerElement player = this.getPlayer(table.getPlayer(i));
                             if (player != null) {

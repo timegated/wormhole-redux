@@ -412,6 +412,9 @@ public class ServerThread extends Thread {
 				}
 			}
 		}
+		if (user().table() == table) {
+			marshall( table.password() );
+		}
 		sendPacket();
 	}
 	
@@ -462,6 +465,9 @@ public class ServerThread extends Thread {
 			marshall( user != null ? user.username() : "" );
 		}
 		marshall( (byte)0 );	// number of table options
+		if (user().table() == table) {
+			marshall( table.password() );
+		}
 		sendPacket();
 	}
 	
