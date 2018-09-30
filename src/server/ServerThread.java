@@ -232,11 +232,11 @@ public class ServerThread extends Thread {
 		short 		tableId		= stream.readShort();
 		String 		password	= stream.readUTF();
 		ServerTable table 		= server.tableManager.getTable(tableId);
-		byte 		teamId		= table.isTeamTable() ? Team.GOLDTEAM : Team.NOTEAM;
-		
-		if (table.isFull()) {
+		if (table == null || table.isFull()) {
 			return;
 		}
+
+		byte teamId	= table.isTeamTable() ? Team.GOLDTEAM : Team.NOTEAM;	// Gold table is default when joining
 		
 		if (!table.isPrivate() || password.equals(table.password())) {
 			byte slot = table.addUser(user().username());
