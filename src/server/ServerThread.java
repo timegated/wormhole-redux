@@ -216,6 +216,10 @@ public class ServerThread extends Thread {
 			}
 		}
 		
+		if (user().table() != null) {	// prevents spam clicking create table from doing anything
+			return;
+		}
+		
 		ServerTable table = new ServerTable(isRanked, password, isBigTable, isTeamTable, boardSize, isBalancedTable);
 		byte slot = table.addUser(user().username());
 		table.addUser(user());
