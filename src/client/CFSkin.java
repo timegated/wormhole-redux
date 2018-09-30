@@ -112,7 +112,7 @@ public class CFSkin extends MouseAdapter
             graphics.drawString("Table was deleted!", 25, 55);
         }
         else {
-            graphics.drawString("Enter Password:", 10, 35);
+            graphics.drawString("Enter Password:", 10, 45);
         }
         graphics.setColor(this.m_clrError);
         graphics.drawString(cfPrivateTableDialog.getStatus(), 10, 103);
@@ -556,7 +556,7 @@ public class CFSkin extends MouseAdapter
         graphics.setColor(this.m_clrDefaultText);
         graphics.drawString("User: " + playingPanel.getUsername(), 10, 13);
         getSkin().drawIcons(graphics, this.m_logic.getPlayer(this.m_logic.getUsername()).getIcons(), playingPanel.getChatPanel().getSize().width - 47, 4, 14, 3);
-        graphics.drawString("Password: " + ((playingPanel.getTablePassword() != null) ? playingPanel.getTablePassword() : "none"), 10, 26);
+        graphics.drawString("Password: " + ((playingPanel.getTablePassword() != null) ? playingPanel.getTablePassword() : "none"), 20, 26);
         final int playerRank = this.m_logic.getPlayerRank(playingPanel.getUsername());
         final CFTableElement tableElement = playingPanel.getTableElement();
         graphics.drawString("Rank: " + ((playerRank < 0) ? "n/a  " : (playerRank + "  ")), 10, 39);

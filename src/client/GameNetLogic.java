@@ -904,7 +904,6 @@ public class GameNetLogic implements Runnable, IListener
                     short tableId = dataInputStream.readShort();
                     String username = dataInputStream.readUTF();
                     byte slot = dataInputStream.readByte();
-                    byte teamId = dataInputStream.readByte();
                     CFTablePanel tablePanel = this.m_pnlGame.getLobbyPanel().getTablePanel();
                     CFTableElement table = tablePanel.findTable(tableId);
                     
@@ -913,7 +912,7 @@ public class GameNetLogic implements Runnable, IListener
                     GameBoard gameBoard = this.m_pnlGame.getPlayingPanel().getGameBoard();
                     if (this.m_tableID == tableId && this.m_bInATable) {
                         CFPlayerElement player = this.getPlayer(username);
-                        gameBoard.addPlayer(username, player.getRank(), teamId, player.getIcons(), slot);
+                        gameBoard.addPlayer(username, player.getRank(), Team.NOTEAM, player.getIcons(), slot);
                     }
                     else if (username.equals(this.m_username)){
                     	String tablePassword = dataInputStream.readUTF();
@@ -921,6 +920,10 @@ public class GameNetLogic implements Runnable, IListener
                         for (byte i=0; i<table.getNumPlayers(); i++) {
                             CFPlayerElement player = this.getPlayer(table.getPlayer(i));
                             if (player != null) {
+                                byte teamId = Team.NOTEAM;
+                                if (table.isTeamTable()) {
+                                	teamId = dataInputStream.readByte();
+                                }
                             	gameBoard.addPlayer(player.getName(), player.getRank(), teamId, player.getIcons(), i);
                             }
                         }

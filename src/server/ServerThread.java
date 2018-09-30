@@ -403,7 +403,9 @@ public class ServerThread extends Thread {
 		marshall( table.id() );
 		marshall( username );
 		marshall( slot );
-		marshall( teamId );
+		if (user().table() == table) {
+			marshall( table.password() );
+		}
 		// if team table, then we need to send to the new player the teamIds of the other players
 		if (table.isTeamTable() && user.username() == username) {
 			for (ServerUser user : table.users()) {
@@ -411,9 +413,6 @@ public class ServerThread extends Thread {
 					marshall(user.teamId());
 				}
 			}
-		}
-		if (user().table() == table) {
-			marshall( table.password() );
 		}
 		sendPacket();
 	}
