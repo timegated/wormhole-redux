@@ -216,6 +216,10 @@ public class ServerThread extends Thread {
 			}
 		}
 		
+		if (user().table() != null) {	// prevents spam clicking create table from doing anything
+			return;
+		}
+		
 		ServerTable table = new ServerTable(isRanked, password, isBigTable, isTeamTable, boardSize, isBalancedTable);
 		byte slot = table.addUser(user().username());
 		table.addUser(user());
@@ -232,11 +236,11 @@ public class ServerThread extends Thread {
 		short 		tableId		= stream.readShort();
 		String 		password	= stream.readUTF();
 		ServerTable table 		= server.tableManager.getTable(tableId);
-		byte 		teamId		= table.isTeamTable() ? Team.GOLDTEAM : Team.NOTEAM;
-		
-		if (table.isFull()) {
+		if (table == null || table.isFull() || user().table() == table) {
 			return;
 		}
+
+		byte teamId	= table.isTeamTable() ? Team.GOLDTEAM : Team.NOTEAM;	// Gold table is default when joining
 		
 		if (!table.isPrivate() || password.equals(table.password())) {
 			byte slot = table.addUser(user().username());
