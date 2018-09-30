@@ -232,7 +232,7 @@ public class ServerThread extends Thread {
 		short 		tableId		= stream.readShort();
 		String 		password	= stream.readUTF();
 		ServerTable table 		= server.tableManager.getTable(tableId);
-		if (table == null || table.isFull()) {
+		if (table == null || table.isFull() || user().table() == table) {
 			return;
 		}
 
