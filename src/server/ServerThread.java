@@ -293,8 +293,10 @@ public class ServerThread extends Thread {
 		ServerTable table = server.tableManager.getTable(tableId);
 		
 		if (table.status() != TableStatus.COUNTDOWN && table.numPlayers() > 1) {
-			table.setStatus(TableStatus.COUNTDOWN);
-			new TableTransitionThread(table, table.status());
+			if (!table.isTeamTable() || (table.teamSize(Team.GOLDTEAM) > 0 && table.teamSize(Team.BLUETEAM) > 0)) {
+				table.setStatus(TableStatus.COUNTDOWN);
+				new TableTransitionThread(table, table.status());
+			}
 		}
 	}
 	
@@ -695,6 +697,11 @@ public class ServerThread extends Thread {
 					countdown --;
 					Thread.sleep(1000);
 					if (table.numPlayers() < 2) {	// People left below the limit, we need to stop counting down
+						table.setStatus(TableStatus.IDLE);
+						server.broadcastTableStatusChange(table.id(), table.status(), TABLE_COUNTDOWN);
+						return;
+					}
+					else if (table.isTeamTable() && (table.teamSize(Team.GOLDTEAM) <= 0 || table.teamSize(Team.BLUETEAM) <= 0)) {
 						table.setStatus(TableStatus.IDLE);
 						server.broadcastTableStatusChange(table.id(), table.status(), TABLE_COUNTDOWN);
 						return;

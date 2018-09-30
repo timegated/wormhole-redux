@@ -115,7 +115,7 @@ public class CFSkin extends MouseAdapter
             graphics.drawString("Enter Password:", 10, 45);
         }
         graphics.setColor(this.m_clrError);
-        graphics.drawString(cfPrivateTableDialog.getStatus(), 10, 103);
+        graphics.drawString(cfPrivateTableDialog.getStatus(), 10, 113);
     }
     
     public LoginPanel generateLoginPanel(final GamePanel gamePanel, final IListener listener) {

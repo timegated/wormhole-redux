@@ -160,10 +160,10 @@ public class GameNetLogic implements Runnable, IListener
                     }
                     if (this.m_subscriptionLevel < 2 && this.m_subscriptionLevel != -1) {
                         if (cfTableElement.isTeamTable()) {
-                            this.addLine("Only Team plan members can join Team tables!!!");
+                            //this.addLine("Only Team plan members can join Team tables!!!");
                         }
                         else if (cfTableElement.isBigTable()) {
-                            this.addLine("Only Team plan members can join Huge tables!!!");
+                            //this.addLine("Only Team plan members can join Huge tables!!!");
                         }
                     }
                     if (!cfTableElement.isPrivate()) {
@@ -911,8 +911,12 @@ public class GameNetLogic implements Runnable, IListener
                     this.setTableForPlayer(username, tableId);
                     GameBoard gameBoard = this.m_pnlGame.getPlayingPanel().getGameBoard();
                     if (this.m_tableID == tableId && this.m_bInATable) {
+                        byte teamId = Team.NOTEAM;
+                        if (table.isTeamTable()) {
+                        	teamId = Team.GOLDTEAM;	// gold team is default starting team
+                        }
                         CFPlayerElement player = this.getPlayer(username);
-                        gameBoard.addPlayer(username, player.getRank(), Team.NOTEAM, player.getIcons(), slot);
+                        gameBoard.addPlayer(username, player.getRank(), teamId, player.getIcons(), slot);
                     }
                     else if (username.equals(this.m_username)){
                     	String tablePassword = dataInputStream.readUTF();

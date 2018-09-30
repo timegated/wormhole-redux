@@ -163,6 +163,16 @@ public class ServerTable {
 		}
 	}
 	
+	public int teamSize(byte teamId) {
+		int count = 0;
+		for (ServerUser user : users()) {
+			if (user != null && user.teamId() == teamId) {
+				count ++;
+			}
+		}
+		return count;
+	}
+	
 	public byte winnerSlot() {
 		if (isTeamTable()) {
 			return numPlayersAlive(Team.GOLDTEAM) > 0 ? Team.GOLDTEAM : Team.BLUETEAM; 
