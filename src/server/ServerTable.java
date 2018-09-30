@@ -48,6 +48,15 @@ public class ServerTable {
 		m_id = id;
 	}
 	
+	public boolean isFull() {
+		for (int i=0; i<m_users.length; i++) {
+			if (m_users[i] == null) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	public void setStatus(byte status) {
 		m_status = status;
 	}

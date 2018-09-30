@@ -234,6 +234,10 @@ public class ServerThread extends Thread {
 		ServerTable table 		= server.tableManager.getTable(tableId);
 		byte 		teamId		= table.isTeamTable() ? Team.GOLDTEAM : Team.NOTEAM;
 		
+		if (table.isFull()) {
+			return;
+		}
+		
 		if (!table.isPrivate() || password.equals(table.password())) {
 			byte slot = table.addUser(user().username());
 			table.addUser(user());
