@@ -234,6 +234,10 @@ public class ServerThread extends Thread {
 		ServerTable table 		= server.tableManager.getTable(tableId);
 		byte 		teamId		= table.isTeamTable() ? Team.GOLDTEAM : Team.NOTEAM;
 		
+		if (table.isFull()) {
+			return;
+		}
+		
 		if (!table.isPrivate() || password.equals(table.password())) {
 			byte slot = table.addUser(user().username());
 			table.addUser(user());
@@ -293,8 +297,10 @@ public class ServerThread extends Thread {
 		ServerTable table = server.tableManager.getTable(tableId);
 		
 		if (table.status() != TableStatus.COUNTDOWN && table.numPlayers() > 1) {
-			table.setStatus(TableStatus.COUNTDOWN);
-			new TableTransitionThread(table, table.status());
+			if (!table.isTeamTable() || (table.teamSize(Team.GOLDTEAM) > 0 && table.teamSize(Team.BLUETEAM) > 0)) {
+				table.setStatus(TableStatus.COUNTDOWN);
+				new TableTransitionThread(table, table.status());
+			}
 		}
 	}
 	
@@ -403,7 +409,9 @@ public class ServerThread extends Thread {
 		marshall( table.id() );
 		marshall( username );
 		marshall( slot );
-		marshall( teamId );
+		if (user().table() == table) {
+			marshall( table.password() );
+		}
 		// if team table, then we need to send to the new player the teamIds of the other players
 		if (table.isTeamTable() && user.username() == username) {
 			for (ServerUser user : table.users()) {
@@ -411,9 +419,6 @@ public class ServerThread extends Thread {
 					marshall(user.teamId());
 				}
 			}
-		}
-		if (user().table() == table) {
-			marshall( table.password() );
 		}
 		sendPacket();
 	}
@@ -696,6 +701,11 @@ public class ServerThread extends Thread {
 					countdown --;
 					Thread.sleep(1000);
 					if (table.numPlayers() < 2) {	// People left below the limit, we need to stop counting down
+						table.setStatus(TableStatus.IDLE);
+						server.broadcastTableStatusChange(table.id(), table.status(), TABLE_COUNTDOWN);
+						return;
+					}
+					else if (table.isTeamTable() && (table.teamSize(Team.GOLDTEAM) <= 0 || table.teamSize(Team.BLUETEAM) <= 0)) {
 						table.setStatus(TableStatus.IDLE);
 						server.broadcastTableStatusChange(table.id(), table.status(), TABLE_COUNTDOWN);
 						return;

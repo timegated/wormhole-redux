@@ -48,6 +48,15 @@ public class ServerTable {
 		m_id = id;
 	}
 	
+	public boolean isFull() {
+		for (int i=0; i<m_users.length; i++) {
+			if (m_users[i] == null) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	public void setStatus(byte status) {
 		m_status = status;
 	}
@@ -161,6 +170,16 @@ public class ServerTable {
 				m_wins[user.slot()] ++;
 			}
 		}
+	}
+	
+	public int teamSize(byte teamId) {
+		int count = 0;
+		for (ServerUser user : users()) {
+			if (user != null && user.teamId() == teamId) {
+				count ++;
+			}
+		}
+		return count;
 	}
 	
 	public byte winnerSlot() {

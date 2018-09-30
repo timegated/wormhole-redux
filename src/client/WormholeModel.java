@@ -332,7 +332,7 @@ public class WormholeModel extends Model
         final int x = mouseEvent.getX();
         final int y = mouseEvent.getY();
         if (mouseEvent.getSource() == this.m_pnlOtherPlayers) {
-            if (super.m_tableElement.isTeamTable() && this.m_changeTeamsRect.contains(x, y)) {
+            if (super.m_tableElement.isTeamTable() && this.m_changeTeamsRect.contains(x, y) && super.m_tableElement.getStatus() == TableStatus.IDLE) {
                 super.m_logic.getNetwork().changeTeams((byte)(3 - this.m_teamID));
                 return;
             }
