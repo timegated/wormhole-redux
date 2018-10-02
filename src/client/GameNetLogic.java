@@ -652,9 +652,9 @@ public class GameNetLogic implements Runnable, IListener
                     break;
                 }
                 case 14: {
-                    final String utf7 = dataInputStream.readUTF();
-                    this.m_pnlGame.getLobbyPanel().getPlayerPanel().removePlayer(utf7);
-                    final CFPlayerDialog playerDialog = this.findPlayerDialog(utf7);
+                    final String username = dataInputStream.readUTF();
+                    this.m_pnlGame.getLobbyPanel().getPlayerPanel().removePlayer(username);
+                    final CFPlayerDialog playerDialog = this.findPlayerDialog(username);
                     if (playerDialog != null) {
                         playerDialog.setUserLoggedOff();
                         return;

@@ -538,7 +538,7 @@ public class ServerThread extends Thread {
 		sendPacket();
 	}
 	
-	public void processPackets(final DataInputStream stream) {
+	public byte processPackets(final DataInputStream stream) {
 		try {
 			final byte opcode = stream.readByte();
 			switch(opcode){
@@ -587,11 +587,14 @@ public class ServerThread extends Thread {
 			case 40:
 				receiveTeamChange();
 				break;
+			default:
+				break;
 			}
+			return opcode;
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			return;
+			return -1;
 		}
 	}
 	
@@ -605,7 +608,7 @@ public class ServerThread extends Thread {
 				return;
 			}
 			
-			if (!this.clientVersion.equals("version1")){
+			if (!this.clientVersion.equals("version0.4")){
 				sendLoginFailed("Wrong client version, check website for updated client");
 				server.clients.remove(this);
 				return;
@@ -642,7 +645,10 @@ public class ServerThread extends Thread {
 					if (stream.available() > 0) {
 						short numBytes = stream.readShort();	// packetStreamWriter/Reader let first short be size, we do not use that here
 						if (numBytes > 0) {
-							processPackets(stream);
+							byte opcode = processPackets(stream);
+							if (opcode == 1) {	// user logout
+								break;
+							}
 						}
 						this.nextTime = System.currentTimeMillis() + GameNetLogic.NOOP_DURATION*2;
 					}
