@@ -14,26 +14,20 @@ public class GameBoard extends Panel
     	if (!GameBoard.m_bPlaySound) {
     		return;
     	}
+		Clip clip = (Clip)WormholeModel.g_mediaTable.get(sound);
     	if (sound.equals("snd_thrust")) {
-    		Clip thrustClip = (Clip)WormholeModel.g_mediaTable.get(sound);
-    		if (!thrustClip.isRunning()) {
-    			thrustClip.setFramePosition(0);
-    			thrustClip.start();
+    		if (!clip.isRunning()) {
+    			clip.setFramePosition(0);
+    			clip.start();
     		}
     	}
-    	else {	// sound is something other than thrust
-        	byte[] audioBytes = (byte[])WormholeModel.g_mediaTable.get(sound);
-			try {
-	            AudioInputStream audioStream = AudioSystem.getAudioInputStream(new ByteArrayInputStream(audioBytes));
-	            AudioFormat format = audioStream.getFormat();
-	        	Clip audioClip = (Clip) AudioSystem.getLine(new DataLine.Info(Clip.class, format));
-	        	audioClip.open(audioStream);
-	        	audioClip.start();
-	        	audioStream.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-        }
+    	else {
+    		if (clip.isRunning()) {
+    			clip.stop();
+    		}
+    		clip.setFramePosition(0);
+    		clip.start();
+    	}
     }
     
     public GameBoard(final CFProps cfProps, final GameNetLogic gameNetLogic, final Hashtable hashtable) {

@@ -35,6 +35,7 @@ public class GunshipSprite extends Sprite
                 this.m_strafeOffsetX = (int)(200.0 * Math.cos(n2));
                 this.m_strafeOffsetY = (int)(200.0 * Math.sin(n2));
                 this.m_mode = 1;
+                break;
             }
             case 1: {
                 final int n3 = Sprite.model.m_player.intx + this.m_strafeOffsetX;
@@ -50,6 +51,7 @@ public class GunshipSprite extends Sprite
                     this.m_mode = 2;
                 }
                 this.m_retreatCounter = 0;
+                break;
             }
             case 2: {
                 this.reverseTrack();
