@@ -112,7 +112,10 @@ public class GameNetLogic implements Runnable, IListener
                 return;
             }
             if (o == playingPanel.getStartGameButton()) {
-                this.m_network.startGame(this.m_tableID);
+            	final CFTableElement table = this.m_pnlGame.getLobbyPanel().getTablePanel().findTable(this.m_tableID);
+            	if (table != null && table.getStatus() == TableStatus.IDLE) {
+            		this.m_network.startGame(this.m_tableID);
+            	}
                 return;
             }
             if (o == playingPanel.getSoundButton()) {

@@ -300,7 +300,7 @@ public class ServerThread extends Thread {
 		
 		ServerTable table = server.tableManager.getTable(tableId);
 		
-		if (table.status() != TableStatus.COUNTDOWN && table.numPlayers() > 1) {
+		if (table.status() == TableStatus.IDLE && table.numPlayers() > 1) {
 			if (!table.isTeamTable() || (table.teamSize(Team.GOLDTEAM) > 0 && table.teamSize(Team.BLUETEAM) > 0)) {
 				table.setStatus(TableStatus.COUNTDOWN);
 				new TableTransitionThread(table, table.status());
@@ -608,7 +608,7 @@ public class ServerThread extends Thread {
 				return;
 			}
 			
-			if (!this.clientVersion.equals("version0.4")){
+			if (!this.clientVersion.equals("version0.5")){
 				sendLoginFailed("Wrong client version, check website for updated client");
 				server.clients.remove(this);
 				return;
