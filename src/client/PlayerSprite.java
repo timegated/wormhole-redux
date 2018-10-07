@@ -384,10 +384,12 @@ public class PlayerSprite extends Sprite
     void fireBullet() {
         switch (this.m_numShots) {
             case 1: {
+                GameBoard.playSound("snd_fire");
                 this.fireBullet(super.radAngle);
                 break;
             }
             case 2: {
+                GameBoard.playSound("snd_fire");
                 this.fireBullet(super.radAngle - 0.05);
                 this.fireBullet(super.radAngle + 0.05);
                 break;
@@ -432,7 +434,6 @@ public class PlayerSprite extends Sprite
     }
     
     private void fireBullet(final double n) {
-        GameBoard.playSound("snd_fire");
         final BulletSprite bulletSprite = new BulletSprite((int)(Math.cos(n) * 12.0 + super.x), (int)(Math.sin(n) * 12.0 + super.y), this.m_bulletDamage, this.m_bulletSize, PlayerSprite.g_bulletColors[this.m_bulletType], 2);
         bulletSprite.setPlayer(super.m_slot);
         bulletSprite.setVelocity(Math.cos(n) * 10.0 + super.vectorx, Math.sin(n) * 10.0 + super.vectory);
