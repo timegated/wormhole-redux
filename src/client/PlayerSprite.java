@@ -289,10 +289,10 @@ public class PlayerSprite extends Sprite
         }
         if (this.m_shieldCyclesLeft > 0) {
             Color color = Color.gray;
-            if (this.m_shieldCyclesLeft > 40) {
+            if (this.m_shieldCyclesLeft > 80) {
                 color = Color.green;
             }
-            else if (this.m_shieldCyclesLeft > 20) {
+            else if (this.m_shieldCyclesLeft > 40) {
                 color = Color.yellow;
             }
             graphics.setColor(color);

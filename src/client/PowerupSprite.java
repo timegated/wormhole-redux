@@ -75,7 +75,7 @@ public class PowerupSprite extends Sprite
                 break;
             }
             case 3: {
-                playerSprite.m_shieldCyclesLeft = Math.min(450, playerSprite.m_shieldCyclesLeft + 200);
+                playerSprite.m_shieldCyclesLeft = Math.max(450, playerSprite.m_shieldCyclesLeft + 200);
                 break;
             }
             case 4: {

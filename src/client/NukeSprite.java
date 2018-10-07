@@ -13,7 +13,7 @@ public class NukeSprite extends Sprite
     int m_mode;
     static final int COUNTDOWN = 0;
     static final int DETONATE = 1;
-    static final int COUNTDOWN_TIME = 8;
+    static final int COUNTDOWN_TIME = 9;
     
     public void addSelf() {
         super.addSelf();
