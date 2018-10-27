@@ -116,13 +116,13 @@ public class WHUtil
     
     public static boolean isPolygonIntersect(final Polygon polygon, final Polygon polygon2, final int n, final int n2, final int n3, final int n4) {
         for (int i = 0; i < polygon.npoints; ++i) {
-            System.out.println("test: " + (polygon.xpoints[i] + n) + "y: " + (polygon.ypoints[i] + n2));
+            //System.out.println("test: " + (polygon.xpoints[i] + n) + "y: " + (polygon.ypoints[i] + n2));
             if (polygon2.contains(polygon.xpoints[i] + n, polygon.ypoints[i] + n2)) {
                 return true;
             }
         }
         for (int j = 0; j < polygon2.npoints; ++j) {
-            System.out.println("test: " + (polygon2.xpoints[j] + n3) + "Y: " + (polygon2.ypoints[j] + n4));
+            //System.out.println("test: " + (polygon2.xpoints[j] + n3) + "Y: " + (polygon2.ypoints[j] + n4));
             if (polygon.contains(polygon2.xpoints[j] + n3, polygon2.ypoints[j] + n4)) {
                 return true;
             }

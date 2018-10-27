@@ -34,7 +34,7 @@ public class EMPSprite extends Sprite
         graphics.setColor(super.m_color);
         WHUtil.drawTarget(graphics, super.intx, super.inty);
         graphics.translate(super.intx, super.inty);
-        graphics.setFont(WormholeModel.fontEleven);
+        graphics.setFont(WormholeModel.fontTwelve);
         graphics.drawString("EMP: ", -5, -3);
         if (this.m_stage == 0) {
             final double n = this.m_formation / 65.0;

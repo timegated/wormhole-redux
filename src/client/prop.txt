@@ -1,10 +1,8 @@
 # props file for gui skeleton
-NumClasses=60
 hostname=wormholeredux.com
 loginserviceport=6049
-#
+
 #images
-#
 NumImgs=3
 IN0=img_powerups
 IP0=images/powerups-ex.gif
@@ -14,9 +12,8 @@ IP1=images/small_powerups-ex.gif
 IX1=14
 IN2=img_r2title
 IP2=images/title_ng.gif
-#
+
 #sounds
-#
 NumSnds=5
 SN0=snd_silence
 SP0=sounds/silence.wav
@@ -28,80 +25,83 @@ SN3=snd_powerup
 SP3=sounds/magic.wav
 SN4=snd_thrust
 SP4=sounds/thrust.wav
-# CUSTOM SKIN VARS
-# placements
-# login
-loginpanel_tf_username=185,292,100,20
-loginpanel_tf_password=185,322,100,20
-loginpanel_btn_login=305,320,60,24
+
+# login (x,y,w,h)
+loginpanel_tf_username=300,300,100,20
+loginpanel_tf_password=300,325,100,20
+loginpanel_btn_login=430,325,60,30
+
 # lobby
-lobbypanel_playerpanel=5,120,231,355
-lobbypanel_tablepanel=241,29,542,272
-lobbypanel_chatpanel=241,319,542,156
-lobbypanel_btn_logout=124,81,112,20
-lobbypanel_btn_createtable=296,5,100,20
-lobbypanel_btn_createtableoptions=408,5,130,20
+lobbypanel_playerpanel=10,130,300,620
+lobbypanel_tablepanel=320,40,810,410
+lobbypanel_chatpanel=320,470,810,280
+lobbypanel_btn_logout=175,80,110,20
+lobbypanel_btn_createtable=450,5,150,30
+lobbypanel_btn_createtableoptions=610,5,200,30
+
 # lobby URL buttons
-lobbypanel_btn0=5,31,231,20
+lobbypanel_btn0=50,30,235,20
 lobbypanel_btnurl0=
 lobbypanel_btnname0=Instructions & Tips
-lobbypanel_btn1=5,56,112,20
+lobbypanel_btn1=50,55,110,20
 lobbypanel_btnurl1=
 lobbypanel_btnname1=Missions
-lobbypanel_btn2=124,56,112,20
+lobbypanel_btn2=175,55,110,20
 lobbypanel_btnurl2=
 lobbypanel_btnname2=Clans
-lobbypanel_btn3=5,81,112,20
+lobbypanel_btn3=50,80,110,20
 lobbypanel_btnurl3=
 lobbypanel_btnname3=Sign Up!
 lobbypanel_btnsubmin3=-1
 lobbypanel_btnsubmax3=0
-lobbypanel_btn4=5,81,112,20
-lobbypanel_btnurl4=
-lobbypanel_btnname4=My Locker
-lobbypanel_btnsubmin4=1
-lobbypanel_btnsubmax4=2
+
 # playing
-playingpanel_chatpanel=5,155,205,320
-playingpanel_btn_startgame=5,55,200,20
-playingpanel_btn_soundtoggle=5,80,200,20
-playingpanel_btn_leavetable=5,130,200,20
-playingpanel_gameboard=213,3,576,472
-playingpanel_credits=0,0,0,0
+playingpanel_chatpanel=5,155,275,595
+playingpanel_btn_startgame=40,55,200,20
+playingpanel_btn_soundtoggle=40,80,200,20
+playingpanel_btn_leavetable=40,130,200,20
+playingpanel_gameboard=285,5,900,750
+playingpanel_credits=0,5,0,0
+
 # playing URL buttons
-playingpanel_btn0=5,105,200,20
+playingpanel_btn0=40,105,200,20
 playingpanel_btnurl0=
 playingpanel_btnname0=Instructions & Tips
+
 # dialogs
 # create table dialog
-table_dialog=280,160,300,187
-table_dialog_tf_password=7,95,255,20
-table_dialog_btn_ok=6,120,100,20
-table_dialog_btn_cancel=125,120,100,20
-table_dialog_cb_ranking=12,36,100,14
-table_dialog_cb_bigtable=134,36,100,14
-table_dialog_cb_balancedteams=134,54,120,14
-table_dialog_choice_teams=12,54,115,14
+table_dialog=280,160,300,200
+table_dialog_tf_password=10,120,255,20
+table_dialog_cb_ranking=15,40,150,20
+table_dialog_cb_bigtable=140,40,120,20
+table_dialog_cb_balancedteams=140,65,140,20
+table_dialog_choice_teams=15,65,120,14
+table_dialog_btn_ok=30,150,100,20
+table_dialog_btn_cancel=150,150,100,20
+
 # join table dialog
-jointable_dialog=280,130,155,144
-jointable_dialog_tf_password=8,51,135,20
-jointable_dialog_btn_ok=8,80,65,20
-jointable_dialog_btn_cancel=80,80,65,20
+jointable_dialog=280,130,175,150
+jointable_dialog_tf_password=10,60,135,20
+jointable_dialog_btn_ok=10,90,65,30
+jointable_dialog_btn_cancel=80,90,65,30
+
 # player info dialog
 player_dialog=350,150,270,170
 player_dialog_btn_view=0,0,0,0
-player_dialog_tf_whisper=70,69,172,20
+player_dialog_tf_whisper=80,70,172,20
 player_dialog_btn_send=0,10,0,0
-player_dialog_btn_close=30,112,190,20
+player_dialog_btn_close=30,120,190,20
 player_dialog_cb_ignore=9,92,300,19
 player_dialog_icon_URL=
 player_dialog_clan_URL=
+
 # colors
 clr_bg=115,90,73
 clr_fg=192,151,96
 clr_who_me=252,211,156
 clr_who_other=192,151,96
-# shades,1=middle,2=top,3=underside
+
+# shades (middle,top,underside)
 clr_shade_ext0=204,204,204
 clr_shade_ext1=255,255,255
 clr_shade_ext2=0,0,0
@@ -138,7 +138,7 @@ welcome4=Red tables are playing.
 welcome5=Type '/help' to list chat commands.
 welcome6=----------------------------------------------------------------------
 welcome7=Welcome to Wormhole Redux! Enjoy your stay :)
-welcome8=This is a preview version with no permanent accounts and no ranked games.
+welcome8=This is a version with no permanent accounts and no ranked games.
 instr0=Help: this message
 instr1=Whisper:  /whisper [username] 
 instr2=Reply:   /reply [message]

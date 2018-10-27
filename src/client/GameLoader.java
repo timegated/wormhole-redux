@@ -145,8 +145,8 @@ public class GameLoader extends JPanel implements Runnable
         //System.out.println("Loader v1.0");
         this.setBackground(Color.black);
         this.setForeground(Color.white);
-        this.m_screenWidth = 800;
-        this.m_screenHeight = 525;
+        this.m_screenWidth = 1150;
+        this.m_screenHeight = 790;
         this.m_mediaTracker = new MediaTracker(this);
         this.repaint();
     }
@@ -156,7 +156,7 @@ public class GameLoader extends JPanel implements Runnable
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setResizable(false);
         
-        frame.setBounds(20, 20, 800, 525);
+        frame.setBounds(20, 20, 1150, 790);
         frame.setTitle("Wormhole Redux");
         
         GameLoader gameLoader = new GameLoader();
