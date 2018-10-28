@@ -21,8 +21,7 @@ public class WormholeModel extends Model
     public static final Font fontSuperLarge;
     public static final Font fontLarge;
     public static final Font fontFourteen;
-    public static final Font fontEleven;
-    public static final Font fontNine;
+    public static final Font fontTwelve;
     public Color m_color;
     private Rectangle m_rectLogo;
     private Image m_imgLogo;		// background image in the center of the wormholes
@@ -58,8 +57,8 @@ public class WormholeModel extends Model
     public static final int otherPlayersWidth = 144;
     public static final int statusWidth = 430;
     public static final int statusHeight = 49;
-    public static final int gboardWidth = 430;
-    public static final int gboardHeight = 423;
+    public static final int gboardWidth = 700;
+    public static final int gboardHeight = 700;
     private int m_playerHeight;
     private int m_gameOverCycle;
     private static final int MAXGAMEOVERCYCLES = 120;
@@ -657,7 +656,7 @@ public class WormholeModel extends Model
         graphics.fillRoundRect(n + 1, n2, n4 - 2 - n, 15, n3, n3);
         graphics.setColor(color2);
         graphics.drawRoundRect(n + 1, n2, n4 - 2 - n, 15, n3, n3);
-        graphics.setFont(WormholeModel.fontEleven);
+        graphics.setFont(WormholeModel.fontTwelve);
         this.drawCenteredString2(graphics, s, n2 + 13, n, n4 - n);
     }
     
@@ -765,7 +764,7 @@ public class WormholeModel extends Model
         graphics.fillRect(0, 0, 430, 49);
         graphics.setColor(this.m_color);
         graphics.drawRect(0, 0, 429, 48);
-        graphics.setFont(WormholeModel.fontEleven);
+        graphics.setFont(WormholeModel.fontTwelve);
         if (this.m_player != null) {
             graphics.setColor(Color.white);
             graphics.drawString(super.m_logic.getUsername(), 7, 10);
@@ -959,8 +958,8 @@ public class WormholeModel extends Model
         this.m_incomingWhoStack = new byte[40];
         this.boardChanged = true;
         WormholeModel.g_mediaTable = g_mediaTable;
-        this.boardWidth = 430;
-        this.boardHeight = 423;
+        this.boardWidth = gboardWidth;
+        this.boardHeight = gboardHeight;
         for (int i = 0; i < this.m_players.length; ++i) {
             this.m_players[i] = new PlayerInfo();
         }
@@ -976,13 +975,13 @@ public class WormholeModel extends Model
         final Rectangle bounds = new Rectangle();
         gameBoard.setLayout(null);
         this.m_pnlStatus = new ImagePanel();
-        bounds.setBounds(0, 0, 430, 49);
+        bounds.setBounds(100, 0, 430, 49);
         this.m_pnlStatus.setBounds(bounds);
         this.m_pnlPlaying = new ImagePanel();
-        bounds.setBounds(0, 49, 430, 423);
+        bounds.setBounds(0, 49, 700, 700);
         this.m_pnlPlaying.setBounds(bounds);
         this.m_pnlOtherPlayers = new ImagePanel();
-        bounds.setBounds(430, 0, 144, 474);
+        bounds.setBounds(700, 0, 144, 474);
         this.m_pnlOtherPlayers.setBounds(bounds);
         this.m_pnlStatus.m_g.setColor(Color.green);
         this.m_pnlStatus.m_g.drawRect(0, 0, 429, 48);
@@ -1062,13 +1061,13 @@ public class WormholeModel extends Model
                 this.drawShadowString(graphics, "WINNER: " + this.m_winningPlayerString, 100, 120);
             }
             graphics.setColor(Color.white);
-            graphics.setFont(WormholeModel.fontEleven);
+            graphics.setFont(WormholeModel.fontTwelve);
             for (int n = 0; n < this.m_vMessages.size(); ++n) {
                 graphics.drawString((String)this.m_vMessages.elementAt(n), 10, 10 * (n + 1));
             }
         }
         if (this.m_teamID != 0) {
-            graphics.setFont(WormholeModel.fontEleven);
+            graphics.setFont(WormholeModel.fontTwelve);
             graphics.setColor(CFSkin.TEAM_COLORS[this.m_teamID]);
             graphics.drawString(CFSkin.TEAM_NAMES[this.m_teamID] + " member", this.boardWidth - 135, 13);
         }
@@ -1185,8 +1184,7 @@ public class WormholeModel extends Model
         fontSuperLarge = new Font("Helvetica", 1, 40);
         fontLarge = new Font("Helvetica", 0, 20);
         fontFourteen = new Font("Helvetica", 1, 14);
-        fontEleven = new Font("Helvetica", 1, 11);
-        fontNine = new Font("Helvetica", 1, 9);
+        fontTwelve = new Font("Helvetica", 1, 12);
         g_titleColor = Color.green;
         WormholeModel.gOrbitDistance = 270;
     }
@@ -1308,9 +1306,9 @@ public class WormholeModel extends Model
         do {
             this.m_novaInfo[n2][0] = 50.0;
         } while (++n2 < 60);
-        this.totalBoardW = (int)(this.boardWidth * n);
-        this.totalBoardH = (int)(this.boardHeight * n);
-        this.m_boardCenterX = this.totalBoardW / 2;
+        this.totalBoardW = (int)(this.boardWidth / 1.5 * n);	// divide by 1.5 because we increased viewing size from ~420 to 700, which scaled map size here
+        this.totalBoardH = (int)(this.boardHeight / 1.5 * n);
+        this.m_boardCenterX = this.totalBoardW / 2 ;
         this.m_boardCenterY = this.totalBoardH / 2;
         this.m_rectCenterBox = new Rectangle(this.m_boardCenterX - 100, this.m_boardCenterY - 100, 200, 200);
         this.m_portalVisibility = (int)(this.boardWidth / 2.0 * 1.45);
@@ -1436,7 +1434,7 @@ public class WormholeModel extends Model
         graphics.setColor(Color.white);
         graphics.setFont(WormholeModel.fontFourteen);
         graphics.drawString("Wormhole NG Ship Selection", this.m_introX + 100, this.m_introY + 16);
-        graphics.setFont(WormholeModel.fontEleven);
+        graphics.setFont(WormholeModel.fontTwelve);
         graphics.drawString("Choose a ship by clicking on it.", this.m_introX + 100, this.m_introY + 28);
         graphics.setColor(Color.gray);
         graphics.fillRect(this.m_intro_shipX, this.m_intro_shipY, 400, 50);
@@ -1484,7 +1482,8 @@ public class WormholeModel extends Model
             }
         }
         graphics.translate(this.m_introX + 75, this.m_introY + 180);
-        WHUtil.drawScaledPoly(graphics, PlayerSprite.g_polyShip[this.m_describedShip][this.m_currentFighterShade / 2 % 24], zoomInIntro);
+        //WHUtil.drawScaledPoly(graphics, PlayerSprite.g_polyShip[this.m_describedShip][this.m_currentFighterShade / 2 % 24], zoomInIntro);
+        WHUtil.drawScaledPoly(graphics, PlayerSprite.g_polyShip[this.m_describedShip][this.m_currentFighterShade * 10 / 15 % 24], zoomInIntro);
         graphics.translate(-(this.m_introX + 75), -(this.m_introY + 180));
         graphics.setColor(Color.white);
         graphics.drawString(array[0], this.m_introX + 10, this.m_introY + 110);

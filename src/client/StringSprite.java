@@ -16,7 +16,7 @@ public class StringSprite extends Sprite
     
     public void drawSelf(final Graphics graphics) {
         graphics.setColor(this.m_color);
-        graphics.setFont(WormholeModel.fontEleven);
+        graphics.setFont(WormholeModel.fontTwelve);
         graphics.drawString(super.name, super.intx, super.inty);
     }
     

@@ -112,7 +112,7 @@ public class CFSkin extends MouseAdapter
             graphics.drawString("Table was deleted!", 25, 55);
         }
         else {
-            graphics.drawString("Enter Password:", 10, 45);
+            graphics.drawString("Enter Password:", 10, 50);
         }
         graphics.setColor(this.m_clrError);
         graphics.drawString(cfPrivateTableDialog.getStatus(), 10, 113);
@@ -532,7 +532,7 @@ public class CFSkin extends MouseAdapter
     public void defaultPaintCFChatPanel(final Graphics graphics, final CFChatPanel cfChatPanel) {
         graphics.setFont(CFSkin.FONTNORMAL);
         graphics.setColor(this.m_clrPanelText);
-        graphics.drawString("Say:", cfChatPanel.m_tfChat.getLocation().x - 27, cfChatPanel.m_tfChat.getLocation().y + 16);
+        graphics.drawString("Say:", cfChatPanel.m_tfChat.getLocation().x - 29, cfChatPanel.m_tfChat.getLocation().y + 16);
     }
     
     public void defaultPrePaintCFChatPanel(final Graphics graphics, final CFChatPanel cfChatPanel) {
@@ -579,8 +579,8 @@ public class CFSkin extends MouseAdapter
         }
         this.m_loginOffScreenG.drawImage((Image)GameLoader.g_mediaElements.get("img_r2title"), this.titleCounter, loginPanel.m_tfUsername.getLocation().y - 50, null);
         this.m_loginOffScreenG.setFont(CFSkin.FONTNORMAL);
-        this.m_loginOffScreenG.drawString("Username:", loginPanel.m_tfUsername.getLocation().x - 70, loginPanel.m_tfUsername.getLocation().y + 15);
-        this.m_loginOffScreenG.drawString("Password:", loginPanel.m_tfPassword.getLocation().x - 70, loginPanel.m_tfPassword.getLocation().y + 15);
+        this.m_loginOffScreenG.drawString("Username:", loginPanel.m_tfUsername.getLocation().x - 80, loginPanel.m_tfUsername.getLocation().y + 15);
+        this.m_loginOffScreenG.drawString("Password:", loginPanel.m_tfPassword.getLocation().x - 80, loginPanel.m_tfPassword.getLocation().y + 15);
         this.m_loginOffScreenG.setColor(Color.yellow);
         this.m_loginOffScreenG.drawString(loginPanel.getConnectionStatus(), loginPanel.m_tfUsername.getLocation().x - 70, loginPanel.m_tfPassword.getLocation().y + 40);
         this.m_loginOffScreenG.setColor(Color.black);
@@ -675,7 +675,7 @@ public class CFSkin extends MouseAdapter
             graphics.fillRect(n + 4 - 2, 26, 4, 4);
         }
         graphics.setColor(Color.yellow);
-        graphics.setFont(CFSkin.FONTSMALL);
+        graphics.setFont(CFSkin.FONTNORMAL);
         String s2 = cfTableElement.isRanked() ? "Ranked" : "";
         if (cfTableElement.isTeamTable()) {
             if (cfTableElement.isRanked()) {
@@ -869,10 +869,10 @@ public class CFSkin extends MouseAdapter
     }
     
     static {
-        FONTSMALL = new Font("Helvetica", 0, 9);
-        FONTNORMAL = new Font("Helvetica", 1, 11);
-        FONTELEMENT = new Font("Helvetica", 1, 10);
-        FONTELEMENT_TITLE = new Font("Helvetica", 1, 11);
+        FONTSMALL = new Font("Helvetica", 0, 12);
+        FONTNORMAL = new Font("Helvetica", 1, 14);
+        FONTELEMENT = new Font("Helvetica", 1, 12);
+        FONTELEMENT_TITLE = new Font("Helvetica", 1, 12);
         STR_TEAMS = new String[] { "No teams", "Teams: Auto Brd", "Teams: Sml Brd", "Teams: Med Brd", "Teams: Lrg Brd" };
         STR_TEAMS_SHORT = new String[] { "", "Auto", "Sml", "Med", "Lrg" };
         TEAM_COLORS = new Color[] { Color.white, new Color(232, 224, 0), new Color(87, 83, 255) };

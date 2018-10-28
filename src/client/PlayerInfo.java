@@ -74,13 +74,13 @@ public class PlayerInfo
     void draw(final Graphics graphics, final int n, final int n2) {
         this.m_bRefresh = false;
         WHUtil.drawBoundRect(graphics, 0, 0, n, n2, this.m_color, this.m_gameOver ? Color.gray : ((this.offsetCycle == 30) ? Color.orange : Color.black));
-        graphics.setFont(WormholeModel.fontEleven);
+        graphics.setFont(WormholeModel.fontTwelve);
         graphics.drawString((this.m_username.length() > 12) ? this.m_username.substring(0, 11) : this.m_username, 30, 11);
         if (this.m_bEmpty) {
             return;
         }
         CFSkin.getSkin().drawIcons(graphics, this.m_icons, 97, 2, 15, 3);
-        graphics.drawString("wins: " + this.m_wins, 95, 24);
+        graphics.drawString("wins: " + this.m_wins, 85, 24);
         graphics.drawString("rank: " + ((this.m_rank >= 0) ? ("" + this.m_rank) : "n/a"), 30, 24);
         for (byte b = 0; b < this.m_nPowerups; ++b) {
             graphics.drawImage(this.m_imgPowerups[PowerupSprite.convertToSmallImage(this.m_powerups[b])], 34 + b * 21, 29, null);
