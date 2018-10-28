@@ -12,6 +12,8 @@ public class GamePanel extends Panel
     private GameNetLogic m_netLogic;
     public static JPanel m_applet;
     public static Vector g_vDialogs;
+    private long m_lastCycleStartTime;
+    private long m_lastCycleEndTime;
     private CFProps m_cfProps;
     
     public GameNetLogic getNetLogic() {
@@ -49,7 +51,14 @@ public class GamePanel extends Panel
     public void doOneCycle() {
         try {
             if (this.m_pnlPlaying.isVisible()) {
+            	long lastCycleDuration = (m_lastCycleEndTime - m_lastCycleStartTime) / 1000000;
+	            long millisDelay = 21 - lastCycleDuration;
+	            if (millisDelay < 0) millisDelay = 0;
+	            Thread.sleep(millisDelay);
+                
+	            m_lastCycleStartTime = System.nanoTime();
                 this.m_pnlPlaying.doOneCycle();
+                m_lastCycleEndTime = System.nanoTime();
             }
             else if (this.m_pnlLogin.isVisible()) {
                 this.m_pnlLogin.doOneCycle();
