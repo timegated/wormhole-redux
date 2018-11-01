@@ -58,7 +58,6 @@ public class GamePanel extends Panel
                 
 	            m_lastCycleStartTime = System.nanoTime();
                 this.m_pnlPlaying.doOneCycle();
-                m_lastCycleEndTime = System.nanoTime();
             }
             else if (this.m_pnlLogin.isVisible()) {
                 this.m_pnlLogin.doOneCycle();
@@ -68,6 +67,7 @@ public class GamePanel extends Panel
                 Thread.sleep(50L);
             }
             this.m_netLogic.doOneCycle();
+            m_lastCycleEndTime = System.nanoTime();
         }
         catch (Exception ex) {}
     }
