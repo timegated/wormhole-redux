@@ -608,7 +608,7 @@ public class ServerThread extends Thread {
 				return;
 			}
 			
-			if (!this.clientVersion.equals("version0.7")){
+			if (!this.clientVersion.equals("version1.0")){
 				sendLoginFailed("Wrong client version, check website for updated client");
 				server.clients.remove(this);
 				return;
