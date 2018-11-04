@@ -32,9 +32,9 @@ loginpanel_tf_password=300,325,100,20
 loginpanel_btn_login=430,325,60,30
 
 # lobby
-lobbypanel_playerpanel=10,130,300,620
-lobbypanel_tablepanel=320,40,810,410
-lobbypanel_chatpanel=320,470,810,280
+lobbypanel_playerpanel=10,130,300,580
+lobbypanel_tablepanel=320,40,810,390
+lobbypanel_chatpanel=320,450,810,260
 lobbypanel_btn_logout=175,80,110,20
 lobbypanel_btn_createtable=450,5,150,30
 lobbypanel_btn_createtableoptions=610,5,200,30
@@ -56,11 +56,11 @@ lobbypanel_btnsubmin3=-1
 lobbypanel_btnsubmax3=0
 
 # playing
-playingpanel_chatpanel=5,155,275,595
+playingpanel_chatpanel=5,155,310,555
 playingpanel_btn_startgame=40,55,200,20
 playingpanel_btn_soundtoggle=40,80,200,20
 playingpanel_btn_leavetable=40,130,200,20
-playingpanel_gameboard=285,5,900,750
+playingpanel_gameboard=320,5,800,705
 playingpanel_credits=0,5,0,0
 
 # playing URL buttons

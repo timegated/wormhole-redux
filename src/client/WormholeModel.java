@@ -57,8 +57,8 @@ public class WormholeModel extends Model
     public static final int otherPlayersWidth = 144;
     public static final int statusWidth = 430;
     public static final int statusHeight = 49;
-    public static final int gboardWidth = 700;
-    public static final int gboardHeight = 700;
+    public static final int gboardWidth = 655;
+    public static final int gboardHeight = 655;
     private int m_playerHeight;
     private int m_gameOverCycle;
     private static final int MAXGAMEOVERCYCLES = 120;
@@ -978,10 +978,10 @@ public class WormholeModel extends Model
         bounds.setBounds(100, 0, 430, 49);
         this.m_pnlStatus.setBounds(bounds);
         this.m_pnlPlaying = new ImagePanel();
-        bounds.setBounds(0, 49, 700, 700);
+        bounds.setBounds(0, 49, this.boardWidth, this.boardHeight);
         this.m_pnlPlaying.setBounds(bounds);
         this.m_pnlOtherPlayers = new ImagePanel();
-        bounds.setBounds(700, 0, 144, 474);
+        bounds.setBounds(this.boardWidth, 0, 144, 474);
         this.m_pnlOtherPlayers.setBounds(bounds);
         this.m_pnlStatus.m_g.setColor(Color.green);
         this.m_pnlStatus.m_g.drawRect(0, 0, 429, 48);
