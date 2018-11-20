@@ -191,7 +191,7 @@ public class ServerThread extends Thread {
 		final DataInputStream stream = this.pr.getStream();
 		
 		byte boardSize = 0, numStringPairs;
-		boolean isRanked, hasPassword, isBigTable, isTeamTable, isBalancedTable = false;
+		boolean isRanked, hasPassword, isBigTable, allShipsAllowed, isTeamTable, isBalancedTable = false;
 		String password = "";
 
 		isRanked 	= (stream.readByte()==1);
@@ -202,6 +202,7 @@ public class ServerThread extends Thread {
 		}
 		
 		isBigTable	= (stream.readByte()==1);
+		allShipsAllowed	= (stream.readByte()==1);
 		isTeamTable = (stream.readByte()==1);
 		if (isTeamTable){
 			boardSize = stream.readByte();
@@ -220,7 +221,7 @@ public class ServerThread extends Thread {
 			return;
 		}
 		
-		ServerTable table = new ServerTable(isRanked, password, isBigTable, isTeamTable, boardSize, isBalancedTable);
+		ServerTable table = new ServerTable(isRanked, password, isBigTable, allShipsAllowed, isTeamTable, boardSize, isBalancedTable);
 		byte slot = table.addUser(user().username());
 		table.addUser(user());
 		user().setSlot(slot);
@@ -465,6 +466,7 @@ public class ServerThread extends Thread {
 		marshall( table.isRanked() );
 		marshall( table.isPrivate() );
 		marshall( table.isBigTable() );
+		marshall( table.allShipsAllowed() );
 		marshall( table.isTeamTable() );
 		if (table.isTeamTable()) {
 			marshall( table.boardSize() );

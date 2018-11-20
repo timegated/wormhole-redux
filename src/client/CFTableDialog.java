@@ -11,6 +11,7 @@ public class CFTableDialog extends Dialog implements IListener, WindowListener, 
     public Choice m_choiceTeamTable;
     public Checkbox m_cbBigTable;
     public Checkbox m_cbBalancedTeams;
+    public Checkbox m_cbAllShips;
     private IListener m_listener;
     private boolean m_bOK;
     
@@ -32,6 +33,8 @@ public class CFTableDialog extends Dialog implements IListener, WindowListener, 
         this.add(this.m_cbBigTable);
         (this.m_cbBalancedTeams = CFSkin.getSkin().generateCheckBox("Balanced Teams", false)).setEnabled(false);
         this.add(this.m_cbBalancedTeams);
+        (this.m_cbAllShips = CFSkin.getSkin().generateCheckBox("All Ships", false)).setEnabled(true);
+        this.add(this.m_cbAllShips);
         (this.m_choiceTeamTable = CFSkin.getSkin().generateChoice()).addItemListener(this);
         this.m_choiceTeamTable.setEnabled(false);
         this.add(this.m_choiceTeamTable);
@@ -89,6 +92,10 @@ public class CFTableDialog extends Dialog implements IListener, WindowListener, 
         return this.m_cbBalancedTeams.getState();
     }
     
+    public boolean allShipsEnabled() {
+        return this.m_cbAllShips.getState();
+    }
+    
     public String getPassword() {
         return this.m_tfPassword.getText();
     }
@@ -118,6 +125,10 @@ public class CFTableDialog extends Dialog implements IListener, WindowListener, 
     
     public boolean isBigTable() {
         return this.m_cbBigTable.getState();
+    }
+    
+    public boolean allShips() {
+        return this.m_cbAllShips.getState();
     }
     
     public void setListener(final IListener listener) {

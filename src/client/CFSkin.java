@@ -399,12 +399,14 @@ public class CFSkin extends MouseAdapter
         this.setColors(colors.m_cbRanking);
         this.setColors(colors.m_cbBigTable);
         this.setColors(colors.m_cbBalancedTeams);
+        this.setColors(colors.m_cbAllShips);
         this.setColors(colors.m_choiceTeamTable);
         colors.m_cbRanking.setBounds(this.m_cfProps.getRect("table_dialog_cb_ranking"));
         colors.m_cbBigTable.setBounds(this.m_cfProps.getRect("table_dialog_cb_bigtable"));
         //colors.m_cbBigTable.setEnabled(this.m_logic.getSubscriptionLevel() >= 2);
         colors.m_cbBigTable.setEnabled(this.m_logic.getSubscriptionLevel() >= -1);
         colors.m_cbBalancedTeams.setBounds(this.m_cfProps.getRect("table_dialog_cb_balancedteams"));
+        colors.m_cbAllShips.setBounds(this.m_cfProps.getRect("table_dialog_cb_allships"));
         colors.m_choiceTeamTable.setBounds(this.m_cfProps.getRect("table_dialog_choice_teams"));
         colors.m_tfPassword.setBounds(this.m_cfProps.getRect("table_dialog_tf_password"));
         colors.m_cfBtnOK.setBounds(this.m_cfProps.getRect("table_dialog_btn_ok"));
