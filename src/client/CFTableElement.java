@@ -179,6 +179,15 @@ class CFTableElement extends CFElement
         return this.m_names[slot];
     }
     
+    public int getSlot(String username) {
+    	for (int i=0; i<this.m_names.length; i++) {
+    		if (this.m_names[i].equals(username)) {
+    			return i;
+    		}
+    	}
+    	return -1;
+    }
+    
     public boolean isTeamTable() {
         return this.m_bTeamTable;
     }

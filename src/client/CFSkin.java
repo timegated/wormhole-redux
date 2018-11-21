@@ -299,12 +299,13 @@ public class CFSkin extends MouseAdapter
         final CFChatElement cfChatElement = new CFChatElement(listener, CFSkin.FONTNORMAL, s, s2, s3, n);
         cfChatElement.setForeground((color != null) ? color : this.m_clrForeground);
         cfChatElement.setBackground(this.g_set_internal[0]);
-        if (s2 != null && s2.equals(this.m_logic.getUsername())) {
-            cfChatElement.setWhoColor(this.m_clrWhoMe);
-        }
-        else {
-            cfChatElement.setWhoColor(this.m_clrWhoOther);
-        }
+        cfChatElement.setWhoColor(this.m_clrWhoMe);
+//        if (s2 != null && s2.equals(this.m_logic.getUsername())) {
+//            cfChatElement.setWhoColor(this.m_clrWhoMe);
+//        }
+//        else {
+//            cfChatElement.setWhoColor(this.m_clrWhoOther);
+//        }
         return cfChatElement;
     }
     
@@ -616,7 +617,15 @@ public class CFSkin extends MouseAdapter
                 final int index = s.indexOf(": ");
                 graphics.setColor(cfChatElement.getWhoColor());
                 if (index > -1) {
+                	final String username = s.substring(0, index);
                     final String substring = s.substring(0, index + 2);
+                    if (m_logic.inTable()) {
+                    	CFPlayerElement player = m_logic.getPlayer(username);
+                    	if (player != null && player.getTableID() == m_logic.getTableID()) {
+                    		final CFTableElement table = m_logic.gamePanel().getLobbyPanel().getTablePanel().findTable(player.getTableID());
+                    		graphics.setColor(Sprite.g_colors[table.getSlot(username)][0]);
+                    	}
+                    }
                     graphics.drawString(substring, 5, n);
                     graphics.setColor(cfChatElement.getForeground());
                     graphics.drawString(s.substring(index + 2), 5 + graphics.getFontMetrics(cfChatElement.getFont()).stringWidth(substring), n);

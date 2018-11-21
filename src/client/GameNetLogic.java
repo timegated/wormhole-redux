@@ -30,6 +30,16 @@ public class GameNetLogic implements Runnable, IListener
     private static final String[] g_commands;
     private String m_lastWhisperer;
     
+    public boolean inTable() {
+    	return m_bInATable;
+    }
+    public GamePanel gamePanel() {
+    	return m_pnlGame;
+    }
+    public int getTableID() {
+    	return m_tableID;
+    }
+    
     public void whisper(final String s, final String s2) {
         if (s2.length() > 0) {
             String s3 = null;
