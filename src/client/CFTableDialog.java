@@ -8,9 +8,10 @@ public class CFTableDialog extends Dialog implements IListener, WindowListener, 
     public TextField m_tfPassword;
     public CFButton m_cfBtnOK;
     public CFButton m_cfBtnCancel;
-    public Choice m_choiceTeamTable;
+    public Choice m_choiceBoardSize;
     public Checkbox m_cbBigTable;
     public Checkbox m_cbBalancedTeams;
+    public Checkbox m_cbTeams;
     public Checkbox m_cbAllShips;
     private IListener m_listener;
     private boolean m_bOK;
@@ -28,16 +29,18 @@ public class CFTableDialog extends Dialog implements IListener, WindowListener, 
         super.setResizable(false);
         GamePanel.g_vDialogs.addElement(this);
         this.m_cbRanking = CFSkin.getSkin().generateCheckBox("Ranked Table", true);
-        (this.m_cbBigTable = CFSkin.getSkin().generateCheckBox("Huge Table", false)).addItemListener(this);
-        this.m_cbBigTable.setEnabled(false);
+        (this.m_cbBigTable = CFSkin.getSkin().generateCheckBox("Huge Table", false)).setEnabled(true);
         this.add(this.m_cbBigTable);
         (this.m_cbBalancedTeams = CFSkin.getSkin().generateCheckBox("Balanced Teams", false)).setEnabled(false);
         this.add(this.m_cbBalancedTeams);
+        (this.m_cbTeams = CFSkin.getSkin().generateCheckBox("Team Game", false)).addItemListener(this);
+        this.m_cbTeams.setEnabled(true);
+        this.add(this.m_cbTeams);
         (this.m_cbAllShips = CFSkin.getSkin().generateCheckBox("All Ships", false)).setEnabled(true);
         this.add(this.m_cbAllShips);
-        (this.m_choiceTeamTable = CFSkin.getSkin().generateChoice()).addItemListener(this);
-        this.m_choiceTeamTable.setEnabled(false);
-        this.add(this.m_choiceTeamTable);
+        (this.m_choiceBoardSize = CFSkin.getSkin().generateChoice()).setEnabled(true);
+        this.add(this.m_choiceBoardSize);
+        this.m_choiceBoardSize.select(3);	// Default to large board, which is the size of classic 4-player wormhole
         this.m_cfBtnOK = CFSkin.getSkin().generateCFButton("Create", this, 8);
         this.m_cfBtnCancel = CFSkin.getSkin().generateCFButton("Cancel", this, 8);
         (this.m_tfPassword = new TextField(15)).addActionListener(this);
@@ -52,27 +55,12 @@ public class CFTableDialog extends Dialog implements IListener, WindowListener, 
     }
     
     public void itemStateChanged(final ItemEvent itemEvent) {
-        if (itemEvent.getSource() != this.m_choiceTeamTable) {
-            final byte subscriptionLevel = CFSkin.getSkin().getLogic().getSubscriptionLevel();
-            //if (subscriptionLevel >= 2) {
-            if (subscriptionLevel >= -1) {
-                this.m_choiceTeamTable.setEnabled(this.m_cbBigTable.getState());
-                this.m_cbBalancedTeams.setEnabled(this.m_choiceTeamTable.isEnabled() && !this.m_choiceTeamTable.getSelectedItem().equals(CFSkin.STR_TEAMS[0]));
-                if (!this.m_choiceTeamTable.isEnabled()) {
-                	this.m_choiceTeamTable.select(0);
-                	this.m_cbBalancedTeams.setState(false);
-                }
-            }
-            return;
-        }
-
-        final boolean enabled = !this.m_choiceTeamTable.getSelectedItem().equals(CFSkin.STR_TEAMS[0]);
+        final boolean enabled = this.m_cbTeams.getState();
         this.m_cbBalancedTeams.setEnabled(enabled);
         if (!enabled) {
             this.m_cbBalancedTeams.setState(false);
             return;
         }
-	    this.m_cbRanking.setState(false);
     }
     
     public void paint(final Graphics graphics) {
@@ -91,7 +79,7 @@ public class CFTableDialog extends Dialog implements IListener, WindowListener, 
     public boolean isBalancedTable() {
         return this.m_cbBalancedTeams.getState();
     }
-    
+
     public boolean allShipsEnabled() {
         return this.m_cbAllShips.getState();
     }
@@ -136,7 +124,7 @@ public class CFTableDialog extends Dialog implements IListener, WindowListener, 
     }
     
     public int getBoardSize() {
-        final String selectedItem = this.m_choiceTeamTable.getSelectedItem();
+        final String selectedItem = this.m_choiceBoardSize.getSelectedItem();
         if (selectedItem == null) {
             return 0;
         }
@@ -156,7 +144,6 @@ public class CFTableDialog extends Dialog implements IListener, WindowListener, 
     }
     
     public boolean isTeamTable() {
-        final String selectedItem = this.m_choiceTeamTable.getSelectedItem();
-        return selectedItem != null && !selectedItem.equals(CFSkin.STR_TEAMS[0]);
+    	return this.m_cbTeams.getState();
     }
 }

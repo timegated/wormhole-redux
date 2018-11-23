@@ -1268,23 +1268,21 @@ public class WormholeModel extends Model
         this.refreshStatus = true;
         double n = 3.0;
         WormholeModel.gOrbitDistance = 240;
-        if (super.m_tableElement != null && super.m_tableElement.getNames().length > 4) {
+        if (super.m_tableElement != null) {
             int totalOpposingPlayingPlayers = this.m_totalOpposingPlayingPlayers;
-            if (super.m_tableElement.isTeamTable()) {
-                switch (super.m_tableElement.getBoardSize()) {
-                	// setting local totalOpposingPlayingPlayers to change the board size
-                    case 2: {
-                        totalOpposingPlayingPlayers = 1;
-                        break;
-                    }
-                    case 3: {
-                        totalOpposingPlayingPlayers = 2;
-                        break;
-                    }
-                    case 4: {
-                        totalOpposingPlayingPlayers = 4;
-                        break;
-                    }
+            switch (super.m_tableElement.getBoardSize()) {
+            	// setting local totalOpposingPlayingPlayers to change the board size
+                case 1: {
+                    totalOpposingPlayingPlayers = 1;
+                    break;
+                }
+                case 2: {
+                    totalOpposingPlayingPlayers = 2;
+                    break;
+                }
+                case 3: {
+                    totalOpposingPlayingPlayers = 4;
+                    break;
                 }
             }
             switch (totalOpposingPlayingPlayers) {

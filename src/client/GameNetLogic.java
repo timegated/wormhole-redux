@@ -111,8 +111,6 @@ public class GameNetLogic implements Runnable, IListener
                 if (this.m_bGuestAccount) {
                     generateCFTableDialog.m_cbRanking.setState(false);
                     generateCFTableDialog.m_cbRanking.setEnabled(false);
-                    generateCFTableDialog.m_cbBigTable.setEnabled(true);
-                    generateCFTableDialog.m_choiceTeamTable.setEnabled(false);
                 }
                 generateCFTableDialog.show();
                 if (generateCFTableDialog.ok()) {
@@ -878,12 +876,8 @@ public class GameNetLogic implements Runnable, IListener
                     int numPlayerSlots = (dataInputStream.readByte() == 1) ? 8 : 4;
                     boolean allShipsAllowed = dataInputStream.readByte() == 1;
                     boolean isTeamTable = dataInputStream.readByte() == 1;
-                    byte boardSize = -1;
-                    boolean isBalancedTable = false;
-                    if (isTeamTable) {
-                    	boardSize = dataInputStream.readByte();
-                        isBalancedTable = (dataInputStream.readByte() == 1);
-                    }
+                    byte boardSize = dataInputStream.readByte();
+                    boolean isBalancedTable = (dataInputStream.readByte() == 1);
                     
                     String[] players = new String[numPlayerSlots];
                     for (int i=0; i < numPlayerSlots; i++) {

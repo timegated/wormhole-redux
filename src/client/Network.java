@@ -112,10 +112,8 @@ public class Network extends ByteArrayInputStream
             stream.writeByte((byte)(isBigTable ? 1 : 0));
             stream.writeByte((byte)(allShips ? 1 : 0));
             stream.writeByte((byte)(isTeamTable ? 1 : 0));
-            if (isTeamTable) {
-                stream.writeByte((byte)boardSize);
-                stream.writeByte(isBalancedTable ? 1 : 0);
-            }
+            stream.writeByte((byte)boardSize);
+            stream.writeByte(isBalancedTable ? 1 : 0);
             if (array != null) {
                 stream.writeByte((byte)array.length);
                 for (int i = 0; i < array.length; ++i) {
@@ -134,7 +132,7 @@ public class Network extends ByteArrayInputStream
     }
     
     void createTable(final String s, final boolean b) {
-        this.createTable(s, b, false, false, 0, false, false, null);
+        this.createTable(s, b, false, false, 3, false, false, null);
     }
     
     public void disconnect() {

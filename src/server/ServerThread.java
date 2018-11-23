@@ -204,10 +204,8 @@ public class ServerThread extends Thread {
 		isBigTable	= (stream.readByte()==1);
 		allShipsAllowed	= (stream.readByte()==1);
 		isTeamTable = (stream.readByte()==1);
-		if (isTeamTable){
-			boardSize = stream.readByte();
-			isBalancedTable	= (stream.readByte()==1);
-		}
+		boardSize = stream.readByte();
+		isBalancedTable	= (stream.readByte()==1);
 		
 		numStringPairs = stream.readByte();
 		if (numStringPairs > 0){	// pretty sure this is always 0
@@ -468,10 +466,8 @@ public class ServerThread extends Thread {
 		marshall( table.isBigTable() );
 		marshall( table.allShipsAllowed() );
 		marshall( table.isTeamTable() );
-		if (table.isTeamTable()) {
-			marshall( table.boardSize() );
-			marshall( table.isBalancedTable() );				
-		}
+		marshall( table.boardSize() );
+		marshall( table.isBalancedTable() );				
 		for (ServerUser user : table.users()) {
 			marshall( user != null ? user.username() : "" );
 		}

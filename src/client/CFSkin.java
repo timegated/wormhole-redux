@@ -400,15 +400,17 @@ public class CFSkin extends MouseAdapter
         this.setColors(colors.m_cbRanking);
         this.setColors(colors.m_cbBigTable);
         this.setColors(colors.m_cbBalancedTeams);
+        this.setColors(colors.m_cbTeams);
         this.setColors(colors.m_cbAllShips);
-        this.setColors(colors.m_choiceTeamTable);
+        this.setColors(colors.m_choiceBoardSize);
         colors.m_cbRanking.setBounds(this.m_cfProps.getRect("table_dialog_cb_ranking"));
         colors.m_cbBigTable.setBounds(this.m_cfProps.getRect("table_dialog_cb_bigtable"));
         //colors.m_cbBigTable.setEnabled(this.m_logic.getSubscriptionLevel() >= 2);
         colors.m_cbBigTable.setEnabled(this.m_logic.getSubscriptionLevel() >= -1);
         colors.m_cbBalancedTeams.setBounds(this.m_cfProps.getRect("table_dialog_cb_balancedteams"));
+        colors.m_cbTeams.setBounds(this.m_cfProps.getRect("table_dialog_cb_teams"));
         colors.m_cbAllShips.setBounds(this.m_cfProps.getRect("table_dialog_cb_allships"));
-        colors.m_choiceTeamTable.setBounds(this.m_cfProps.getRect("table_dialog_choice_teams"));
+        colors.m_choiceBoardSize.setBounds(this.m_cfProps.getRect("table_dialog_choice_boardsize"));
         colors.m_tfPassword.setBounds(this.m_cfProps.getRect("table_dialog_tf_password"));
         colors.m_cfBtnOK.setBounds(this.m_cfProps.getRect("table_dialog_btn_ok"));
         colors.m_cfBtnCancel.setBounds(this.m_cfProps.getRect("table_dialog_btn_cancel"));
@@ -563,7 +565,9 @@ public class CFSkin extends MouseAdapter
         final int playerRank = this.m_logic.getPlayerRank(playingPanel.getUsername());
         final CFTableElement tableElement = playingPanel.getTableElement();
         graphics.drawString("Rank: " + ((playerRank < 0) ? "n/a  " : (playerRank + "  ")), 10, 39);
-        graphics.drawString("Table: " + (tableElement.isRanked() ? "Ranked" : "Unranked") + (tableElement.isTeamTable() ? ((tableElement.isBalancedTeams() ? ", Bal., " : ", ") + CFSkin.STR_TEAMS_SHORT[tableElement.getBoardSize()] + " Board") : ""), 10, 52);
+        graphics.drawString("Table: " + (tableElement.isRanked() ? "Ranked" : "Unranked") + 
+        					(tableElement.isTeamTable() ? (tableElement.isBalancedTeams() ? ", Bal., " : ", ") : ", ") + 
+        					CFSkin.STR_TEAMS_SHORT[tableElement.getBoardSize()] + " Board", 10, 52);
     }
     
     private void defaultPaintLoginPanel(final Graphics graphics, final LoginPanel loginPanel) {
@@ -687,13 +691,10 @@ public class CFSkin extends MouseAdapter
         }
         graphics.setColor(Color.yellow);
         graphics.setFont(CFSkin.FONTNORMAL);
-        String s2 = cfTableElement.isRanked() ? "Ranked" : "";
-        if (cfTableElement.isTeamTable()) {
-            if (cfTableElement.isRanked()) {
-                s2 += ", ";
-            }
-            s2 = s2 + (cfTableElement.isBalancedTeams() ? "Bal. " : "") + CFSkin.STR_TEAMS_SHORT[cfTableElement.getBoardSize()];
-        }
+        String s2 = cfTableElement.isRanked() ? "Ranked, " : "";
+        s2 += CFSkin.STR_TEAMS_SHORT[cfTableElement.getBoardSize()];
+        s2 += cfTableElement.isTeamTable() ? ", Tm" : "";
+        s2 += cfTableElement.isBalancedTeams() ? ", Bal" : "";
         graphics.drawString(s2, n + 21, 32);
         graphics.setFont(CFSkin.FONTNORMAL);
         final int length = cfTableElement.getNames().length;
@@ -884,8 +885,8 @@ public class CFSkin extends MouseAdapter
         FONTNORMAL = new Font("Helvetica", 1, 14);
         FONTELEMENT = new Font("Helvetica", 1, 12);
         FONTELEMENT_TITLE = new Font("Helvetica", 1, 12);
-        STR_TEAMS = new String[] { "No teams", "Teams: Auto Brd", "Teams: Sml Brd", "Teams: Med Brd", "Teams: Lrg Brd" };
-        STR_TEAMS_SHORT = new String[] { "", "Auto", "Sml", "Med", "Lrg" };
+        STR_TEAMS = new String[] { "Auto Size", "Small Board", "Medium Board", "Large Board" };
+        STR_TEAMS_SHORT = new String[] { "Auto", "Sml", "Med", "Lrg" };
         TEAM_COLORS = new Color[] { Color.white, new Color(232, 224, 0), new Color(87, 83, 255) };
         TEAM_BG_COLORS = new Color[] { Color.black, Color.black, Color.white };
         TEAM_NAMES = new String[] { "", "Gold Team", "Blue Team" };
