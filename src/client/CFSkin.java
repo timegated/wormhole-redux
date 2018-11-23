@@ -346,12 +346,12 @@ public class CFSkin extends MouseAdapter
     
     public void defaultAddInstructions(final CFChatPanel cfChatPanel, final String s, final boolean b) {
         int n = 0;
+        Color color = this.m_clrInstructions;
         while (true) {
             final String string = this.m_cfProps.getString(s + n, null);
             if (string == null) {
                 break;
             }
-            Color color = this.m_clrInstructions;
             if (b) {
                 switch (n) {
                     case 2: {
@@ -375,6 +375,8 @@ public class CFSkin extends MouseAdapter
             cfChatPanel.addLine(null, null, string, color);
             ++n;
         }
+        cfChatPanel.addLine(null, null, "", color); // add blank line after instructions
+        cfChatPanel.addLine(null, null, "", color);
     }
     
     public GameNetLogic getLogic() {
