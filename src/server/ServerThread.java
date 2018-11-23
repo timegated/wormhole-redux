@@ -300,7 +300,9 @@ public class ServerThread extends Thread {
 		ServerTable table = server.tableManager.getTable(tableId);
 		
 		if (table.status() == TableStatus.IDLE && table.numPlayers() > 1) {
-			if (!table.isTeamTable() || (table.teamSize(Team.GOLDTEAM) > 0 && table.teamSize(Team.BLUETEAM) > 0)) {
+			if (!table.isTeamTable() ||
+				table.teamSize(Team.GOLDTEAM) == table.teamSize(Team.BLUETEAM) ||
+				!table.isBalancedTable() && (table.teamSize(Team.GOLDTEAM) > 0 && table.teamSize(Team.BLUETEAM) > 0)) {
 				table.setStatus(TableStatus.COUNTDOWN);
 				new TableTransitionThread(table, table.status());
 			}
@@ -708,12 +710,9 @@ public class ServerThread extends Thread {
 					server.broadcastTableStatusChange(table.id(), table.status(), countdown);
 					countdown --;
 					Thread.sleep(1000);
-					if (table.numPlayers() < 2) {	// People left below the limit, we need to stop counting down
-						table.setStatus(TableStatus.IDLE);
-						server.broadcastTableStatusChange(table.id(), table.status(), TABLE_COUNTDOWN);
-						return;
-					}
-					else if (table.isTeamTable() && (table.teamSize(Team.GOLDTEAM) <= 0 || table.teamSize(Team.BLUETEAM) <= 0)) {
+					if (table.numPlayers() < 2 ||
+						table.isTeamTable() && (table.teamSize(Team.GOLDTEAM) <= 0 || table.teamSize(Team.BLUETEAM) <= 0) ||
+						table.isBalancedTable() && (table.teamSize(Team.GOLDTEAM) != table.teamSize(Team.BLUETEAM))) {	// People left, we need to stop counting down
 						table.setStatus(TableStatus.IDLE);
 						server.broadcastTableStatusChange(table.id(), table.status(), TABLE_COUNTDOWN);
 						return;
