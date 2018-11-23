@@ -12,6 +12,7 @@ class CFTableElement extends CFElement
     private boolean m_bPrivate;
     private boolean m_bRanked;
     private boolean m_bTeamTable;
+    private boolean m_bAllShipsAllowed;
     private byte m_boardSize;
     private boolean m_bBalancedTeams;
     private String m_text;
@@ -56,11 +57,12 @@ class CFTableElement extends CFElement
         this.m_bOver = true;
     }
     
-    public void setOptions(final boolean bRanked, final boolean bPrivate, final boolean bTeamTable, final byte boardSize, final boolean bBalancedTeams, final String[][] options) {
+    public void setOptions(final boolean bRanked, final boolean bPrivate, boolean bAllShipsAllowed, final boolean bTeamTable, final byte boardSize, final boolean bBalancedTeams, final String[][] options) {
         this.m_bRanked = bRanked;
         this.m_bPrivate = bPrivate;
         this.m_bTeamTable = bTeamTable;
         this.m_boardSize = boardSize;
+        this.m_bAllShipsAllowed = bAllShipsAllowed;
         this.m_bBalancedTeams = bBalancedTeams;
         this.m_options = options;
         this.repaint();
@@ -87,6 +89,10 @@ class CFTableElement extends CFElement
     
     public boolean isPrivate() {
         return this.m_bPrivate;
+    }
+    
+    public boolean allShipsAllowed() {
+        return this.m_bAllShipsAllowed;
     }
     
     public boolean isRanked() {
@@ -171,6 +177,15 @@ class CFTableElement extends CFElement
     
     public String getPlayer(int slot) {
         return this.m_names[slot];
+    }
+    
+    public int getSlot(String username) {
+    	for (int i=0; i<this.m_names.length; i++) {
+    		if (this.m_names[i].equals(username)) {
+    			return i;
+    		}
+    	}
+    	return -1;
     }
     
     public boolean isTeamTable() {

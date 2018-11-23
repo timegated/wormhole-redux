@@ -191,7 +191,7 @@ public class ServerThread extends Thread {
 		final DataInputStream stream = this.pr.getStream();
 		
 		byte boardSize = 0, numStringPairs;
-		boolean isRanked, hasPassword, isBigTable, isTeamTable, isBalancedTable = false;
+		boolean isRanked, hasPassword, isBigTable, allShipsAllowed, isTeamTable, isBalancedTable = false;
 		String password = "";
 
 		isRanked 	= (stream.readByte()==1);
@@ -202,11 +202,10 @@ public class ServerThread extends Thread {
 		}
 		
 		isBigTable	= (stream.readByte()==1);
+		allShipsAllowed	= (stream.readByte()==1);
 		isTeamTable = (stream.readByte()==1);
-		if (isTeamTable){
-			boardSize = stream.readByte();
-			isBalancedTable	= (stream.readByte()==1);
-		}
+		boardSize = stream.readByte();
+		isBalancedTable	= (stream.readByte()==1);
 		
 		numStringPairs = stream.readByte();
 		if (numStringPairs > 0){	// pretty sure this is always 0
@@ -220,7 +219,7 @@ public class ServerThread extends Thread {
 			return;
 		}
 		
-		ServerTable table = new ServerTable(isRanked, password, isBigTable, isTeamTable, boardSize, isBalancedTable);
+		ServerTable table = new ServerTable(isRanked, password, isBigTable, allShipsAllowed, isTeamTable, boardSize, isBalancedTable);
 		byte slot = table.addUser(user().username());
 		table.addUser(user());
 		user().setSlot(slot);
@@ -301,7 +300,9 @@ public class ServerThread extends Thread {
 		ServerTable table = server.tableManager.getTable(tableId);
 		
 		if (table.status() == TableStatus.IDLE && table.numPlayers() > 1) {
-			if (!table.isTeamTable() || (table.teamSize(Team.GOLDTEAM) > 0 && table.teamSize(Team.BLUETEAM) > 0)) {
+			if (!table.isTeamTable() ||
+				table.teamSize(Team.GOLDTEAM) == table.teamSize(Team.BLUETEAM) ||
+				!table.isBalancedTable() && (table.teamSize(Team.GOLDTEAM) > 0 && table.teamSize(Team.BLUETEAM) > 0)) {
 				table.setStatus(TableStatus.COUNTDOWN);
 				new TableTransitionThread(table, table.status());
 			}
@@ -465,11 +466,10 @@ public class ServerThread extends Thread {
 		marshall( table.isRanked() );
 		marshall( table.isPrivate() );
 		marshall( table.isBigTable() );
+		marshall( table.allShipsAllowed() );
 		marshall( table.isTeamTable() );
-		if (table.isTeamTable()) {
-			marshall( table.boardSize() );
-			marshall( table.isBalancedTable() );				
-		}
+		marshall( table.boardSize() );
+		marshall( table.isBalancedTable() );				
 		for (ServerUser user : table.users()) {
 			marshall( user != null ? user.username() : "" );
 		}
@@ -608,7 +608,7 @@ public class ServerThread extends Thread {
 				return;
 			}
 			
-			if (!this.clientVersion.equals("version1.0")){
+			if (!this.clientVersion.equals("version1.1")){
 				sendLoginFailed("Wrong client version, check website for updated client");
 				server.clients.remove(this);
 				return;
@@ -710,12 +710,9 @@ public class ServerThread extends Thread {
 					server.broadcastTableStatusChange(table.id(), table.status(), countdown);
 					countdown --;
 					Thread.sleep(1000);
-					if (table.numPlayers() < 2) {	// People left below the limit, we need to stop counting down
-						table.setStatus(TableStatus.IDLE);
-						server.broadcastTableStatusChange(table.id(), table.status(), TABLE_COUNTDOWN);
-						return;
-					}
-					else if (table.isTeamTable() && (table.teamSize(Team.GOLDTEAM) <= 0 || table.teamSize(Team.BLUETEAM) <= 0)) {
+					if (table.numPlayers() < 2 ||
+						table.isTeamTable() && (table.teamSize(Team.GOLDTEAM) <= 0 || table.teamSize(Team.BLUETEAM) <= 0) ||
+						table.isBalancedTable() && (table.teamSize(Team.GOLDTEAM) != table.teamSize(Team.BLUETEAM))) {	// People left, we need to stop counting down
 						table.setStatus(TableStatus.IDLE);
 						server.broadcastTableStatusChange(table.id(), table.status(), TABLE_COUNTDOWN);
 						return;

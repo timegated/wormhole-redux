@@ -150,7 +150,7 @@ public class WormholeModel extends Model
     
     private void drawFighter(final Graphics graphics, final int n, final int n2, final int n3) {
         graphics.translate(n2, n3);
-        if (this.hasPermission((byte)PlayerSprite.g_fighterData[n][13])) {
+        if (this.hasShipPermission((byte)PlayerSprite.g_fighterData[n][13])) {
             graphics.setColor(Sprite.g_colors[super.m_slot][2]);
         }
         else {
@@ -350,7 +350,7 @@ public class WormholeModel extends Model
             }
             this.m_describedShip = describedShip;
             this.m_zoomInIntro = 0.0;
-            if (this.hasPermission((byte)PlayerSprite.g_fighterData[this.m_describedShip][13])) {
+            if (this.hasShipPermission((byte)PlayerSprite.g_fighterData[this.m_describedShip][13])) {
                 this.m_playerFighterType = this.m_describedShip;
             }
         }
@@ -842,7 +842,7 @@ public class WormholeModel extends Model
             this.m_teamID = 0;
         }
         this.init();
-        if (!this.hasPermission((byte)PlayerSprite.g_fighterData[this.m_playerFighterType][13])) {
+        if (!this.hasShipPermission((byte)PlayerSprite.g_fighterData[this.m_playerFighterType][13])) {
             this.m_playerFighterType = 1;
         }
         this.drawPlayerBar(this.m_pnlOtherPlayers.m_g, true);
@@ -878,7 +878,11 @@ public class WormholeModel extends Model
         return this.m_players[this.translateSlot(b)].m_username;
     }
     
-    private boolean hasPermission(final byte b) {
+    private boolean hasShipPermission(final byte b) {
+    	if (super.m_tableElement.allShipsAllowed()) {
+    		return true;
+    	}
+    	
         byte b2 = 2;
         switch (b) {
             case 10: {
@@ -1264,23 +1268,21 @@ public class WormholeModel extends Model
         this.refreshStatus = true;
         double n = 3.0;
         WormholeModel.gOrbitDistance = 240;
-        if (super.m_tableElement != null && super.m_tableElement.getNames().length > 4) {
+        if (super.m_tableElement != null) {
             int totalOpposingPlayingPlayers = this.m_totalOpposingPlayingPlayers;
-            if (super.m_tableElement.isTeamTable()) {
-                switch (super.m_tableElement.getBoardSize()) {
-                	// setting local totalOpposingPlayingPlayers to change the board size
-                    case 2: {
-                        totalOpposingPlayingPlayers = 1;
-                        break;
-                    }
-                    case 3: {
-                        totalOpposingPlayingPlayers = 2;
-                        break;
-                    }
-                    case 4: {
-                        totalOpposingPlayingPlayers = 4;
-                        break;
-                    }
+            switch (super.m_tableElement.getBoardSize()) {
+            	// setting local totalOpposingPlayingPlayers to change the board size
+                case 1: {
+                    totalOpposingPlayingPlayers = 1;
+                    break;
+                }
+                case 2: {
+                    totalOpposingPlayingPlayers = 2;
+                    break;
+                }
+                case 3: {
+                    totalOpposingPlayingPlayers = 4;
+                    break;
                 }
             }
             switch (totalOpposingPlayingPlayers) {
@@ -1440,7 +1442,7 @@ public class WormholeModel extends Model
         graphics.fillRect(this.m_intro_shipX, this.m_intro_shipY, 400, 50);
         graphics.setColor(this.m_color);
         graphics.drawRect(this.m_intro_shipX, this.m_intro_shipY, 400, 50);
-        final boolean hasPermission = this.hasPermission((byte)PlayerSprite.g_fighterData[this.m_describedShip][13]);
+        final boolean hasPermission = this.hasShipPermission((byte)PlayerSprite.g_fighterData[this.m_describedShip][13]);
         int n = 0;
         do {
             graphics.setColor(this.m_color);
@@ -1489,8 +1491,8 @@ public class WormholeModel extends Model
         graphics.drawString(array[0], this.m_introX + 10, this.m_introY + 110);
         if (!hasPermission) {
             graphics.setColor(Color.red);
-            graphics.drawString("Subscribe now to access", this.m_introX + 10, this.m_introY + 180);
-            graphics.drawString("extra ships!", this.m_introX + 10, this.m_introY + 192);
+            graphics.drawString("Enable extra ships in", this.m_introX + 10, this.m_introY + 180);
+            graphics.drawString("create table options", this.m_introX + 10, this.m_introY + 192);
         }
     }
     

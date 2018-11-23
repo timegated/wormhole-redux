@@ -76,7 +76,7 @@ public class Network extends ByteArrayInputStream
             stream.writeInt(gameId);
             stream.writeShort(majorVersion);
             stream.writeShort(minorVersion);
-            stream.writeUTF("version1.0");
+            stream.writeUTF("version1.1");
             this.m_writer.sendPacket();
             this.m_bConnected = true;
         }
@@ -99,7 +99,7 @@ public class Network extends ByteArrayInputStream
         this.sendGeneric((byte)0, (short)(-2));
     }
     
-    synchronized void createTable(final String password, final boolean isRanked, final boolean isBigTable, final boolean isTeamTable, final int boardSize, final boolean isBalancedTable, final String[][] array) {
+    synchronized void createTable(final String password, final boolean isRanked, final boolean isBigTable, final boolean isTeamTable, final int boardSize, final boolean isBalancedTable, final boolean allShips, final String[][] array) {
         final DataOutput stream = this.getStream(0);
         try {
             stream.writeByte(20);
@@ -110,11 +110,10 @@ public class Network extends ByteArrayInputStream
                 stream.writeUTF(password);
             }
             stream.writeByte((byte)(isBigTable ? 1 : 0));
+            stream.writeByte((byte)(allShips ? 1 : 0));
             stream.writeByte((byte)(isTeamTable ? 1 : 0));
-            if (isTeamTable) {
-                stream.writeByte((byte)boardSize);
-                stream.writeByte(isBalancedTable ? 1 : 0);
-            }
+            stream.writeByte((byte)boardSize);
+            stream.writeByte(isBalancedTable ? 1 : 0);
             if (array != null) {
                 stream.writeByte((byte)array.length);
                 for (int i = 0; i < array.length; ++i) {
@@ -133,7 +132,7 @@ public class Network extends ByteArrayInputStream
     }
     
     void createTable(final String s, final boolean b) {
-        this.createTable(s, b, false, false, 0, false, null);
+        this.createTable(s, b, false, false, 3, false, false, null);
     }
     
     public void disconnect() {
