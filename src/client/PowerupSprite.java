@@ -111,7 +111,8 @@ public class PowerupSprite extends Sprite
     }
     
     static {
-        g_enemyRatios = new int[] { 0, 0, 0, 0, 0, 0, 0, 1, 0, 3, 4, 2, 1, 2, 1, 1, 1, 1, 0, 2 };
+        //g_enemyRatios = new int[] { 0, 0, 0, 0, 0, 0, 0, 1, 0, 3, 4, 2, 1, 2, 1, 1, 1, 1, 0, 2 };
+        g_enemyRatios = new int[] { 0, 0, 0, 0, 0, 0, 0, 1, 0, 3, 4, 2, 1, 2, 1, 1, 1, 1, 1, 2 };
         g_largeConverstionTypes = new int[] { 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 };
         g_smallConverstionTypes = new int[] { 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
         g_names = new String[] { "GUN UPGRADE", "THRUST UPGRADE", "RETROS", "INVULNERABILITY", "ZAP ATTACK", "EXTRA HEALTH", "HEAT SEEKER", "WORMHOLE TURRET", "WORMHOLE MINES", "SEND UFO", "SEND INFLATER", "SEND MINELAYER", "SEND GUNSHIP", "SEND SCARAB", "SEND NUKE", "SEND WALLCRAWLER", "WORMHOLE BEAM", "WORMHOLE EMP", "SEND GHOST-PUD", "SEND ARTILLERY" };
@@ -171,7 +172,8 @@ public class PowerupSprite extends Sprite
             }
         }
         else {
-            final int n4 = (Sprite.model.m_logic.getSubscriptionLevel() < 2) ? 11 : 14;
+            //final int n4 = (Sprite.model.m_logic.getSubscriptionLevel() < 2) ? 11 : 14;
+            final int n4 = (Sprite.model.m_tableElement.allPowerupsAllowed()) ? 14 : 11;
             n3 = 6 + WHUtil.randABSInt() % n4;
             if (n3 == 14 && WHUtil.randABSInt() % 2 == 0) {
                 n3 = 6 + WHUtil.randABSInt() % n4;

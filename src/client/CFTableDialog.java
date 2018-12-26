@@ -13,6 +13,7 @@ public class CFTableDialog extends Dialog implements IListener, WindowListener, 
     public Checkbox m_cbBalancedTeams;
     public Checkbox m_cbTeams;
     public Checkbox m_cbAllShips;
+    public Checkbox m_cbAllPowerups;
     private IListener m_listener;
     private boolean m_bOK;
     
@@ -38,6 +39,8 @@ public class CFTableDialog extends Dialog implements IListener, WindowListener, 
         this.add(this.m_cbTeams);
         (this.m_cbAllShips = CFSkin.getSkin().generateCheckBox("All Ships", false)).setEnabled(true);
         this.add(this.m_cbAllShips);
+        (this.m_cbAllPowerups = CFSkin.getSkin().generateCheckBox("All Powerups", false)).setEnabled(true);
+        this.add(this.m_cbAllPowerups);
         (this.m_choiceBoardSize = CFSkin.getSkin().generateChoice()).setEnabled(true);
         this.add(this.m_choiceBoardSize);
         this.m_choiceBoardSize.select(3);	// Default to large board, which is the size of classic 4-player wormhole
@@ -79,10 +82,6 @@ public class CFTableDialog extends Dialog implements IListener, WindowListener, 
     public boolean isBalancedTable() {
         return this.m_cbBalancedTeams.getState();
     }
-
-    public boolean allShipsEnabled() {
-        return this.m_cbAllShips.getState();
-    }
     
     public String getPassword() {
         return this.m_tfPassword.getText();
@@ -117,6 +116,10 @@ public class CFTableDialog extends Dialog implements IListener, WindowListener, 
     
     public boolean allShips() {
         return this.m_cbAllShips.getState();
+    }
+    
+    public boolean allPowerups() {
+        return this.m_cbAllPowerups.getState();
     }
     
     public void setListener(final IListener listener) {

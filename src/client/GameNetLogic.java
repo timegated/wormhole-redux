@@ -114,7 +114,7 @@ public class GameNetLogic implements Runnable, IListener
                 }
                 generateCFTableDialog.show();
                 if (generateCFTableDialog.ok()) {
-                    this.m_network.createTable(generateCFTableDialog.getPassword(), !this.m_bGuestAccount && generateCFTableDialog.isRanked(), generateCFTableDialog.isBigTable(), generateCFTableDialog.isTeamTable(), generateCFTableDialog.getBoardSize(), generateCFTableDialog.isBalancedTable(), generateCFTableDialog.allShips(), CFSkin.getSkin().getTableOptions(generateCFTableDialog));
+                    this.m_network.createTable(generateCFTableDialog.getPassword(), !this.m_bGuestAccount && generateCFTableDialog.isRanked(), generateCFTableDialog.isBigTable(), generateCFTableDialog.isTeamTable(), generateCFTableDialog.getBoardSize(), generateCFTableDialog.isBalancedTable(), generateCFTableDialog.allShips(), generateCFTableDialog.allPowerups(), CFSkin.getSkin().getTableOptions(generateCFTableDialog));
                 }
                 this.m_pnlGame.setEnabled(true);
                 return;
@@ -875,6 +875,7 @@ public class GameNetLogic implements Runnable, IListener
                     boolean isPrivate = dataInputStream.readByte() == 1;
                     int numPlayerSlots = (dataInputStream.readByte() == 1) ? 8 : 4;
                     boolean allShipsAllowed = dataInputStream.readByte() == 1;
+                    boolean allPowerupsAllowed = dataInputStream.readByte() == 1;
                     boolean isTeamTable = dataInputStream.readByte() == 1;
                     byte boardSize = dataInputStream.readByte();
                     boolean isBalancedTable = (dataInputStream.readByte() == 1);
@@ -892,7 +893,7 @@ public class GameNetLogic implements Runnable, IListener
                     	table = tablePanel.findTable(tableId);
                     }
                     table.setStatus(status);
-                    table.setOptions(isRanked, isPrivate, allShipsAllowed, isTeamTable, boardSize, isBalancedTable, tableOptions);
+                    table.setOptions(isRanked, isPrivate, allShipsAllowed, allPowerupsAllowed, isTeamTable, boardSize, isBalancedTable, tableOptions);
                     for (int i=0; i < numPlayerSlots; i++) {
                 		byte slot = (byte)i;
                 		String username = players[i];
