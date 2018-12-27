@@ -56,8 +56,8 @@ public class PlayerSprite extends Sprite
     public static final int SHIP_DATA_POWERUP_ATTRACTOR = 4;
     private double m_nextHSRegen;
     public static final int SHIP_DATA_HS_REGEN_TIME = 20000;
-    public static final int NROTATIONS = 24;
-    public static final int DROTATE = 15;
+    public static final int NROTATIONS = 360;
+    public static final int DROTATE = 360 / NROTATIONS;
     private double[][] m_turretLocations;
     public static final Polygon[][] g_polyShipCollision;
     public static final Polygon[][] g_polyShip;
@@ -209,7 +209,7 @@ public class PlayerSprite extends Sprite
     
     public void rotate(final double n) {
         super.rotate(n);
-        final int n2 = (int)((super.angle + 90.0) / 15.0) % 24;
+        final int n2 = (int)((super.angle + 90.0) / DROTATE) % NROTATIONS;
         final int n3 = (this.m_specialType == 2) ? this.m_shapeShifterFighterShape : this.m_fighterType;
         super.m_poly = PlayerSprite.g_polyShipCollision[n3][n2];
         this.m_drawPoly = PlayerSprite.g_polyShip[n3][n2];
@@ -467,8 +467,8 @@ public class PlayerSprite extends Sprite
     }
     
     static {
-        g_polyShipCollision = new Polygon[8][24];
-        g_polyShip = new Polygon[8][24];
+        g_polyShipCollision = new Polygon[8][NROTATIONS];
+        g_polyShip = new Polygon[8][NROTATIONS];
         //g_fighterData = new double[][] { { 3.0, 1.0, 4.0, 6.0, 6.0, 0.18, 260.0, 2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 10.0 }, { 4.0, 1.0, 4.0, 10.0, 6.8, 0.25, 230.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 10.0 }, { 0.0, 1.0, 4.0, 12.0, 10.0, 0.48, 200.0, 0.0, 3.0, 0.0, 0.0, 0.0, 0.0, 10.0 }, { -2.0, 1.0, 4.0, 12.0, 11.0, 0.35, 180.0, 0.0, 2.0, 1.0, 12.0, 0.0, 0.0, 12.0 }, { 0.0, 1.0, 4.0, 4.5, 5.2, 0.15, 250.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0, 12.0 }, { 0.0, 1.0, 4.0, 1.0, 1.0, 0.1, 190.0, 3.0, 3.0, 0.0, 0.0, 2.0, 0.0, 14.0 }, { 0.0, 1.0, 4.0, 4.8, 7.0, 0.3, 220.0, 0.0, 1.0, 0.0, 0.0, 3.0, 0.0, 12.0 }, { 0.0, 0.5, 2.0, 2.0, 3.9, 0.11, 300.0, 0.0, 2.0, 2.0, 14.0, 4.0, 0.0, 14.0 } };
         g_fighterData = new double[][] { { 3.0, 1.0, 3.0, 5.0, 6.0, 0.10, 280.0, 2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 10.0 }, { 4.0, 1.0, 3.0, 7.0, 7.0, 0.25, 240.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 10.0 }, { 0.0, 1.0, 3.0, 10.0, 10.0, 0.48, 200.0, 0.0, 3.0, 0.0, 0.0, 0.0, 0.0, 10.0 }, { -2.0, 1.0, 3.0, 12.0, 11.0, 0.35, 180.0, 0.0, 2.0, 1.0, 12.0, 0.0, 0.0, 12.0 }, { 0.0, 1.0, 3.0, 4.5, 5.2, 0.15, 250.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0, 12.0 }, { 0.0, 1.0, 3.0, 1.0, 1.0, 0.1, 190.0, 3.0, 3.0, 0.0, 0.0, 2.0, 0.0, 14.0 }, { 0.0, 1.0, 3.0, 4.8, 7.0, 0.3, 220.0, 0.0, 1.0, 0.0, 0.0, 3.0, 0.0, 12.0 }, { 0.0, 0.5, 1.5, 2.0, 3.9, 0.11, 300.0, 0.0, 2.0, 2.0, 14.0, 4.0, 0.0, 14.0 } };
         g_shipDescriptions = new String[][] { { "The Tank", "The Tank is the ultimate in", "destructive capabilities. Meant to slug it", "out with larger ships, the Tank's armor", "& guns are fomidable right off the bat.", "Item acquisition is much slower, but", "with increased firepower, the board", "should be littered with the items from", "the carcasses of your enemies" }, { "The Wing", "The Wing is a balanced mix of speed", "& armor.  The Wing is specially designed", "to be a smaller target for the numerous", "enemies you are to face.  The Wing", "offers a good compromise for those", "starting off in the New Grounds." }, { "The Squid", "The Squid is a light ship designed", "for quick item acquisition on the field", "of battle.  The thrusters have been", "maxed out and the speed and accel.", "borders on reckless. The light armor is", "balanced with an increase in evasion", "abilities.", "Only those of fast reflexes need apply." }, { "The Rabbit", "The Rabbit is a light ship designed", "for hit and run engagements. The Rabbit", "sacrifices armor for a special tracking", "cannon typical of corvettes and larger", "ships.  Upgrade your weapon systems to", "maximize the effectiveness of this ship." }, { "The Turtle", "The Turtle is a modified Tank with", "a built-in high powered weapon, the", "Turtle Cannon.  The TC destroys all", "visible targets, making it a formidable", "ship.  The main drawback is that the", "TC is so effective that the Turtle", "often takes damage when using it.", "Use the 'd' key to activate Turtle Cannon." }, { "The Flash", "The Flash is an experimental 'hybrid'", "ship.  It can tranform between two", "states, the Squid and Tank states,", "where it can mimic that particular ship.", "The benefit of the Flash is the pilot can", "stand and fight or hit and run when", "necessary. The downside is that the", "Flash cannot be upgraded...", "Use the 'd' key to transform." }, { "The Hunter", "The Hunter is a fast, but not very", "agile missile corvette.  Its array of 17", "Piranha missiles can function as both", "an offensive and defensive weapon.", "The Piranhas are designed as an area", "effect weapon, and circle in close", "proximity of the targetted area.", "Hunter can generate new missiles over", "time, or the pilot can refill his arsenal", "by capturing HeatSeeker powerups.", "Use the 'd' key to use missiles." }, { "The Flagship", "The Flagship is a capitol ship, meant", "to command a squadron of fighters.", "Center Fleet has decided to include", "testing the Flagship in battle scenarios.", "The Flagship contains a large", "attracter/repulser (A/R) unit that draws", "powerups in, and pushes enemies out.", "The drawback is that when the A/R unit", "is on, there is not enough power to run", "the tracking guns, thrusters, or main", "cannon.", "Use the 'd' key to activate A/R." } };
@@ -592,9 +592,9 @@ public class PlayerSprite extends Sprite
             do {
                 PlayerSprite.g_polyShip[n2][n3] = constructPolygon.cloneMyPolygon();
                 PlayerSprite.g_polyShipCollision[n2][n3] = constructPolygon2.cloneMyPolygon();
-                constructPolygon.rotate(15.0);
-                constructPolygon2.rotate(15.0);
-            } while (++n3 < 24);
+                constructPolygon.rotate(DROTATE);
+                constructPolygon2.rotate(DROTATE);
+            } while (++n3 < NROTATIONS);
         } while (++n2 < 8);
     }
     
