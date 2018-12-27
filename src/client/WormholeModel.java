@@ -1485,7 +1485,7 @@ public class WormholeModel extends Model
         }
         graphics.translate(this.m_introX + 75, this.m_introY + 180);
         //WHUtil.drawScaledPoly(graphics, PlayerSprite.g_polyShip[this.m_describedShip][this.m_currentFighterShade / 2 % 24], zoomInIntro);
-        WHUtil.drawScaledPoly(graphics, PlayerSprite.g_polyShip[this.m_describedShip][this.m_currentFighterShade * 10 / 15 % 24], zoomInIntro);
+        WHUtil.drawScaledPoly(graphics, PlayerSprite.g_polyShip[this.m_describedShip][this.m_currentFighterShade * 10 / PlayerSprite.DROTATE % PlayerSprite.NROTATIONS], zoomInIntro);
         graphics.translate(-(this.m_introX + 75), -(this.m_introY + 180));
         graphics.setColor(Color.white);
         graphics.drawString(array[0], this.m_introX + 10, this.m_introY + 110);
