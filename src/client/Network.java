@@ -76,7 +76,7 @@ public class Network extends ByteArrayInputStream
             stream.writeInt(gameId);
             stream.writeShort(majorVersion);
             stream.writeShort(minorVersion);
-            stream.writeUTF("version1.1");
+            stream.writeUTF("version1.2");
             this.m_writer.sendPacket();
             this.m_bConnected = true;
         }
