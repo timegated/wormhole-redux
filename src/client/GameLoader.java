@@ -55,14 +55,17 @@ public class GameLoader extends JPanel implements Runnable
                 this.m_mediaTracker.addImage(this.m_loadingImageArray[i], i);
             }
             for (int k = 0; k < intProperty2; ++k) {
-            	InputStream audioSrc = getClass().getResourceAsStream(this.m_props.getProperty("SP" + k));
-            	AudioInputStream audioStream = AudioSystem.getAudioInputStream(new BufferedInputStream(audioSrc));
-                DataLine.Info info = new DataLine.Info(Clip.class, audioStream.getFormat());
-                Clip audioClip = (Clip)AudioSystem.getLine(info);
-                audioClip.open(audioStream);
-            	audioClip.start();
-            	GameLoader.g_mediaElements.put(this.m_props.getProperty("SN" + k), audioClip);
-                this.m_animator.notifyLoad();
+            	try {	// If sound device is disabled, AudioSystem.getLine can cause an IllegalArgumentException. There may be other exceptions too.
+	            	InputStream audioSrc = getClass().getResourceAsStream(this.m_props.getProperty("SP" + k));
+	            	AudioInputStream audioStream = AudioSystem.getAudioInputStream(new BufferedInputStream(audioSrc));
+	                DataLine.Info info = new DataLine.Info(Clip.class, audioStream.getFormat());
+	                Clip audioClip = (Clip)AudioSystem.getLine(info);
+	                audioClip.open(audioStream);
+	            	audioClip.start();
+	            	GameLoader.g_mediaElements.put(this.m_props.getProperty("SN" + k), audioClip);
+	                this.m_animator.notifyLoad();
+            	}
+            	catch (Exception e) {}
             }
             for (int l = 0; l < intProperty; ++l) {
                 this.m_mediaTracker.waitForID(l);
