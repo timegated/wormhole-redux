@@ -11,7 +11,7 @@ public class GameBoard extends Panel
     private CFTableElement m_tableElement;
     
     public static void playSound(String sound) {
-    	if (!GameBoard.m_bPlaySound) {
+    	if (!GameBoard.m_bPlaySound || !WormholeModel.g_mediaTable.containsKey(sound)) {
     		return;
     	}
 		Clip clip = (Clip)WormholeModel.g_mediaTable.get(sound);
