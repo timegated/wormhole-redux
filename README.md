@@ -63,4 +63,4 @@ The game was originally in the browser because it was an applet, but applets are
 
 ## Sample Gameplay
 
-![wormhole_gameplay.gif](/harenbergsd/wormhole-redux/raw/master/wormhole_gameplay.gif)
+![wormhole_gameplay.gif](wormhole_gameplay.gif)
